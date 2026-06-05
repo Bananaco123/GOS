@@ -1,0 +1,26 @@
+{
+  "name": "web-im-v9",
+  "private": true,
+  "version": "9.0.0",
+  "type": "module",
+  "description": "G-Builder OS V1 · SCRM 后台端 · AI 业务员 + 知识库 demo（基于 PRD SCRM-AI业务员配合功能-PRD v2 + g-builder-os-interaction-spec.md）",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^6.1.1",
+    "antd": "^6.3.5",
+    "dayjs": "^1.11.20",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-router-dom": "^7.14.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "vite": "^8.0.4"
+  }
+}

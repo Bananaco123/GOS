@@ -1,0 +1,143 @@
+.gb-agent-list-page {
+  padding: 24px;
+  min-height: 100%;
+}
+
+.gb-agent-list-head {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.gb-agent-list-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--gb-text-primary);
+  margin: 0;
+  line-height: 32px;
+}
+
+.gb-agent-list-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* 卡片网格 */
+.gb-agent-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.gb-agent-card {
+  background: #fff;
+  border: 1px solid var(--gb-border);
+  border-radius: var(--gb-radius-md);
+  padding: 16px 18px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  cursor: pointer;
+  transition: border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
+}
+
+.gb-agent-card:hover {
+  border-color: var(--gb-primary);
+  box-shadow: 0 4px 12px rgba(26, 77, 143, 0.08);
+}
+
+.gb-agent-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.gb-agent-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gb-text-primary);
+  margin: 0;
+  line-height: 22px;
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.gb-agent-card-id {
+  font-size: 12px;
+  color: var(--gb-text-muted);
+  font-family: var(--gb-font-mono);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.gb-agent-card-tags {
+  display: flex;
+  gap: 6px;
+  margin: 2px 0 4px;
+}
+
+.gb-agent-card-tag {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  font-size: 12px;
+  line-height: 20px;
+  border: 1px solid;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.gb-agent-card-meta {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gb-agent-card-meta > div {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.gb-agent-card-meta dt {
+  flex-shrink: 0;
+  color: var(--gb-text-muted);
+  font-weight: 400;
+  width: 72px;
+  margin: 0;
+}
+
+.gb-agent-card-meta dd {
+  color: var(--gb-text-secondary);
+  font-weight: 400;
+  margin: 0;
+}
+
+.gb-mono {
+  font-family: var(--gb-font-mono);
+  font-feature-settings: 'tnum';
+  color: var(--gb-text-secondary);
+}
+
+.gb-agent-card-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--gb-border-light);
+}
+
+.gb-agent-card-actions .ant-btn {
+  flex: 1;
+  font-size: 12px;
+}

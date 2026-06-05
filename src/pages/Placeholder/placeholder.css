@@ -1,0 +1,68 @@
+.gb-placeholder {
+  display: flex;
+  justify-content: center;
+  padding: 64px 32px;
+  min-height: calc(100vh - var(--gb-topbar-h) - var(--gb-breadcrumb-h));
+}
+
+.gb-placeholder-inner {
+  max-width: 720px;
+  width: 100%;
+}
+
+.gb-placeholder-title {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--gb-text);
+  margin: 0 0 8px;
+}
+
+.gb-placeholder-sub {
+  font-size: 14px;
+  color: var(--gb-text-muted);
+  margin-bottom: 24px;
+}
+
+.gb-placeholder-desc {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--gb-text-secondary);
+  background: var(--gb-bg-secondary);
+  padding: 16px 20px;
+  border-radius: 8px;
+  border-left: 3px solid var(--gb-primary-light);
+  margin: 0 0 24px;
+}
+
+.gb-placeholder-specbox {
+  font-size: 13px;
+  color: var(--gb-text-secondary);
+  background: var(--gb-white);
+  border: 1px dashed var(--gb-border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 32px;
+}
+
+.gb-placeholder-context-title {
+  font-size: 13px;
+  color: var(--gb-text);
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.gb-placeholder-divider {
+  height: 1px;
+  background: var(--gb-border-light);
+  margin: 40px 0 24px;
+}
+
+.gb-placeholder-foot {
+  font-size: 12px;
+  color: var(--gb-text-muted);
+  line-height: 1.8;
+}
+
+.gb-placeholder-foot-line {
+  display: block;
+}

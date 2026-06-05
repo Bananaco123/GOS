@@ -1,0 +1,161 @@
+/* ============================================================
+ * G-Builder OS · 全局视觉 Token（按 g-builder-os-interaction-spec.md §1）
+ * ============================================================ */
+
+:root {
+  /* ---- 品牌色 ---- */
+  --gb-primary: #1A4D8F;
+  --gb-primary-light: #2E7BD6;
+  --gb-primary-lighter: #4A95E8;
+  --gb-primary-bg: #EBF3FB;       /* 选中态浅蓝底 */
+  --gb-accent: #00A3B4;
+
+  /* ---- 辅助色 ---- */
+  --gb-amber: #E59B26;
+  --gb-success: #10A86A;
+  --gb-danger: #D32F2F;
+
+  /* ---- 中性色 ---- */
+  --gb-bg: #F8FAFC;
+  --gb-bg-secondary: #F0F4F8;
+  --gb-border: #E2E8F0;
+  --gb-border-light: #F1F5F9;
+  --gb-text: #1F2937;
+  --gb-text-secondary: #6B7280;
+  --gb-text-muted: #94A3B8;
+  --gb-white: #FFFFFF;
+
+  /* ---- 尺寸 ---- */
+  --gb-topbar-h: 56px;
+  --gb-sidebar-w: 240px;
+  --gb-breadcrumb-h: 40px;
+
+  /* ---- 圆角 ---- */
+  --gb-radius-sm: 6px;
+  --gb-radius: 8px;
+  --gb-radius-lg: 12px;
+
+  /* ---- 阴影 ---- */
+  --gb-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --gb-shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --gb-shadow-popover: 0 6px 16px rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12);
+}
+
+/* ---- reset ---- */
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  color: var(--gb-text);
+  background: var(--gb-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--gb-primary-light);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--gb-primary);
+  text-decoration: underline;
+}
+
+/* ---- 滚动条 ---- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* ---- 通用工具类 ---- */
+.gb-page {
+  padding: 24px 32px;
+  min-height: calc(100vh - var(--gb-topbar-h) - var(--gb-breadcrumb-h));
+}
+
+.gb-page-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--gb-text);
+  margin: 0 0 8px;
+}
+
+.gb-page-desc {
+  font-size: 14px;
+  color: var(--gb-text-secondary);
+  margin: 0 0 24px;
+}
+
+.gb-section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--gb-text);
+  margin: 0 0 16px;
+}
+
+.gb-card-section {
+  background: var(--gb-white);
+  border: 1px solid var(--gb-border);
+  border-radius: var(--gb-radius-lg);
+  box-shadow: var(--gb-shadow-card);
+  padding: 24px;
+  margin-bottom: 16px;
+  transition: box-shadow 200ms ease;
+}
+
+.gb-text-secondary {
+  color: var(--gb-text-secondary);
+}
+
+.gb-text-muted {
+  color: var(--gb-text-muted);
+}
+
+.gb-mono {
+  font-family: 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
+  font-size: 12px;
+}
+
+/* ---- antd 微调（保留 antd 默认风格，仅在视觉与 G-Builder OS 冲突处覆盖） ---- */
+.ant-layout {
+  background: var(--gb-bg);
+}
+
+.ant-btn-primary {
+  box-shadow: none;
+}
+
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  font-weight: 500;
+}
+
+/* 让 antd 表格表头颜色更接近 G-Builder OS 中性色 */
+.ant-table-thead > tr > th {
+  background: var(--gb-bg-secondary) !important;
+  color: var(--gb-text) !important;
+  font-weight: 500 !important;
+}

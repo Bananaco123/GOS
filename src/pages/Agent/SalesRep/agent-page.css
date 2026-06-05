@@ -1,0 +1,1095 @@
+/* ============================================================
+ * AI 业务员主页（按 g-builder-os-interaction-spec.md §4.5）
+ *
+ * 布局：Hero 顶栏（含 Toolbar） + Alert 区 + Tabs + 内容区
+ * ============================================================ */
+
+.gb-agent-page {
+  padding: 0;
+  background: var(--gb-bg);
+  min-height: calc(100vh - var(--gb-topbar-h) - var(--gb-breadcrumb-h));
+}
+
+/* ---- Hero 区 ---- */
+.gb-agent-hero {
+  background: linear-gradient(135deg, #0F3461 0%, #1A4D8F 60%, #2E7BD6 100%);
+  color: white;
+  padding: 24px 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.gb-agent-hero::before {
+  content: '';
+  position: absolute;
+  top: -120px;
+  right: -100px;
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.gb-agent-hero-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* 返回：统一圆形符号按钮，垂直居中 */
+.gb-agent-hero-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+.gb-agent-hero-back:hover {
+  background: rgba(255, 255, 255, 0.24);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.gb-agent-hero-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+}
+
+.gb-agent-hero-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.gb-agent-hero-name {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.gb-agent-hero-name .gb-agent-version {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.18);
+  letter-spacing: 0.5px;
+}
+
+.gb-agent-hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.gb-agent-hero-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.gb-agent-hero-meta-item .anticon {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.gb-agent-hero-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  background: rgba(16, 168, 106, 0.24);
+  color: #C6F6DD;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid rgba(16, 168, 106, 0.4);
+}
+
+/* 当前版本徽标（顶栏标题旁） */
+.gb-agent-hero-version {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  font-family: var(--gb-font-mono);
+}
+
+.gb-agent-hero-status-pill.is-draft {
+  background: rgba(229, 155, 38, 0.24);
+  color: #FBD38D;
+  border-color: rgba(229, 155, 38, 0.5);
+}
+
+.gb-agent-hero-status-pill.is-pre {
+  background: rgba(46, 123, 214, 0.32);
+  color: #BEE3F8;
+  border-color: rgba(46, 123, 214, 0.6);
+}
+
+.gb-agent-hero-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ---- Tab 区 ---- */
+.gb-agent-tabs {
+  background: var(--gb-white);
+  border-bottom: 1px solid var(--gb-border);
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  margin-top: 0;
+}
+
+.gb-agent-tabs .ant-tabs-nav {
+  margin: 0 !important;
+}
+
+.gb-agent-tabs .ant-tabs-tab {
+  padding: 14px 0 !important;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.gb-agent-tabs .ant-tabs-tab + .ant-tabs-tab {
+  margin-left: 32px !important;
+}
+
+/* ---- 内容区 ---- */
+.gb-agent-content {
+  padding: 24px 32px;
+}
+
+.gb-agent-section {
+  background: var(--gb-white);
+  border: 1px solid var(--gb-border);
+  border-radius: 12px;
+  box-shadow: var(--gb-shadow-card);
+  margin-bottom: 16px;
+  overflow: hidden;
+  transition: box-shadow 200ms;
+}
+
+.gb-agent-section:hover {
+  box-shadow: var(--gb-shadow-card-hover);
+}
+
+.gb-agent-section-head {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--gb-border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.gb-agent-section-head-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gb-agent-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gb-text);
+  margin: 0;
+}
+
+.gb-agent-section-sub {
+  font-size: 12px;
+  color: var(--gb-text-muted);
+  margin-top: 4px;
+  font-weight: 400;
+}
+
+.gb-agent-section-body {
+  padding: 20px 24px;
+}
+
+/* ---- Account Offline Alert ---- */
+.gb-agent-alert-zone {
+  padding: 16px 32px 0;
+}
+
+.gb-agent-alert-zone .ant-alert {
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+/* ---- WhatsApp 账号选择器 ---- */
+.gb-acc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: var(--gb-bg-secondary);
+  border: 1px solid var(--gb-border);
+  font-size: 13px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  transition: all 200ms;
+}
+
+.gb-acc-chip.is-offline {
+  background: #FEF3F2;
+  border-color: #FDA29B;
+  color: #B42318;
+}
+
+.gb-acc-chip.is-test {
+  background: #FFFAEB;
+  border-color: #FEC84B;
+  color: #B54708;
+}
+
+.gb-acc-chip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gb-success);
+  flex-shrink: 0;
+}
+
+.gb-acc-chip.is-offline .gb-acc-chip-dot {
+  background: var(--gb-danger);
+}
+
+.gb-acc-chip-remove {
+  cursor: pointer;
+  color: var(--gb-text-muted);
+  margin-left: 4px;
+}
+
+.gb-acc-chip-remove:hover {
+  color: var(--gb-text);
+}
+
+/* ---- 候选账号 select item ---- */
+.gb-acc-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 4px 0;
+}
+
+.gb-acc-option-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.gb-acc-option-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+  min-width: 0;
+}
+
+.gb-acc-option-name {
+  font-size: 13px;
+  color: var(--gb-text);
+  font-weight: 500;
+}
+
+.gb-acc-option-sub {
+  font-size: 11px;
+  color: var(--gb-text-muted);
+}
+
+.gb-acc-option-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  font-size: 11px;
+}
+
+/* ---- 知识库引用 ---- */
+.gb-kb-ref-mode {
+  margin-bottom: 16px;
+}
+
+.gb-kb-ref-summary {
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--gb-bg-secondary);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.gb-kb-ref-summary-stat {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.gb-kb-ref-summary-num {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--gb-primary);
+}
+
+.gb-kb-ref-summary-label {
+  font-size: 12px;
+  color: var(--gb-text-secondary);
+  margin-top: 2px;
+}
+
+/* ---- 历史版本抽屉 ---- */
+.gb-version-item {
+  padding: 16px;
+  border-bottom: 1px solid var(--gb-border-light);
+  cursor: pointer;
+  transition: background 200ms;
+}
+
+.gb-version-item:hover {
+  background: var(--gb-bg);
+}
+
+.gb-version-item-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.gb-version-item-num {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gb-text);
+}
+
+.gb-version-item-meta {
+  font-size: 12px;
+  color: var(--gb-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gb-version-item-remark {
+  font-size: 13px;
+  color: var(--gb-text-secondary);
+  line-height: 1.6;
+}
+
+.gb-version-item-changes {
+  margin-top: 8px;
+  padding-left: 16px;
+}
+
+.gb-version-item-changes li {
+  font-size: 12px;
+  color: var(--gb-text-secondary);
+  line-height: 1.6;
+}
+
+/* ---- 转人工矩阵 ---- */
+.gb-handoff-matrix {
+  display: grid;
+  grid-template-columns: 120px 1fr 1fr;
+  gap: 1px;
+  background: var(--gb-border);
+  border: 1px solid var(--gb-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.gb-handoff-cell {
+  background: var(--gb-white);
+  padding: 16px;
+  min-height: 144px;
+}
+
+.gb-handoff-axis {
+  background: var(--gb-bg-secondary);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--gb-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.gb-handoff-cell-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.gb-handoff-cell-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--gb-text);
+}
+
+.gb-handoff-cell-sla {
+  font-size: 12px;
+  color: var(--gb-text-secondary);
+  margin-bottom: 8px;
+}
+
+.gb-handoff-cell-body {
+  font-size: 12px;
+  color: var(--gb-text-secondary);
+  line-height: 1.6;
+}
+
+/* ---- 识别字 / 数字 / 进度等小标题样式 ---- */
+.gb-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gb-stat-num {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--gb-primary);
+  line-height: 1;
+}
+
+.gb-stat-label {
+  font-size: 12px;
+  color: var(--gb-text-secondary);
+}
+
+/* ---- 评级 ----  */
+.gb-grading-element-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--gb-border-light);
+}
+
+.gb-grading-element-row:last-child {
+  border-bottom: none;
+}
+
+.gb-grading-tier-card {
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid var(--gb-border);
+  transition: all 200ms;
+}
+
+.gb-grading-tier-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--gb-shadow-card-hover);
+}
+
+.gb-grading-tier-card.is-a {
+  background: linear-gradient(135deg, #FFE2E0 0%, #FFD7D5 100%);
+  border-color: #FCA5A5;
+}
+
+.gb-grading-tier-card.is-b {
+  background: linear-gradient(135deg, #FFEDD5 0%, #FED7AA 100%);
+  border-color: #FDBA74;
+}
+
+.gb-grading-tier-card.is-c {
+  background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+  border-color: #93C5FD;
+}
+
+.gb-grading-tier-card.is-d {
+  background: linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%);
+  border-color: #D1D5DB;
+}
+
+/* ============================================================
+   v5 修订：评级体系新版（截图 2 样式）
+   ============================================================ */
+
+/* section title 前面的蓝色竖条 */
+.gb-section-bar {
+  display: inline-block;
+  width: 4px;
+  height: 14px;
+  background: var(--gb-primary);
+  border-radius: 2px;
+  margin-right: 8px;
+  vertical-align: -1px;
+}
+
+/* ABCD 阈值胶囊容器 */
+.gb-grading-thresholds {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.gb-grading-threshold-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  background: var(--gb-bg-elevated, #F1F4F8);
+  border: 1px solid var(--gb-border-light);
+  border-radius: 999px;
+  padding: 4px 4px 4px 4px;
+  min-width: 220px;
+  height: 40px;
+}
+
+.gb-grading-threshold-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  padding: 0 16px;
+  border-radius: 999px;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.gb-grading-threshold-range {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 12px;
+  flex: 1;
+  justify-content: center;
+}
+
+.gb-grading-threshold-range .ant-input-number {
+  width: 64px;
+}
+
+.gb-grading-threshold-range .ant-input-number-input {
+  text-align: center;
+  font-family: var(--gb-font-mono);
+  font-weight: 500;
+  color: var(--gb-text-primary);
+}
+
+.gb-grading-threshold-dash {
+  color: var(--gb-text-muted);
+  user-select: none;
+}
+
+.gb-grading-thresholds-desc {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--gb-border-light);
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* 阈值胶囊 hover 时显示 × 按钮 */
+.gb-grading-threshold-pill {
+  position: relative;
+}
+
+.gb-grading-threshold-remove {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: none;
+  background: var(--gb-text-muted);
+  color: white;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 120ms;
+  padding: 0;
+}
+
+.gb-grading-threshold-pill:hover .gb-grading-threshold-remove {
+  opacity: 1;
+}
+
+.gb-grading-threshold-remove:hover {
+  background: var(--gb-danger);
+}
+
+/* 新增等级 + 按钮 */
+.gb-grading-threshold-add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 40px;
+  border: 1px dashed var(--gb-border);
+  background: white;
+  border-radius: 999px;
+  cursor: pointer;
+  color: var(--gb-text-muted);
+  transition: border-color 120ms, color 120ms, background 120ms;
+}
+
+.gb-grading-threshold-add:hover {
+  border-color: var(--gb-primary);
+  color: var(--gb-primary);
+  background: var(--gb-bg-elevated, #F1F4F8);
+}
+
+/* ============================================================
+   接待策略 Tab（会话设置 / 客户唤醒）
+   ============================================================ */
+.gb-strategy-subhead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gb-text-primary);
+  margin-top: 8px;
+}
+
+.gb-strategy-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gb-strategy-card {
+  border: 1px solid var(--gb-border-light);
+  border-radius: 10px;
+  background: var(--gb-bg-elevated, #F7F9FC);
+  padding: 14px 18px;
+  transition: border-color 120ms, background 120ms;
+}
+
+.gb-strategy-card:hover {
+  border-color: var(--gb-primary-light);
+  background: #fff;
+}
+
+.gb-strategy-card.is-disabled {
+  opacity: 0.55;
+}
+
+.gb-strategy-card-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gb-strategy-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.gb-strategy-field-block {
+  display: block;
+}
+
+.gb-strategy-label {
+  font-size: 13px;
+  color: var(--gb-text-secondary);
+  flex-shrink: 0;
+}
+
+.gb-strategy-field-block .gb-strategy-label {
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* 档位校验通过提示 */
+.gb-grading-threshold-ok {
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--gb-text-muted);
+  display: flex;
+  align-items: center;
+}
+
+/* 100% 警告条 */
+.gb-weight-warning {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background: #FFF7E6;
+  border: 1px solid #FFCB6B;
+  border-radius: 6px;
+  color: #B45309;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* 评级要素卡片 */
+.gb-grading-elements {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gb-grading-element-card {
+  border: 1px solid var(--gb-border-light);
+  border-radius: 10px;
+  background: var(--gb-bg-elevated, #F7F9FC);
+  padding: 16px 20px;
+  transition: border-color 120ms, background 120ms, box-shadow 120ms, transform 120ms;
+  cursor: grab;
+}
+
+.gb-grading-element-card:hover {
+  border-color: var(--gb-primary-light);
+  background: white;
+}
+
+.gb-grading-element-card:active {
+  cursor: grabbing;
+}
+
+.gb-grading-element-card.is-drag-over {
+  border-color: var(--gb-primary);
+  border-style: dashed;
+  background: rgba(26, 77, 143, 0.04);
+  box-shadow: 0 0 0 3px rgba(26, 77, 143, 0.12);
+  transform: scale(1.005);
+}
+
+.gb-grading-element-card.is-disabled {
+  opacity: 0.55;
+  background: var(--gb-bg);
+}
+
+/* 拖拽手柄 */
+.gb-grading-element-drag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  color: var(--gb-text-muted);
+  flex-shrink: 0;
+  cursor: grab;
+}
+
+.gb-grading-element-drag:hover {
+  color: var(--gb-text-secondary);
+}
+
+.gb-grading-element-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.gb-grading-element-index {
+  width: 56px;
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gb-text-muted);
+}
+
+.gb-grading-element-name-block {
+  flex: 1;
+  min-width: 0;
+}
+
+.gb-grading-element-weight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gb-grading-element-weight-label {
+  font-size: 13px;
+  color: var(--gb-text-muted);
+}
+
+.gb-grading-element-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 8px;
+}
+
+.gb-grading-element-standards {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--gb-border-light);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: 88px;
+}
+
+.gb-grading-standard-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 22px;
+}
+
+.gb-grading-standard-icon {
+  font-size: 14px;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.gb-grading-standard-label {
+  color: var(--gb-text-muted);
+  flex-shrink: 0;
+  width: 80px;
+}
+
+.gb-grading-standard-value {
+  color: var(--gb-text-secondary);
+}
+
+.gb-grading-standard-value em {
+  color: var(--gb-text-muted);
+  font-style: normal;
+  opacity: 0.6;
+}
+
+/* ============================================================
+   v6 转人工规则（向「得分项指标」卡片靠齐）
+   - 取消左色条与标题置灰，统一卡片视觉
+   - Header（序号 + 强调标题 + 紧急 chip + 命中次数 + 开关 + 删除）
+   - 配置区：label-control 多行
+   ============================================================ */
+.gb-handoff-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gb-handoff-card {
+  border: 1px solid var(--gb-border-light);
+  border-radius: 10px;
+  background: var(--gb-bg-elevated, #F7F9FC);
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: border-color 120ms, background 120ms, box-shadow 120ms;
+}
+
+.gb-handoff-card:hover {
+  border-color: var(--gb-primary-light);
+  background: #fff;
+}
+
+.gb-handoff-card.is-selected {
+  border-color: var(--gb-primary);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(26, 77, 143, 0.12);
+}
+
+.gb-handoff-card.is-disabled {
+  opacity: 0.55;
+}
+
+/* Header */
+.gb-handoff-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--gb-border-light);
+}
+
+.gb-handoff-card-no {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gb-text-muted);
+  flex-shrink: 0;
+}
+
+.gb-handoff-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gb-text-primary);
+  line-height: 22px;
+}
+
+.gb-handoff-card-title-empty {
+  color: var(--gb-text-muted);
+  font-weight: 400;
+  font-style: italic;
+}
+
+.gb-handoff-sev-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 8px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid;
+  border-radius: 4px;
+}
+
+.gb-handoff-card-head-right {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.gb-handoff-hit {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--gb-text-secondary);
+  font-size: 12px;
+  line-height: 18px;
+  border: 1px solid var(--gb-border-light);
+}
+
+.gb-handoff-hit strong {
+  color: var(--gb-text-primary);
+  font-weight: 600;
+  font-family: var(--gb-font-mono);
+  font-feature-settings: 'tnum';
+  margin: 0 2px;
+}
+
+/* 配置区 */
+.gb-handoff-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 14px;
+}
+
+.gb-handoff-field {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.gb-handoff-field-block {
+  align-items: flex-start;
+}
+
+.gb-handoff-field-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--gb-text-secondary);
+  padding-top: 2px;
+}
+
+.gb-handoff-field-label .anticon {
+  color: var(--gb-text-muted);
+}
+
+.gb-handoff-field-control {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  min-width: 0;
+}
+
+.gb-handoff-field-control .ant-input {
+  background: #fff;
+}
+
+.gb-handoff-field-sep {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  color: var(--gb-text-secondary);
+  margin-left: 4px;
+}
+
+.gb-handoff-sla-hint {
+  font-size: 12px;
+  color: var(--gb-text-muted);
+}
+
+/* 二级字段 */
+.gb-handoff-subfields {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 4px 12px;
+  background: #fff;
+  border: 1px solid var(--gb-border-light);
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.gb-handoff-subfield {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gb-handoff-subfield-label {
+  color: var(--gb-text-muted);
+  font-size: 13px;
+}
+
+/* 底部说明 */
+.gb-handoff-foot {
+  margin-top: 16px;
+  padding: 10px 14px;
+  background: var(--gb-bg-elevated, #F1F4F8);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--gb-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}

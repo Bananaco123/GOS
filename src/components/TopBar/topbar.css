@@ -1,0 +1,236 @@
+.gb-topbar {
+  height: var(--gb-topbar-h);
+  background: var(--gb-white);
+  border-bottom: 1px solid var(--gb-border);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  flex-shrink: 0;
+  gap: 24px;
+}
+
+/* ---- 左侧 Logo ---- */
+.gb-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.gb-topbar-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--gb-primary);
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: -0.5px;
+}
+
+.gb-topbar-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.gb-topbar-brand-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gb-text);
+}
+
+.gb-topbar-brand-version {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gb-text-muted);
+  letter-spacing: 0.5px;
+}
+
+/* ---- 中间搜索框 ---- */
+.gb-topbar-search {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.gb-topbar-search .ant-input-affix-wrapper {
+  width: 100%;
+  max-width: 480px;
+}
+
+.gb-topbar-search-dropdown {
+  position: absolute;
+  top: 44px;
+  left: 0;
+  right: 0;
+  background: var(--gb-white);
+  border: 1px solid var(--gb-border);
+  border-radius: 12px;
+  box-shadow: var(--gb-shadow-popover);
+  padding: 16px;
+  z-index: 1000;
+}
+
+.gb-topbar-search-section {
+  margin-bottom: 12px;
+}
+
+.gb-topbar-search-section:last-child {
+  margin-bottom: 0;
+}
+
+.gb-topbar-search-section-title {
+  font-size: 12px;
+  color: var(--gb-text-muted);
+  margin-bottom: 8px;
+}
+
+.gb-topbar-search-chip {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: var(--gb-bg-secondary);
+  font-size: 13px;
+  color: var(--gb-text);
+  margin-right: 6px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: background 200ms;
+}
+
+.gb-topbar-search-chip:hover {
+  background: var(--gb-primary-bg);
+  color: var(--gb-primary);
+}
+
+/* ---- 右侧 ---- */
+.gb-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.gb-topbar-icon-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 8px;
+  color: var(--gb-text-secondary);
+  transition: background 200ms;
+}
+
+.gb-topbar-icon-btn:hover {
+  background: var(--gb-bg-secondary);
+  color: var(--gb-primary);
+}
+
+.gb-topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 200ms;
+}
+
+.gb-topbar-user:hover {
+  background: var(--gb-bg-secondary);
+}
+
+.gb-topbar-user-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.gb-topbar-user-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gb-text);
+}
+
+.gb-topbar-user-role {
+  font-size: 11px;
+  color: var(--gb-text-muted);
+}
+
+/* ---- 通知 popover ---- */
+.gb-topbar-notification-popover .ant-popover-inner {
+  padding: 0;
+}
+
+.gb-topbar-notification {
+  width: 360px;
+}
+
+.gb-topbar-notification-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--gb-border-light);
+}
+
+.gb-topbar-notification-title {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.gb-topbar-notification-item {
+  padding: 12px 16px !important;
+  border-bottom: 1px solid var(--gb-border-light) !important;
+  cursor: pointer;
+  transition: background 200ms;
+}
+
+.gb-topbar-notification-item:hover {
+  background: var(--gb-bg);
+}
+
+.gb-topbar-notification-item-inner {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.gb-topbar-notification-item-body {
+  flex: 1;
+}
+
+.gb-topbar-notification-item-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gb-text);
+  margin-bottom: 4px;
+}
+
+.gb-topbar-notification-item-desc {
+  font-size: 12px;
+  color: var(--gb-text-secondary);
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+
+.gb-topbar-notification-item-time {
+  font-size: 11px;
+  color: var(--gb-text-muted);
+}
+
+.gb-topbar-notification-foot {
+  padding: 10px 16px;
+  text-align: center;
+}

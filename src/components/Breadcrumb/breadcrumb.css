@@ -1,0 +1,38 @@
+.gb-breadcrumb {
+  height: var(--gb-breadcrumb-h);
+  background: var(--gb-white);
+  border-bottom: 1px solid var(--gb-border);
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  flex-shrink: 0;
+  font-size: 13px;
+  color: var(--gb-text-secondary);
+}
+
+.gb-breadcrumb .ant-breadcrumb {
+  font-size: 13px;
+}
+
+.gb-breadcrumb .ant-breadcrumb a {
+  color: var(--gb-text-secondary);
+  font-weight: 400;
+}
+
+.gb-breadcrumb .ant-breadcrumb a:hover {
+  color: var(--gb-primary);
+  text-decoration: none;
+}
+
+.gb-breadcrumb .ant-breadcrumb-separator {
+  color: var(--gb-text-muted);
+}
+
+.gb-breadcrumb .ant-breadcrumb-link {
+  color: var(--gb-text-secondary);
+}
+
+.gb-breadcrumb li:last-child .ant-breadcrumb-link {
+  color: var(--gb-text);
+  font-weight: 500;
+}

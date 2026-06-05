@@ -1,0 +1,28 @@
+.gb-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--gb-bg);
+}
+
+.gb-shell-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.gb-shell-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--gb-bg);
+}
+
+.gb-shell-content {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--gb-bg);
+}

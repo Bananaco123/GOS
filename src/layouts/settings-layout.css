@@ -1,0 +1,100 @@
+.gb-settings-sidebar {
+  width: var(--gb-sidebar-w);
+  flex-shrink: 0;
+  background: var(--gb-white);
+  border-right: 1px solid var(--gb-border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.gb-settings-sidebar-head {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gb-text);
+  border-bottom: 1px solid var(--gb-border-light);
+  cursor: pointer;
+}
+
+.gb-settings-sidebar-head:hover { color: var(--gb-primary); }
+
+.gb-settings-sidebar-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 0;
+}
+
+.gb-settings-group { margin-bottom: 8px; }
+
+.gb-settings-group-title {
+  font-size: 12px;
+  color: var(--gb-text-muted);
+  padding: 8px 20px 4px;
+  font-weight: 500;
+}
+
+.gb-settings-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 0 20px;
+  font-size: 14px;
+  color: var(--gb-text-secondary);
+  cursor: pointer;
+  transition: background 120ms, color 120ms;
+}
+
+.gb-settings-item:hover {
+  background: var(--gb-bg-secondary);
+  color: var(--gb-text);
+}
+
+.gb-settings-item.is-active {
+  background: var(--gb-primary-bg);
+  color: var(--gb-primary);
+  font-weight: 500;
+}
+
+.gb-settings-item-icon {
+  display: inline-flex;
+  font-size: 15px;
+}
+
+.gb-settings-bar {
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: var(--gb-primary);
+}
+
+/* 设置页内容通用 */
+.gb-settings-page {
+  padding: 24px;
+}
+
+.gb-settings-page-head {
+  margin-bottom: 16px;
+}
+
+.gb-settings-page-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--gb-text);
+  margin: 0 0 4px;
+}
+
+.gb-settings-page-desc {
+  font-size: 13px;
+  color: var(--gb-text-secondary);
+  margin: 0;
+}
