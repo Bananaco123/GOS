@@ -33,7 +33,7 @@ export default function LoginPage() {
     }
     login(uid)
     const r = roleById(u.role_id)
-    message.success(`欢迎回来，${u.name}（${r?.name}）`)
+    message.success(`欢迎回来，${u.name}，${r?.name}`)
     navigate(from, { replace: true })
   }
 
@@ -42,12 +42,11 @@ export default function LoginPage() {
       message.error('请输入账号和密码')
       return
     }
-    // 演示态：以所选演示身份登录（真实环境按账号校验）
     doLogin(identity)
   }
 
   const handleWechatLogin = () => {
-    message.loading({ content: '正在发起企业微信授权…', key: 'wx', duration: 0.8 })
+    message.loading({ content: '正在发起企业微信授权...', key: 'wx', duration: 0.8 })
     setTimeout(() => {
       message.destroy('wx')
       doLogin(identity)
@@ -65,15 +64,14 @@ export default function LoginPage() {
           </div>
         </div>
         <div className="gb-login-slogan">
-          <h1>以品质赋能全球建筑空间，<br />以平台孵化未来创业领袖</h1>
-          <p>SCRM · AI 业务员 · AI 销冠 · 知识库 · 线索分配 · 数据看板，统一身份、统一权限、统一数据口径。</p>
+          <h1>以品质赋能全球建筑空间<br />以平台孵化未来创业领袖</h1>
         </div>
-        <div className="gb-login-foot">© 2026 敬城集团 · G-Builder OS V8 演示环境</div>
+        <div className="gb-login-foot">© 2026 敬城集团 · G-Builder OS V1.1 演示环境</div>
       </div>
 
       <div className="gb-login-right">
         <div className="gb-login-card">
-          <h2 className="gb-login-title">登录营销 OS</h2>
+          <h2 className="gb-login-title">登录营销 GOS</h2>
           <p className="gb-login-desc">使用企业账号登录，或一键企业微信登录</p>
 
           <div className="gb-login-field">
@@ -96,7 +94,6 @@ export default function LoginPage() {
             />
           </div>
 
-          {/* 演示身份选择（用于体验不同角色的权限差异） */}
           <div className="gb-login-field">
             <div className="gb-login-demo-label">
               演示身份 <Tag color="blue" style={{ marginLeft: 4 }}>Demo</Tag>
@@ -109,7 +106,7 @@ export default function LoginPage() {
               options={DEMO_IDENTITIES.map((d) => ({ value: d.userId, label: d.label }))}
             />
             <div className="gb-login-demo-hint">
-              选择不同身份登录，可体验「菜单隐藏 / 操作权限 / 数据范围」的差异。
+              选择不同身份登录，可体验菜单隐藏、操作权限和数据范围差异。
             </div>
           </div>
 

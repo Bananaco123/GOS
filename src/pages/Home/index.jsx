@@ -1,8 +1,7 @@
-import { useNavigate } from 'react-router-dom'
-import { Avatar, Tag, Tooltip } from 'antd'
+import { Avatar, Tag } from 'antd'
 import {
-  RobotOutlined, BookOutlined, ApartmentOutlined, SafetyCertificateOutlined,
-  AppstoreOutlined, WalletOutlined, ArrowRightOutlined, MessageOutlined,
+  BookOutlined, MessageOutlined, PlayCircleFilled, RobotOutlined,
+  SwapOutlined, TeamOutlined,
 } from '@ant-design/icons'
 
 import { useAuth } from '../../auth/AuthContext'
@@ -10,89 +9,179 @@ import { dataScopeLabel } from '../../mock/rbac'
 import { deptName } from '../../mock/org'
 import './home.css'
 
-const ENTRIES = [
-  { key: 'sales-rep', title: 'AI 业务员', desc: '配置 Agent 接待策略、线索评级、转人工与知识库引用', icon: <RobotOutlined />, path: '/agent/sales-rep', perm: 'agent-sales-rep.view', color: '#1A4D8F' },
-  { key: 'kb', title: '知识库', desc: '维护 FAQ / SOP / 产品资料，供 Agent 召回引用', icon: <BookOutlined />, path: '/knowledge', perm: 'knowledge.view', color: '#10A86A' },
-  { key: 'members', title: '部门与用户', desc: '只读查看来自 2.0 的组织架构与账号状态', icon: <ApartmentOutlined />, path: '/settings/org/members', perm: 'settings-members.view', color: '#2E7BD6' },
-  { key: 'roles', title: '角色与权限', desc: '配置角色的数据权限与功能权限，权限即时生效', icon: <SafetyCertificateOutlined />, path: '/settings/org/roles', perm: 'settings-roles.view', color: '#7C3AED' },
-  { key: 'product', title: '产品中心', desc: '后续承接产品购买与模块开通（规划中）', icon: <AppstoreOutlined />, path: '/settings/product', perm: 'settings-product.view', color: '#E59B26' },
-  { key: 'billing', title: '费用中心', desc: '后续承接额度、消耗、账单与结算（规划中）', icon: <WalletOutlined />, path: '/settings/billing', perm: 'settings-billing.view', color: '#0E7C7B' },
+const FEATURES = [
+  {
+    key: 'scrm',
+    title: 'SCRM',
+    subtitle: '客户会话、上下文、CRM 预留区在一个工作台内协同',
+    icon: <MessageOutlined />,
+    duration: '00:42',
+    accent: '#1A4D8F',
+  },
+  {
+    key: 'lead',
+    title: '线索分配',
+    subtitle: '把 AI 生成的线索表单按等级、负载和跟进状态分配给销售',
+    icon: <TeamOutlined />,
+    duration: '00:36',
+    accent: '#00A3B4',
+  },
+  {
+    key: 'handover',
+    title: '转人工',
+    subtitle: '识别需要人工介入的会话，按队列、SLA 和接管动作处理',
+    icon: <SwapOutlined />,
+    duration: '00:31',
+    accent: '#E59B26',
+  },
+  {
+    key: 'knowledge',
+    title: 'AI 业务员知识库',
+    subtitle: '把产品资料、FAQ、SOP 与 AI 业务员的接待策略连接起来',
+    icon: <RobotOutlined />,
+    duration: '00:48',
+    accent: '#10A86A',
+  },
 ]
 
-export default function HomePage() {
-  const navigate = useNavigate()
-  const { user, role, hasPerm } = useAuth()
+function MediaPreview({ type, accent }) {
+  return (
+    <div className={`gb-home-media gb-home-media-${type}`} style={{ '--feature-accent': accent }}>
+      <div className="gb-home-media-top">
+        <span />
+        <span />
+        <span />
+      </div>
+      <div className="gb-home-media-stage">
+        {type === 'scrm' && (
+          <>
+            <div className="gb-media-sidebar">
+              <i />
+              <i />
+              <i />
+              <i />
+            </div>
+            <div className="gb-media-chat">
+              <b />
+              <b />
+              <b />
+            </div>
+            <div className="gb-media-panel">
+              <i />
+              <i />
+              <i />
+            </div>
+          </>
+        )}
+        {type === 'lead' && (
+          <>
+            <div className="gb-media-filter">
+              <i />
+              <i />
+              <i />
+            </div>
+            <div className="gb-media-table">
+              <b />
+              <b />
+              <b />
+              <b />
+            </div>
+            <div className="gb-media-flow">
+              <span />
+              <span />
+              <span />
+            </div>
+          </>
+        )}
+        {type === 'handover' && (
+          <>
+            <div className="gb-media-queue">
+              <b />
+              <b />
+              <b />
+            </div>
+            <div className="gb-media-sla">
+              <i />
+              <i />
+            </div>
+            <div className="gb-media-action" />
+          </>
+        )}
+        {type === 'knowledge' && (
+          <>
+            <div className="gb-media-bot">
+              <RobotOutlined />
+            </div>
+            <div className="gb-media-nodes">
+              <i />
+              <i />
+              <i />
+              <i />
+            </div>
+            <div className="gb-media-doc">
+              <BookOutlined />
+            </div>
+          </>
+        )}
+        <div className="gb-home-play">
+          <PlayCircleFilled />
+        </div>
+      </div>
+      <div className="gb-home-media-timeline">
+        <span />
+      </div>
+    </div>
+  )
+}
 
-  const visibleEntries = ENTRIES.filter((e) => !e.perm || hasPerm(e.perm))
+export default function HomePage() {
+  const { user, role } = useAuth()
 
   return (
     <div className="gb-home">
-      {/* 欢迎横幅 */}
-      <div className="gb-home-hero">
-        <div className="gb-home-hero-inner">
-          <Avatar size={56} style={{ background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.3)', fontSize: 22, fontWeight: 600 }}>
-            {user?.avatar}
-          </Avatar>
-          <div style={{ flex: 1 }}>
-            <h1 className="gb-home-hero-title">你好，{user?.name} 👋</h1>
-            <div className="gb-home-hero-meta">
-              <span>{user?.title}</span>
-              <span className="gb-home-dot">·</span>
-              <span>{deptName(user?.dept_id)}</span>
-              <Tag color="blue" style={{ marginLeft: 8 }}>{role?.name}</Tag>
-              <Tooltip title="该角色的数据权限范围">
-                <Tag color="geekblue">数据范围：{dataScopeLabel(role?.data_scope)}</Tag>
-              </Tooltip>
+      <section className="gb-home-intro">
+        <div className="gb-home-intro-copy">
+          <div className="gb-home-intro-main">
+            <div>
+              <div className="gb-home-kicker">GOS V1.1 功能导览</div>
+              <h1>从会话接待到 AI 知识资产的营销工作流</h1>
+              <p>
+                首页用于承载核心功能介绍。当前先用抽象媒体预览表达模块形态，后续可替换为真实 UI 截图、产品短片或操作演示。
+              </p>
+            </div>
+            <div className="gb-home-user-strip">
+              <Avatar size={34} style={{ background: '#1A4D8F' }}>{user?.avatar}</Avatar>
+              <div>
+                <strong>{user?.name}</strong>
+                <span>{user?.title} · {deptName(user?.dept_id)}</span>
+              </div>
+              <Tag color="blue">{role?.name}</Tag>
+              <Tag color="geekblue">数据范围：{dataScopeLabel(role?.data_scope)}</Tag>
             </div>
           </div>
         </div>
-        <p className="gb-home-hero-sub">
-          欢迎使用 G-Builder OS 营销操作系统。这里是统一的登录入口与系统首页，下方为你有权限访问的功能入口。
-        </p>
+      </section>
+
+      <div className="gb-home-section-head">
+        <h2>核心功能演示</h2>
+        <span>抽象视频预览 · 后续替换真实 UI 图片</span>
       </div>
 
-      {/* 功能入口 */}
-      <h2 className="gb-home-section-title">快捷入口</h2>
-      <div className="gb-home-grid">
-        {visibleEntries.map((e) => (
-          <div key={e.key} className="gb-home-card" onClick={() => navigate(e.path)}>
-            <div className="gb-home-card-icon" style={{ background: `${e.color}14`, color: e.color }}>
-              {e.icon}
+      <section className="gb-home-feature-grid">
+        {FEATURES.map((feature) => (
+          <article className="gb-home-feature" key={feature.key} style={{ '--feature-accent': feature.accent }}>
+            <div className="gb-home-feature-head">
+              <div className="gb-home-feature-icon">{feature.icon}</div>
+              <div>
+                <h2>{feature.title}</h2>
+                <p>{feature.subtitle}</p>
+              </div>
+              <span className="gb-home-duration">{feature.duration}</span>
             </div>
-            <div className="gb-home-card-body">
-              <div className="gb-home-card-title">{e.title}</div>
-              <div className="gb-home-card-desc">{e.desc}</div>
-            </div>
-            <ArrowRightOutlined className="gb-home-card-arrow" />
-          </div>
+            <MediaPreview type={feature.key} accent={feature.accent} />
+          </article>
         ))}
-      </div>
-
-      {/* 系统说明 */}
-      <h2 className="gb-home-section-title" style={{ marginTop: 28 }}>关于 G-Builder OS 基础架构</h2>
-      <div className="gb-home-about">
-        <div className="gb-home-about-item">
-          <MessageOutlined style={{ color: 'var(--gb-primary)' }} />
-          <div>
-            <div className="gb-home-about-title">统一身份与登录</div>
-            <div className="gb-home-about-desc">账号密码 / 企业微信登录，组织与账号信息实时来自 2.0 系统，营销 OS 只读展示。</div>
-          </div>
-        </div>
-        <div className="gb-home-about-item">
-          <SafetyCertificateOutlined style={{ color: 'var(--gb-primary)' }} />
-          <div>
-            <div className="gb-home-about-title">角色 · 权限 · 数据范围</div>
-            <div className="gb-home-about-desc">通过角色控制菜单可见性、操作权限与数据范围（本人 / 部门及下级 / 全公司），权限修改即时生效。</div>
-          </div>
-        </div>
-        <div className="gb-home-about-item">
-          <AppstoreOutlined style={{ color: 'var(--gb-primary)' }} />
-          <div>
-            <div className="gb-home-about-title">可扩展的平台底座</div>
-            <div className="gb-home-about-desc">SCRM、AI 业务员、AI 销冠、数据看板、产品中心、费用中心等模块统一接入同一套权限与数据口径。</div>
-          </div>
-        </div>
-      </div>
+      </section>
     </div>
   )
 }

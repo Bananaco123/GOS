@@ -1,8 +1,10 @@
-/**
- * 设置中心导航（按需求 4.1 系统信息架构）
- * menuKey 与 rbac.MENU_VIEW_PERM 对应，用于按权限隐藏菜单项
- */
 export const SETTINGS_NAV = [
+  {
+    group: 'SCRM',
+    items: [
+      { key: 'set-cloud-accounts', label: '云账号管理', path: '/settings/scrm/cloud-accounts' },
+    ],
+  },
   {
     group: '组织架构',
     items: [
@@ -11,17 +13,19 @@ export const SETTINGS_NAV = [
     ],
   },
   {
-    group: '平台',
+    group: '系统日志',
     items: [
-      { key: 'set-product', label: '产品中心', path: '/settings/product' },
-      { key: 'set-billing', label: '费用中心', path: '/settings/billing' },
+      { key: 'set-log', label: '系统日志', path: '/settings/org/logs' },
     ],
   },
 ]
 
-// path → 标题（供面包屑 / 多标签页解析）
 export const SETTINGS_TITLES = (() => {
   const map = { '/settings': '设置中心', '/home': '系统首页' }
-  SETTINGS_NAV.forEach((g) => g.items.forEach((it) => { map[it.path] = it.label }))
+  SETTINGS_NAV.forEach((group) => {
+    group.items.forEach((item) => {
+      map[item.path] = item.label
+    })
+  })
   return map
 })()

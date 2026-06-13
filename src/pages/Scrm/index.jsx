@@ -14,6 +14,8 @@ import {
   Select,
   Space,
   Tag,
+  Switch,
+  Tabs,
   Tooltip,
 } from 'antd'
 import {
@@ -29,6 +31,7 @@ import {
   CopyOutlined,
   DeleteOutlined,
   DisconnectOutlined,
+  DownloadOutlined,
   DownOutlined,
   EditOutlined,
   EnvironmentOutlined,
@@ -40,6 +43,7 @@ import {
   InfoCircleOutlined,
   LinkOutlined,
   LoadingOutlined,
+  MenuFoldOutlined,
   MessageOutlined,
   MoreOutlined,
   PaperClipOutlined,
@@ -50,6 +54,7 @@ import {
   PushpinOutlined,
   RedoOutlined,
   ReloadOutlined,
+  RobotOutlined,
   SearchOutlined,
   SendOutlined,
   SmileOutlined,
@@ -57,16 +62,22 @@ import {
   StopOutlined,
   TeamOutlined,
   UploadOutlined,
+  UserOutlined,
   UserAddOutlined,
   UserDeleteOutlined,
   UserSwitchOutlined,
+  VideoCameraOutlined,
   WarningOutlined,
 } from '@ant-design/icons'
 
 import { loadImState, resetImState, saveImState } from '../../mock/imStore'
+import { salesOptions } from '../../mock/conversationManagement'
 import './scrm.css'
 
 const PAGE_SIZE = 12
+const TOOL_PANEL_DEFAULT_WIDTH = 580
+const TOOL_PANEL_MIN_WIDTH = Math.round(TOOL_PANEL_DEFAULT_WIDTH * 0.7)
+const TOOL_PANEL_MAX_WIDTH = Math.round(TOOL_PANEL_DEFAULT_WIDTH * 1.3)
 
 const FILTER_ICONS = {
   all: <MessageOutlined />,
@@ -79,9 +90,51 @@ const FILTER_ICONS = {
 
 const TYPE_ICON = {
   image: <PictureOutlined />,
+  video: <VideoCameraOutlined />,
   voice: <AudioOutlined />,
+  audio: <AudioOutlined />,
   file: <FileTextOutlined />,
   location: <LinkOutlined />,
+}
+
+const CHAT_RECORD_TABS = [
+  { key: 'text', label: '文字消息' },
+  { key: 'media', label: '图片/视频' },
+  { key: 'attachment', label: '附件' },
+]
+
+const MEDIA_MESSAGE_TYPES = ['image', 'video']
+const ATTACHMENT_MESSAGE_TYPES = ['file', 'audio']
+const NON_TEXT_MESSAGE_TYPES = ['system', 'file', 'image', 'video', 'audio', 'voice', 'location', 'contact']
+
+const ATTACHMENT_PICKER_FILES = {
+  file: [
+    { id: 'doc-quotation', name: 'Cabinet_quotation_v4.pdf', meta: '2.8 MB · PDF', type: 'file' },
+    { id: 'doc-contract', name: 'Project_contract_draft.docx', meta: '846 KB · Word', type: 'file' },
+    { id: 'doc-measure', name: 'site_measurement_list.xlsx', meta: '1.2 MB · Excel', type: 'file' },
+  ],
+  album: [
+    { id: 'album-kitchen', name: 'kitchen_reference_01.jpg', meta: '3.4 MB · 图片', type: 'image' },
+    { id: 'album-floor', name: 'floor_plan_markup.png', meta: '2.1 MB · 图片', type: 'image' },
+    { id: 'album-sample', name: 'material_sample_video.mp4', meta: '18.6 MB · 视频', type: 'video' },
+  ],
+  audio: [
+    { id: 'audio-client', name: 'client_requirements_audio.mp3', meta: '0:36 · MP3', type: 'audio' },
+    { id: 'audio-site', name: 'site_feedback_recording.m4a', meta: '1:12 · M4A', type: 'audio' },
+    { id: 'audio-confirm', name: 'delivery_time_confirm.wav', meta: '0:24 · WAV', type: 'audio' },
+  ],
+}
+
+const ATTACHMENT_PICKER_TITLE = {
+  file: '选择文档',
+  album: '选择照片和视频',
+  audio: '选择音频',
+}
+
+const ATTACHMENT_LAST_MESSAGE = {
+  file: '[文档]',
+  album: '[照片/视频]',
+  audio: '[音频]',
 }
 
 const MEMBER_DIRECTORY = [
@@ -98,6 +151,15 @@ const CONTACT_DIRECTORY = [
   { id: 'contact-olivia', name: '~Olivia', phone: '+86 177 0861 3923', account: 'olivia3923', region: '中国', avatar: 'O' },
   { id: 'contact-niko', name: '~Niko', phone: '+86 131 0679 5050', account: 'niko5050', region: '中国', avatar: 'N' },
   { id: 'contact-bruce', name: 'Bruce Lee', phone: '+86 133 2673 1206', account: 'bruce1206', region: '中国', avatar: 'B' },
+]
+
+const SCRM_SIDE_TOOL_ITEMS = [
+  { key: 'customer', label: '客户', icon: <UserOutlined /> },
+  { key: 'follow-up', label: '跟进记录', icon: <ClockCircleOutlined /> },
+  { key: 'translate', label: '翻译', icon: <GlobalOutlined /> },
+  { key: 'quick-reply', label: '快捷回复', icon: <MessageOutlined /> },
+  { key: 'conversation', label: '会话管理', icon: <UserSwitchOutlined /> },
+  { key: 'marketing', label: '营销工具', icon: <StarOutlined /> },
 ]
 
 const STICKER_OPTIONS = ['😀', '🥲', '😍', '👍', '🙏', '🎉']
@@ -139,6 +201,34 @@ function formatRegion(locality = '') {
   return locality.split('·')[0].trim() || '未知地区'
 }
 
+function conversationListSubtitle(conversation) {
+  if (!conversation) return ''
+  if (conversation.type === 'single') return ''
+  if (/^群组\s*·\s*\d+\s*人$/.test(conversation.subtitle || '')) return ''
+  return conversation.subtitle || ''
+}
+
+function conversationListLastMessage(conversation) {
+  const lastMessage = conversation?.lastMessage || ''
+  if (!lastMessage) return ''
+  if (/^AI业务员[:：]\s*/.test(lastMessage)) {
+    return lastMessage.replace(/^AI业务员[:：]\s*/, 'AI：')
+  }
+  if (conversation?.aiManaged && !/^(AI|我|客户|系统|设计师|SM报价师|Scarlett|Abhishek)[:：]/.test(lastMessage)) {
+    return `AI：${lastMessage}`
+  }
+  return lastMessage
+}
+
+function formatLastSeen(conversation) {
+  if (!conversation || conversation.online) return ''
+  if (conversation.lastSeen) return conversation.lastSeen
+  const idScore = Array.from(conversation.id || '').reduce((sum, char) => sum + char.charCodeAt(0), 0)
+  if (idScore % 3 === 0) return '3小时前'
+  if (idScore % 3 === 1) return '1天前'
+  return '2天前'
+}
+
 function memberLocation(member, index = 0) {
   const phone = member.phone || ''
   if (phone.startsWith('+1')) return { region: '加拿大', offset: -4 }
@@ -160,6 +250,12 @@ function statusText(status) {
   if (status === 'sent') return '已发送'
   if (status === 'failed') return '发送失败'
   return '发送中'
+}
+
+function AiAgentAvatar({ size = 30 }) {
+  return (
+    <Avatar size={size} className="scrm-ai-agent-avatar" icon={<RobotOutlined />} />
+  )
 }
 
 function MessageStatusIcon({ status }) {
@@ -201,9 +297,9 @@ function MessageContent({ item, onPreview, onToggleVoice, playing }) {
     )
   }
 
-  if (['file', 'image', 'location'].includes(item.type)) {
-    return (
-      <button className={`im-attachment im-attachment-${item.type}`} onClick={() => onPreview?.(item)}>
+    if (['file', 'image', 'video', 'audio', 'location'].includes(item.type)) {
+      return (
+        <button className={`im-attachment im-attachment-${item.type}`} onClick={() => onPreview?.(item)}>
         <span className="im-attachment-icon">{TYPE_ICON[item.type]}</span>
         <span>
           <strong>{item.text}</strong>
@@ -239,9 +335,11 @@ function MessageBubble({ item, isGroup, onRetry, onAction, selectMode, selected,
   }
 
   const mine = item.direction === 'out'
+  const aiMessage = item.agentType === 'ai' || item.sender === 'AI业务员'
   const moreMenu = {
     items: [
-      { key: 'pin', icon: <PushpinOutlined />, label: '置顶消息' },
+      { key: 'pin', icon: <PushpinOutlined />, label: item.pinned ? '取消置顶' : '置顶消息' },
+      { key: 'star', icon: <StarOutlined />, label: item.starred ? '取消星标' : '星标消息' },
       { key: 'forward', icon: <SendOutlined />, label: '转发消息' },
       { key: 'edit', icon: <EditOutlined />, label: '编辑消息', disabled: !mine || item.type !== 'text' || item.status === 'failed' || item.recalled },
       { key: 'recall', icon: <CloseCircleOutlined />, label: '撤回消息', danger: true, disabled: !mine || item.recalled },
@@ -252,7 +350,7 @@ function MessageBubble({ item, isGroup, onRetry, onAction, selectMode, selected,
   return (
     <div
       id={`scrm-message-${item.id}`}
-      className={`im-message-row ${mine ? 'is-mine' : 'is-other'} ${selectMode ? 'is-selecting' : ''} ${selected ? 'is-selected' : ''} ${highlighted ? 'is-located' : ''}`}
+      className={`im-message-row ${mine ? 'is-mine' : 'is-other'} ${aiMessage ? 'is-ai-agent' : ''} ${selectMode ? 'is-selecting' : ''} ${selected ? 'is-selected' : ''} ${highlighted ? 'is-located' : ''}`}
     >
       {selectMode && (
         <Checkbox
@@ -294,6 +392,7 @@ function MessageBubble({ item, isGroup, onRetry, onAction, selectMode, selected,
           {item.starred && <StarOutlined className="im-message-starred" />}
           {item.edited && <span className="im-message-edited">已编辑</span>}
           <span>{item.time}</span>
+          {aiMessage && <span className="im-message-agent-label"><RobotOutlined />AI业务员</span>}
           {mine && item.status !== 'failed' && (
             <Tooltip title={statusText(item.status)}>
               <button
@@ -316,7 +415,47 @@ function MessageBubble({ item, isGroup, onRetry, onAction, selectMode, selected,
         </div>
         {item.reaction && <div className="im-message-reaction">{item.reaction}</div>}
       </div>
+      {mine && aiMessage && <AiAgentAvatar size={34} />}
     </div>
+  )
+}
+
+function ScrmSideToolRail({ activeKey, onOpen }) {
+  return (
+    <aside className="scrm-side-tool-rail" aria-label="SCRM 业务工具栏">
+      {SCRM_SIDE_TOOL_ITEMS.map((tool) => (
+        <Tooltip key={tool.key} title={tool.label} placement="left">
+          <button
+            className={`scrm-side-tool-button ${activeKey === tool.key ? 'is-active' : ''}`}
+            type="button"
+            aria-label={tool.label}
+            onClick={() => onOpen(tool.key)}
+          >
+            {tool.icon}
+          </button>
+        </Tooltip>
+      ))}
+    </aside>
+  )
+}
+
+function ScrmToolSidePanel({ title, open, resizing, onResizeStart, onClose }) {
+  return (
+    <aside className={`scrm-tool-side-panel ${open ? 'is-open' : ''}`} aria-hidden={!open}>
+      <button
+        className={`scrm-tool-panel-resizer ${resizing ? 'is-dragging' : ''}`}
+        type="button"
+        aria-label="调整侧边栏宽度"
+        onMouseDown={onResizeStart}
+      />
+      <div className="scrm-tool-panel-header">
+        <button className="scrm-tool-panel-collapse" type="button" aria-label="收起侧边栏" onClick={onClose}>
+          <MenuFoldOutlined />
+        </button>
+        <strong>{title}</strong>
+      </div>
+      <div className="scrm-tool-panel-body" />
+    </aside>
   )
 }
 
@@ -331,6 +470,7 @@ export default function ScrmWorkbench() {
   const [contactAccountInput, setContactAccountInput] = useState('')
   const [contactSearch, setContactSearch] = useState('')
   const [contactCardOpen, setContactCardOpen] = useState(false)
+  const [contactCardSearch, setContactCardSearch] = useState('')
   const [accountLoginOpen, setAccountLoginOpen] = useState(false)
   const [newListOpen, setNewListOpen] = useState(false)
   const [listPickerOpen, setListPickerOpen] = useState(false)
@@ -347,6 +487,9 @@ export default function ScrmWorkbench() {
   const [forwardConversationIds, setForwardConversationIds] = useState([])
   const [chatSearchOpen, setChatSearchOpen] = useState(false)
   const [chatSearchQuery, setChatSearchQuery] = useState('')
+  const [chatSearchTab, setChatSearchTab] = useState('text')
+  const [leadTransferOpen, setLeadTransferOpen] = useState(false)
+  const [leadTransferUser, setLeadTransferUser] = useState(salesOptions[0]?.value || '')
   const [highlightedMessageId, setHighlightedMessageId] = useState(null)
   const [receiptOpen, setReceiptOpen] = useState(false)
   const [receiptMessage, setReceiptMessage] = useState(null)
@@ -359,7 +502,11 @@ export default function ScrmWorkbench() {
   const [playingVoiceId, setPlayingVoiceId] = useState(null)
   const [isRecording, setIsRecording] = useState(false)
   const [recordSeconds, setRecordSeconds] = useState(1)
+  const [attachmentPickerType, setAttachmentPickerType] = useState(null)
+  const [selectedAttachmentIds, setSelectedAttachmentIds] = useState([])
   const [infoOpen, setInfoOpen] = useState(false)
+  const [editingContactName, setEditingContactName] = useState(false)
+  const [contactNameDraft, setContactNameDraft] = useState('')
   const [editingContactRemark, setEditingContactRemark] = useState(false)
   const [contactRemarkDraft, setContactRemarkDraft] = useState('')
   const [contactLabelPickerOpen, setContactLabelPickerOpen] = useState(false)
@@ -372,9 +519,11 @@ export default function ScrmWorkbench() {
   const [newGroupMembers, setNewGroupMembers] = useState(['Abhishek Kandi', 'Scarlett Wu'])
   const [conversationWidth, setConversationWidth] = useState(360)
   const [dragging, setDragging] = useState(false)
+  const [activeToolPanel, setActiveToolPanel] = useState(null)
+  const [toolPanelWidth, setToolPanelWidth] = useState(TOOL_PANEL_DEFAULT_WIDTH)
+  const [toolPanelDragging, setToolPanelDragging] = useState(false)
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const [, setClockTick] = useState(Date.now())
-  const uploadInputRef = useRef(null)
   const composerInputRef = useRef(null)
 
   useEffect(() => {
@@ -407,6 +556,22 @@ export default function ScrmWorkbench() {
       document.body.classList.remove('scrm-is-resizing')
     }
   }, [dragging])
+
+  useEffect(() => {
+    if (!toolPanelDragging) return undefined
+    const handleMove = (event) => {
+      setToolPanelWidth((width) => clamp(width - event.movementX, TOOL_PANEL_MIN_WIDTH, TOOL_PANEL_MAX_WIDTH))
+    }
+    const stopDrag = () => setToolPanelDragging(false)
+    window.addEventListener('mousemove', handleMove)
+    window.addEventListener('mouseup', stopDrag)
+    document.body.classList.add('scrm-is-resizing')
+    return () => {
+      window.removeEventListener('mousemove', handleMove)
+      window.removeEventListener('mouseup', stopDrag)
+      document.body.classList.remove('scrm-is-resizing')
+    }
+  }, [toolPanelDragging])
 
   const currentAccount = state.accounts.find((item) => item.id === state.currentAccountId) || state.accounts[0]
 
@@ -457,6 +622,7 @@ export default function ScrmWorkbench() {
       accountConversations[0]
 
   const activeMessages = activeConversation ? state.messages[activeConversation.id] || [] : []
+  const activePinnedMessage = activeMessages.find((item) => item.pinned)
   const activeGroup = activeConversation?.type === 'group' ? state.groups[activeConversation.id] : null
   const isOffline = currentAccount.status === 'offline'
   const groupInviteLink = activeGroup?.inviteLink || `https://os-scrm.gbuilder.com/whatsapp/group/${activeGroup?.id || 'group'}/invite`
@@ -467,6 +633,15 @@ export default function ScrmWorkbench() {
       .filter((item) => `${item.name} ${item.phone} ${item.account}`.toLowerCase().includes(query))
       .slice(0, 5)
   }, [contactSearch])
+  const contactCardCandidates = useMemo(() => {
+    const query = contactCardSearch.trim().toLowerCase()
+    return CONTACT_DIRECTORY
+      .filter((item) => {
+        if (!query) return true
+        return `${item.name} ${item.phone} ${item.account} ${item.region}`.toLowerCase().includes(query)
+      })
+      .slice(0, 8)
+  }, [contactCardSearch])
   const forwardCandidates = useMemo(() => {
     const query = forwardSearch.trim().toLowerCase()
     return accountConversations
@@ -480,15 +655,33 @@ export default function ScrmWorkbench() {
     const query = chatSearchQuery.trim().toLowerCase()
     if (!query) return []
     return activeMessages.filter((item) =>
-      item.type !== 'system' &&
+      !NON_TEXT_MESSAGE_TYPES.includes(item.type) &&
       `${item.sender || ''} ${item.text || ''} ${item.meta || ''}`.toLowerCase().includes(query),
     )
+  }, [activeMessages, chatSearchQuery])
+  const mediaSearchResults = useMemo(() => {
+    const query = chatSearchQuery.trim().toLowerCase()
+    return activeMessages.filter((item) => {
+      if (!MEDIA_MESSAGE_TYPES.includes(item.type)) return false
+      if (!query) return true
+      return `${item.sender || ''} ${item.text || ''} ${item.meta || ''}`.toLowerCase().includes(query)
+    })
+  }, [activeMessages, chatSearchQuery])
+  const attachmentSearchResults = useMemo(() => {
+    const query = chatSearchQuery.trim().toLowerCase()
+    return activeMessages.filter((item) => {
+      if (!ATTACHMENT_MESSAGE_TYPES.includes(item.type)) return false
+      if (!query) return true
+      return `${item.sender || ''} ${item.text || ''} ${item.meta || ''}`.toLowerCase().includes(query)
+    })
   }, [activeMessages, chatSearchQuery])
 
   useEffect(() => {
     setQuotedMessage(null)
     setSelectMessagesMode(false)
     setSelectedMessageIds([])
+    setEditingContactName(false)
+    setContactNameDraft(activeConversation?.title || '')
     setEditingContactRemark(false)
     setContactRemarkDraft(activeConversation?.remark || '')
     setContactLabelPickerOpen(false)
@@ -548,6 +741,18 @@ export default function ScrmWorkbench() {
     updateConversation(activeConversation.id, { remark: contactRemarkDraft.trim() })
     setEditingContactRemark(false)
     message.success('客户备注已更新')
+  }
+
+  const saveContactName = () => {
+    const nextName = contactNameDraft.trim()
+    if (!activeConversation || activeConversation.type !== 'single') return
+    if (!nextName) {
+      message.warning('客户姓名不能为空')
+      return
+    }
+    updateConversation(activeConversation.id, { title: nextName })
+    setEditingContactName(false)
+    message.success('客户姓名已更新')
   }
 
   const updateContactLabel = (labelKey, selected) => {
@@ -619,7 +824,7 @@ export default function ScrmWorkbench() {
   const toggleMuted = (conversation = activeConversation) => {
     if (!conversation) return
     updateConversation(conversation.id, (item) => ({ ...item, muted: !item.muted }))
-    message.success(conversation.muted ? '已开启通知' : '已静音通知')
+    message.success(conversation.muted ? '已取消静音' : '已静音通知')
   }
 
   const toggleArchived = (conversation = activeConversation) => {
@@ -694,6 +899,71 @@ export default function ScrmWorkbench() {
     }, 1500)
   }
 
+  const interveneAiConversation = () => {
+    if (!activeConversation) return
+    const handoffMessage = {
+      id: `handoff-${Date.now()}`,
+      type: 'system',
+      text: `${currentAccount.name} 已介入会话`,
+      time: nowTime(),
+    }
+    patchState((prev) => ({
+      ...prev,
+      conversations: prev.conversations.map((conversation) => (
+        conversation.id === activeConversation.id
+          ? {
+              ...conversation,
+              aiManaged: false,
+              aiTouched: true,
+              lastMessage: '系统: 人工已介入会话',
+              lastAt: '刚刚',
+              sortIndex: Date.now(),
+            }
+          : conversation
+      )),
+      messages: {
+        ...prev.messages,
+        [activeConversation.id]: [...(prev.messages[activeConversation.id] || []), handoffMessage],
+      },
+    }))
+    message.success('已介入会话')
+  }
+
+  const toggleAiReception = (checked) => {
+    if (!activeConversation) return
+    patchState((prev) => ({
+      ...prev,
+      conversations: prev.conversations.map((conversation) => (
+        conversation.id === activeConversation.id
+          ? {
+              ...conversation,
+              aiTouched: true,
+              aiManaged: checked,
+              aiAgentName: conversation.aiAgentName || 'AI业务员',
+            }
+          : conversation
+      )),
+    }))
+  }
+
+  const openChatRecordSearch = () => {
+    setChatSearchQuery('')
+    setChatSearchTab('text')
+    setChatSearchOpen(true)
+  }
+
+  const openLeadTransfer = () => {
+    setLeadTransferUser(salesOptions[0]?.value || '')
+    setLeadTransferOpen(true)
+  }
+
+  const confirmLeadTransfer = () => {
+    if (!activeConversation || !leadTransferUser) return
+    const assignee = salesOptions.find((item) => item.value === leadTransferUser)?.label || leadTransferUser
+    setLeadTransferOpen(false)
+    message.success(`已转派给 ${assignee}`)
+  }
+
   const retryMessage = (messageId) => {
     if (!activeConversation) return
     patchState((prev) => ({
@@ -737,6 +1007,38 @@ export default function ScrmWorkbench() {
       openForwardMessages([item.id])
       return
     }
+    if (key === 'pin') {
+      if (!activeConversation) return
+      const nextPinned = !item.pinned
+      patchState((prev) => ({
+        ...prev,
+        messages: {
+          ...prev.messages,
+          [activeConversation.id]: (prev.messages[activeConversation.id] || []).map((messageItem) =>
+            messageItem.id === item.id
+              ? { ...messageItem, pinned: nextPinned, pinnedAt: nextPinned ? Date.now() : null }
+              : { ...messageItem, pinned: false, pinnedAt: null },
+          ),
+        },
+      }))
+      message.success(nextPinned ? '消息已置顶' : '已取消置顶')
+      return
+    }
+    if (key === 'star') {
+      if (!activeConversation) return
+      const nextStarred = !item.starred
+      patchState((prev) => ({
+        ...prev,
+        messages: {
+          ...prev.messages,
+          [activeConversation.id]: (prev.messages[activeConversation.id] || []).map((messageItem) =>
+            messageItem.id === item.id ? { ...messageItem, starred: nextStarred } : messageItem,
+          ),
+        },
+      }))
+      message.success(nextStarred ? '消息已标为星标' : '已取消星标')
+      return
+    }
     if (key === 'mention') {
       const mentionName = item.sender?.trim()
       if (!mentionName || mentionName === '我') return
@@ -755,11 +1057,7 @@ export default function ScrmWorkbench() {
       setRecallOpen(true)
       return
     }
-    const copy = {
-      pin: '消息已置顶',
-      recall: '消息已撤回',
-    }
-    message.success(copy[key] || `已处理 ${item.id}`)
+    message.success(`已处理 ${item.id}`)
   }
 
   const saveEditedMessage = () => {
@@ -1160,10 +1458,57 @@ export default function ScrmWorkbench() {
     message.success('已添加联系人')
   }
 
-  const handleComposerUpload = (event) => {
-    const file = event.target.files?.[0]
-    if (file) message.success(`已选择 ${file.name}`)
-    event.target.value = ''
+  const openAttachmentPicker = (type) => {
+    setAttachmentPickerType(type)
+    setSelectedAttachmentIds([])
+  }
+
+  const toggleAttachmentSelection = (fileId, checked) => {
+    setSelectedAttachmentIds((ids) =>
+      checked ? Array.from(new Set([...ids, fileId])) : ids.filter((id) => id !== fileId),
+    )
+  }
+
+  const sendSelectedAttachments = () => {
+    if (!activeConversation || !attachmentPickerType) return
+    const selectedFiles = (ATTACHMENT_PICKER_FILES[attachmentPickerType] || [])
+      .filter((file) => selectedAttachmentIds.includes(file.id))
+    if (!selectedFiles.length) {
+      message.warning('请先选择文件')
+      return
+    }
+    const now = Date.now()
+    const nextMessages = selectedFiles.map((file, index) => ({
+      id: `m-upload-${attachmentPickerType}-${now}-${index}`,
+      type: file.type,
+      direction: 'out',
+      sender: '我',
+      text: file.name,
+      meta: file.meta,
+      time: nowTime(),
+      status: 'delivered',
+      sentAt: now + index,
+    }))
+    patchState((prev) => ({
+      ...prev,
+      messages: {
+        ...prev.messages,
+        [activeConversation.id]: [...(prev.messages[activeConversation.id] || []), ...nextMessages],
+      },
+      conversations: prev.conversations.map((item) =>
+        item.id === activeConversation.id
+          ? {
+              ...item,
+              lastMessage: `我: ${ATTACHMENT_LAST_MESSAGE[attachmentPickerType]}${selectedFiles.length > 1 ? ` ×${selectedFiles.length}` : ''}`,
+              lastAt: '刚刚',
+              sortIndex: Date.now(),
+            }
+          : item,
+      ),
+    }))
+    setAttachmentPickerType(null)
+    setSelectedAttachmentIds([])
+    message.success(`已发送 ${selectedFiles.length} 个文件`)
   }
 
   const sendContactCard = (contact) => {
@@ -1192,6 +1537,7 @@ export default function ScrmWorkbench() {
       ),
     }))
     setContactCardOpen(false)
+    setContactCardSearch('')
   }
 
   const sendVoiceMessage = () => {
@@ -1235,7 +1581,7 @@ export default function ScrmWorkbench() {
         setContactCardOpen(true)
         return
       }
-      uploadInputRef.current?.click()
+      openAttachmentPicker(key)
     },
   }
 
@@ -1431,6 +1777,35 @@ export default function ScrmWorkbench() {
     window.setTimeout(() => setHighlightedMessageId(null), 2200)
   }
 
+  const cancelPinnedMessage = (messageId = activePinnedMessage?.id) => {
+    if (!activeConversation || !messageId) return
+    patchState((prev) => ({
+      ...prev,
+      messages: {
+        ...prev.messages,
+        [activeConversation.id]: (prev.messages[activeConversation.id] || []).map((item) =>
+          item.id === messageId ? { ...item, pinned: false, pinnedAt: null } : item,
+        ),
+      },
+    }))
+  }
+
+  const downloadAttachmentPreview = () => {
+    if (!attachmentPreview) return
+    message.success(`已开始下载 ${attachmentPreview.text}`)
+  }
+
+  const downloadChatRecordAttachment = (item) => {
+    message.success(`已开始下载 ${item.text}`)
+  }
+
+  const locateAttachmentPreview = () => {
+    if (!attachmentPreview?.id) return
+    const targetId = attachmentPreview.id
+    setAttachmentPreview(null)
+    locateChatMessage(targetId)
+  }
+
   const openMessageReceipt = (item) => {
     setReceiptMessage(item)
     setReceiptOpen(true)
@@ -1468,6 +1843,7 @@ export default function ScrmWorkbench() {
       source === 'chat' ? { type: 'divider' } : null,
       { key: 'unread', icon: <BellOutlined />, label: conversation?.unread > 0 ? '标记为已读' : '标记未读' },
       { key: 'pin', icon: <PushpinOutlined />, label: conversation?.pinned ? '取消置顶' : '置顶会话' },
+      { key: 'mute', icon: <BellOutlined />, label: conversation?.muted ? '取消静音' : '静音通知' },
       { key: 'archive', icon: <FolderOpenOutlined />, label: conversation?.archived ? '取消归档聊天' : '归档聊天' },
       { type: 'divider' },
       { key: 'list', icon: <FolderOpenOutlined />, label: '更改分组' },
@@ -1478,6 +1854,7 @@ export default function ScrmWorkbench() {
       if (key === 'info') setInfoOpen(true)
       if (key === 'search') {
         setChatSearchQuery('')
+        setChatSearchTab('text')
         setChatSearchOpen(true)
       }
       if (key === 'select') {
@@ -1486,6 +1863,7 @@ export default function ScrmWorkbench() {
       }
       if (key === 'unread') toggleUnread(conversation)
       if (key === 'pin') togglePinned(conversation)
+      if (key === 'mute') toggleMuted(conversation)
       if (key === 'archive') toggleArchived(conversation)
       if (key === 'list') openAssignList(conversation)
       if (key === 'startGroup') startGroupFromConversation(conversation)
@@ -1534,8 +1912,21 @@ export default function ScrmWorkbench() {
     </div>
   )
 
+  const openSideTool = (key) => {
+    if (key === 'conversation') {
+      setActiveToolPanel((panel) => (panel === 'conversation' ? null : 'conversation'))
+    }
+  }
+
   return (
-    <div className="scrm-shell" style={{ '--conversation-width': `${conversationWidth}px` }}>
+    <div
+      className={`scrm-shell ${activeToolPanel ? 'has-tool-panel' : ''}`}
+      style={{
+        '--conversation-width': `${conversationWidth}px`,
+        '--tool-panel-width': `${toolPanelWidth}px`,
+        '--tool-panel-column': activeToolPanel ? `${toolPanelWidth}px` : '0px',
+      }}
+    >
       <aside className="scrm-account-rail">
         <div className="scrm-account-rail-title">账号</div>
         <div className="scrm-account-list">
@@ -1637,7 +2028,7 @@ export default function ScrmWorkbench() {
           {visibleConversations.map((conversation) => (
             <div
               key={conversation.id}
-              className={`scrm-conversation-card ${activeConversation?.id === conversation.id ? 'is-active' : ''} ${conversation.archived ? 'is-archived' : ''}`}
+              className={`scrm-conversation-card ${activeConversation?.id === conversation.id ? 'is-active' : ''} ${conversation.archived ? 'is-archived' : ''} ${conversation.aiTouched ? 'is-ai-touched' : ''} ${conversation.aiManaged ? 'is-ai-managed' : ''}`}
               role="button"
               tabIndex={0}
               onClick={() => selectConversation(conversation.id)}
@@ -1648,7 +2039,14 @@ export default function ScrmWorkbench() {
                 }
               }}
             >
-              <Avatar size={44} style={{ background: conversation.avatarColor }}>{conversation.avatar}</Avatar>
+              <span className="scrm-conversation-avatar-wrap">
+                <Avatar size={44} style={{ background: conversation.avatarColor }}>{conversation.avatar}</Avatar>
+                {conversation.aiTouched && (
+                  <span className="scrm-ai-avatar-badge">
+                    <RobotOutlined />
+                  </span>
+                )}
+              </span>
               <span className="scrm-conversation-body">
                 <span className="scrm-conversation-line">
                   <span className="scrm-conversation-name">
@@ -1659,11 +2057,20 @@ export default function ScrmWorkbench() {
                   </span>
                   <em>{conversation.lastAt}</em>
                 </span>
-                <span className="scrm-conversation-sub">{conversation.subtitle}</span>
-                <span className="scrm-conversation-last">{conversation.lastMessage}</span>
+                {conversationListSubtitle(conversation) && (
+                  <span className="scrm-conversation-sub">{conversationListSubtitle(conversation)}</span>
+                )}
+                {conversation.aiManaged && (
+                  <span className="scrm-ai-reception-line">
+                    <RobotOutlined />
+                    <span>AI接待中</span>
+                  </span>
+                )}
+                <span className="scrm-conversation-last">{conversationListLastMessage(conversation)}</span>
               </span>
               <span className="scrm-conversation-flags">
                 {conversation.pinned && <PushpinOutlined />}
+                {conversation.muted && <BellOutlined className="is-muted" />}
                 {conversation.unread > 0 && <Badge count={conversation.unread} size="small" />}
               </span>
               <Dropdown menu={conversationMenu(conversation, 'list')} trigger={['click']} placement="bottomRight">
@@ -1744,11 +2151,57 @@ export default function ScrmWorkbench() {
                 </div>
               </div>
               <Space size={8} className="scrm-chat-actions">
+                <div className="scrm-chat-toolstrip">
+                  <Button className="scrm-chat-tool-button is-icon-only" type="text" icon={<SearchOutlined />} onClick={openChatRecordSearch} />
+                  <Button className="scrm-chat-tool-button" type="text" icon={<GlobalOutlined />}>
+                    翻译
+                  </Button>
+                  <span className="scrm-chat-tool-button scrm-ai-hosting-control">
+                    <span>AI 托管</span>
+                    <Switch
+                      size="small"
+                      checked={!!activeConversation.aiManaged}
+                      onChange={toggleAiReception}
+                    />
+                  </span>
+                  <Button className="scrm-chat-tool-button is-transfer" type="text" icon={<UserSwitchOutlined />} onClick={openLeadTransfer}>
+                    转派
+                  </Button>
+                </div>
                 <Dropdown menu={conversationMenu(activeConversation)} trigger={['click']} placement="bottomRight">
                   <Button icon={<MoreOutlined />} />
                 </Dropdown>
               </Space>
             </header>
+
+            {activePinnedMessage && (
+              <div className="scrm-pinned-message-bar">
+                <PushpinOutlined />
+                <button
+                  className="scrm-pinned-message-main"
+                  onClick={() => locateChatMessage(activePinnedMessage.id)}
+                >
+                  <strong>{activePinnedMessage.sender || '我'}: </strong>
+                  <span>{activePinnedMessage.text || activePinnedMessage.meta || '[非文本消息]'}</span>
+                </button>
+                <Dropdown
+                  menu={{
+                    items: [
+                      { key: 'unpin', icon: <StopOutlined />, label: '取消置顶' },
+                      { key: 'locate', icon: <SendOutlined />, label: '前往消息' },
+                    ],
+                    onClick: ({ key }) => {
+                      if (key === 'unpin') cancelPinnedMessage(activePinnedMessage.id)
+                      if (key === 'locate') locateChatMessage(activePinnedMessage.id)
+                    },
+                  }}
+                  trigger={['click']}
+                  placement="bottomRight"
+                >
+                  <Button type="text" icon={<DownOutlined />} />
+                </Dropdown>
+              </div>
+            )}
 
             <div className="scrm-message-stream">
               {activeMessages.map((item) => (
@@ -1795,12 +2248,6 @@ export default function ScrmWorkbench() {
                   <Button type="text" icon={<CloseCircleOutlined />} onClick={() => setQuotedMessage(null)} />
                 </div>
               )}
-              <input
-                ref={uploadInputRef}
-                className="scrm-hidden-file"
-                type="file"
-                onChange={handleComposerUpload}
-              />
               {isRecording ? (
                 <div className="scrm-voice-recorder">
                   <Button type="text" icon={<DeleteOutlined />} onClick={() => {
@@ -1813,6 +2260,25 @@ export default function ScrmWorkbench() {
                   <Button type="text" icon={<PauseOutlined />} />
                   <span className="scrm-record-time">1</span>
                   <Button type="primary" shape="circle" icon={<SendOutlined />} onClick={sendVoiceMessage} />
+                </div>
+              ) : activeConversation.aiManaged ? (
+                <div className="scrm-ai-managed-composer">
+                  <div className="scrm-composer-row scrm-ai-managed-input-row" aria-hidden="true">
+                    <Button type="text" icon={<PlusOutlined />} tabIndex={-1} />
+                    <Button type="text" icon={<SmileOutlined />} tabIndex={-1} />
+                    <Input.TextArea
+                      placeholder="输入消息"
+                      autoSize={{ minRows: 1, maxRows: 4 }}
+                      tabIndex={-1}
+                      readOnly
+                    />
+                    <Button type="text" icon={<AudioOutlined />} tabIndex={-1} />
+                  </div>
+                  <div className="scrm-ai-managed-mask">
+                    <Button type="primary" onClick={interveneAiConversation}>
+                      介入会话
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <div className="scrm-composer-row">
@@ -1888,61 +2354,136 @@ export default function ScrmWorkbench() {
         )}
       </main>
 
-      <aside className="scrm-crm-reserved-panel">
-        <div className="scrm-reserved-title">CRM / ERP 预留区</div>
-        <div className="scrm-reserved-card">
-          <strong>CRM 关系</strong>
-          <span>客户关系、联系人归属、商机关系将在这里承载。</span>
-        </div>
-        <div className="scrm-reserved-card">
-          <strong>ERP 交互</strong>
-          <span>订单、报价、交付、售后状态预留接入位。</span>
-        </div>
-        <div className="scrm-reserved-hint">
-          群资料、成员管理、入群审批等 WhatsApp 操作从顶部头像或更多菜单打开，不占用此栏。
-        </div>
-      </aside>
+      <ScrmToolSidePanel
+        title="会话管理"
+        open={activeToolPanel === 'conversation'}
+        resizing={toolPanelDragging}
+        onResizeStart={() => {
+          if (activeToolPanel === 'conversation') setToolPanelDragging(true)
+        }}
+        onClose={() => setActiveToolPanel(null)}
+      />
+
+      <ScrmSideToolRail activeKey={activeToolPanel} onOpen={openSideTool} />
 
       <Drawer
-        title="搜索消息"
+        title="聊天记录"
         open={chatSearchOpen}
         onClose={() => setChatSearchOpen(false)}
-        width={460}
+        width={420}
         className="scrm-chat-search-drawer"
       >
         <div className="scrm-chat-search-panel">
-          <Input
-            prefix={<SearchOutlined />}
-            placeholder="搜索当前会话内容"
-            value={chatSearchQuery}
-            onChange={(event) => setChatSearchQuery(event.target.value)}
-            allowClear
-            autoFocus
+          <Tabs
+            className="scrm-chat-record-tabs"
+            activeKey={chatSearchTab}
+            onChange={(key) => {
+              setChatSearchTab(key)
+              setChatSearchQuery('')
+            }}
+            items={CHAT_RECORD_TABS}
           />
-          <div className="scrm-chat-search-results">
-            {chatSearchResults.map((item) => (
-              <div className="scrm-chat-search-result" key={item.id}>
-                <span>
-                  <strong>{item.sender || (item.direction === 'out' ? '我' : activeConversation?.title)}</strong>
-                  <em>{item.text || item.meta || '[非文本消息]'}</em>
-                  <time>{item.time}</time>
-                </span>
-                <Tooltip title="定位到消息">
-                  <Button
-                    className="scrm-locate-message"
-                    icon={<EnvironmentOutlined />}
-                    onClick={() => locateChatMessage(item.id)}
-                  />
-                </Tooltip>
+
+          {chatSearchTab === 'text' && (
+            <>
+              <Input
+                className="scrm-chat-search-input"
+                suffix={<SearchOutlined />}
+                placeholder="搜索"
+                value={chatSearchQuery}
+                onChange={(event) => setChatSearchQuery(event.target.value)}
+                allowClear
+                autoFocus
+              />
+              <div className="scrm-chat-date-row">
+                <button type="button">开始日期</button>
+                <span>-</span>
+                <button type="button">
+                  结束日期
+                  <CalendarOutlined />
+                </button>
               </div>
-            ))}
-            {chatSearchQuery.trim() && !chatSearchResults.length && (
-              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="未找到匹配消息" />
-            )}
-            {!chatSearchQuery.trim() && (
-              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="输入关键词搜索当前会话" />
-            )}
-          </div>
+              <div className="scrm-chat-search-results">
+                {chatSearchResults.map((item) => (
+                  <div className="scrm-chat-search-result" key={item.id}>
+                    <span>
+                      <strong>{item.sender || (item.direction === 'out' ? '我' : activeConversation?.title)}</strong>
+                      <em>{item.text || item.meta || '[非文本消息]'}</em>
+                      <time>{item.time}</time>
+                    </span>
+                    <Tooltip title="定位到会话">
+                      <Button
+                        className="scrm-locate-message"
+                        icon={<EnvironmentOutlined />}
+                        onClick={() => locateChatMessage(item.id)}
+                      />
+                    </Tooltip>
+                  </div>
+                ))}
+                {chatSearchQuery.trim() && !chatSearchResults.length && (
+                  <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="未找到匹配消息" />
+                )}
+              </div>
+            </>
+          )}
+
+          {chatSearchTab === 'media' && (
+            <div className="scrm-chat-media-panel">
+              <div className="scrm-record-month">本月</div>
+              <div className="scrm-media-grid">
+                {mediaSearchResults.map((item) => (
+                  <div className="scrm-media-card" key={item.id}>
+                    <button className={`scrm-media-thumb is-${item.type}`} type="button" onClick={() => setAttachmentPreview(item)}>
+                      {TYPE_ICON[item.type]}
+                      <span>{item.type === 'video' ? '视频' : '图片'}</span>
+                    </button>
+                    <div className="scrm-media-card-meta">
+                      <span>{item.time}</span>
+                      <Tooltip title="定位到会话">
+                        <Button size="small" type="text" icon={<EnvironmentOutlined />} onClick={() => locateChatMessage(item.id)} />
+                      </Tooltip>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {!mediaSearchResults.length && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无图片/视频" />}
+              {!!mediaSearchResults.length && <div className="scrm-record-end"><span>没有更多了</span></div>}
+            </div>
+          )}
+
+          {chatSearchTab === 'attachment' && (
+            <div className="scrm-chat-attachment-panel">
+              {attachmentSearchResults.map((item) => (
+                <div className="scrm-attachment-record" key={item.id}>
+                  <button className="scrm-attachment-record-main" type="button" onClick={() => setAttachmentPreview(item)}>
+                    <span className="scrm-attachment-record-icon">{TYPE_ICON[item.type] || <FileTextOutlined />}</span>
+                    <span>
+                      <strong>{item.text}</strong>
+                      <em>{item.sender || (item.direction === 'out' ? '我' : activeConversation?.title)} {item.time}</em>
+                    </span>
+                  </button>
+                  <Dropdown
+                    trigger={['click']}
+                    placement="bottomRight"
+                    menu={{
+                      items: [
+                        { key: 'locate', icon: <EnvironmentOutlined />, label: '跳转至会话' },
+                        { key: 'download', icon: <DownloadOutlined />, label: '下载' },
+                      ],
+                      onClick: ({ key }) => {
+                        if (key === 'locate') locateChatMessage(item.id)
+                        if (key === 'download') downloadChatRecordAttachment(item)
+                      },
+                    }}
+                  >
+                    <Button className="scrm-attachment-record-more" size="small" type="text" icon={<MoreOutlined />} />
+                  </Dropdown>
+                </div>
+              ))}
+              {!attachmentSearchResults.length && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无附件" />}
+              {!!attachmentSearchResults.length && <div className="scrm-record-end"><span>没有更多了</span></div>}
+            </div>
+          )}
         </div>
       </Drawer>
 
@@ -2033,6 +2574,39 @@ export default function ScrmWorkbench() {
       </Modal>
 
       <Modal
+        title="线索分配"
+        open={leadTransferOpen}
+        onCancel={() => setLeadTransferOpen(false)}
+        onOk={confirmLeadTransfer}
+        okText="确认分配"
+        cancelText="取消"
+        okButtonProps={{ disabled: !leadTransferUser }}
+        className="scrm-lead-transfer-modal"
+      >
+        {activeConversation && (
+          <Space direction="vertical" size={16} className="scrm-lead-transfer-content">
+            <div className="scrm-lead-transfer-brief">
+              <div>
+                <span>{activeConversation.type === 'group' ? '群组线索' : '客户线索'}</span>
+                <strong>{activeConversation.title}</strong>
+              </div>
+              <p>{conversationListLastMessage(activeConversation) || '当前会话待转派给销售继续跟进。'}</p>
+            </div>
+            <label className="scrm-lead-transfer-field">
+              <span>被分配人</span>
+              <Select
+                showSearch
+                value={leadTransferUser}
+                options={salesOptions}
+                onChange={setLeadTransferUser}
+                filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+              />
+            </label>
+          </Space>
+        )}
+      </Modal>
+
+      <Modal
         title="撤回消息"
         open={recallOpen}
         onCancel={() => {
@@ -2060,7 +2634,15 @@ export default function ScrmWorkbench() {
         title="附件预览"
         open={!!attachmentPreview}
         onCancel={() => setAttachmentPreview(null)}
-        footer={null}
+        footer={[
+          <Button key="close" onClick={() => setAttachmentPreview(null)}>关闭</Button>,
+          <Button key="locate" icon={<EnvironmentOutlined />} onClick={locateAttachmentPreview}>
+            跳转至会话
+          </Button>,
+          <Button key="download" type="primary" icon={<DownloadOutlined />} onClick={downloadAttachmentPreview}>
+            下载
+          </Button>,
+        ]}
         width={620}
         className="scrm-attachment-preview-modal"
       >
@@ -2072,6 +2654,7 @@ export default function ScrmWorkbench() {
             <strong>{attachmentPreview.text}</strong>
             <span>{attachmentPreview.meta || '点击附件后可在此预览内容'}</span>
             {attachmentPreview.type === 'image' && <div className="scrm-preview-image-placeholder">图片预览区域</div>}
+            {attachmentPreview.type === 'video' && <div className="scrm-preview-video-placeholder">视频预览区域</div>}
             {attachmentPreview.type === 'location' && <div className="scrm-preview-map-placeholder">位置地图预览</div>}
           </div>
         )}
@@ -2179,9 +2762,37 @@ export default function ScrmWorkbench() {
             <div className="scrm-contact-profile">
               <Avatar size={56} style={{ background: activeConversation?.avatarColor }}>{activeConversation?.avatar}</Avatar>
               <div>
-                <h3>{activeConversation?.title}</h3>
+                {editingContactName ? (
+                  <div className="scrm-contact-name-editor">
+                    <Input
+                      value={contactNameDraft}
+                      autoFocus
+                      onChange={(event) => setContactNameDraft(event.target.value)}
+                      onPressEnter={saveContactName}
+                    />
+                    <Button type="primary" size="small" onClick={saveContactName}>保存</Button>
+                    <Button size="small" onClick={() => {
+                      setContactNameDraft(activeConversation?.title || '')
+                      setEditingContactName(false)
+                    }}>取消</Button>
+                  </div>
+                ) : (
+                  <button
+                    className="scrm-contact-name-display"
+                    onClick={() => {
+                      setContactNameDraft(activeConversation?.title || '')
+                      setEditingContactName(true)
+                    }}
+                  >
+                    <h3>{activeConversation?.title}</h3>
+                    <EditOutlined />
+                  </button>
+                )}
                 <span className={`scrm-presence ${activeConversation?.online ? 'online' : 'offline'}`}>
                   {activeConversation?.online ? '在线' : '离线'}
+                  {!activeConversation?.online && (
+                    <em className="scrm-last-seen">最近在线：{formatLastSeen(activeConversation)}</em>
+                  )}
                 </span>
               </div>
             </div>
@@ -2539,13 +3150,23 @@ export default function ScrmWorkbench() {
       <Modal
         title="联系人卡片"
         open={contactCardOpen}
-        onCancel={() => setContactCardOpen(false)}
+        onCancel={() => {
+          setContactCardOpen(false)
+          setContactCardSearch('')
+        }}
         footer={null}
         width={520}
         className="scrm-create-chat-modal"
       >
         <div className="scrm-contact-card-picker">
-          {CONTACT_DIRECTORY.map((contact) => (
+          <Input
+            prefix={<SearchOutlined />}
+            placeholder="搜索姓名、手机号或 WhatsApp 账号"
+            value={contactCardSearch}
+            onChange={(event) => setContactCardSearch(event.target.value)}
+            allowClear
+          />
+          {contactCardCandidates.map((contact) => (
             <button key={contact.id} className="scrm-contact-card-option" onClick={() => sendContactCard(contact)}>
               <Avatar size={38}>{contact.avatar}</Avatar>
               <span>
@@ -2555,6 +3176,9 @@ export default function ScrmWorkbench() {
               <span className="scrm-add-pill">发送</span>
             </button>
           ))}
+          {!contactCardCandidates.length && (
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无匹配联系人" />
+          )}
         </div>
       </Modal>
 
@@ -2588,6 +3212,53 @@ export default function ScrmWorkbench() {
               style={{ width: '100%' }}
             />
           </label>
+        </div>
+      </Modal>
+
+      <Modal
+        title={ATTACHMENT_PICKER_TITLE[attachmentPickerType] || '选择文件'}
+        open={Boolean(attachmentPickerType)}
+        onCancel={() => {
+          setAttachmentPickerType(null)
+          setSelectedAttachmentIds([])
+        }}
+        onOk={sendSelectedAttachments}
+        okText={`发送${selectedAttachmentIds.length ? ` ${selectedAttachmentIds.length} 个` : ''}`}
+        className="scrm-attachment-picker-modal"
+      >
+        <div className="scrm-attachment-picker">
+          <div className="scrm-attachment-picker-hint">
+            最近文件
+          </div>
+          <div className="scrm-attachment-file-list">
+            {(ATTACHMENT_PICKER_FILES[attachmentPickerType] || []).map((file) => (
+              <label
+                key={file.id}
+                className={`scrm-attachment-file ${selectedAttachmentIds.includes(file.id) ? 'is-selected' : ''}`}
+              >
+                <Checkbox
+                  checked={selectedAttachmentIds.includes(file.id)}
+                  onChange={(event) => toggleAttachmentSelection(file.id, event.target.checked)}
+                />
+                <span className="scrm-attachment-file-icon">{TYPE_ICON[file.type]}</span>
+                <span className="scrm-attachment-file-body">
+                  <strong>{file.name}</strong>
+                  <em>{file.meta}</em>
+                </span>
+              </label>
+            ))}
+          </div>
+          {selectedAttachmentIds.length > 0 && (
+            <div className="scrm-attachment-selected">
+              <strong>已选 {selectedAttachmentIds.length} 个</strong>
+              <div>
+                {selectedAttachmentIds.map((id) => {
+                  const file = (ATTACHMENT_PICKER_FILES[attachmentPickerType] || []).find((item) => item.id === id)
+                  return file ? <Tag key={id} closable onClose={() => toggleAttachmentSelection(id, false)}>{file.name}</Tag> : null
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </Modal>
 

@@ -32,6 +32,128 @@
   padding: 16px;
 }
 
+.gb-add-candidate-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  border: 1px solid var(--gb-border-light);
+  border-radius: 8px;
+  background: #f7f9fc;
+}
+
+.gb-add-candidate-avatar {
+  flex: 0 0 auto;
+  background: #1a4d8f;
+}
+
+.gb-add-candidate-main {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap: 4px;
+}
+
+.gb-add-candidate-head,
+.gb-add-candidate-meta {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gb-add-candidate-head strong {
+  color: var(--gb-text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.gb-add-candidate-head span,
+.gb-add-candidate-meta {
+  color: var(--gb-text-muted);
+  font-size: 12px;
+}
+
+.gb-add-candidate-meta {
+  flex-wrap: wrap;
+  line-height: 18px;
+}
+
+.gb-handover-user-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--gb-border-light);
+  border-radius: 8px;
+  background: #f7f9fc;
+  margin-bottom: 12px;
+}
+
+.gb-handover-user-main {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap: 3px;
+}
+
+.gb-handover-user-main strong {
+  color: var(--gb-text);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.gb-handover-user-main span {
+  color: var(--gb-text-muted);
+  font-size: 12px;
+}
+
+.gb-handover-note {
+  margin-bottom: 12px;
+  color: var(--gb-text-secondary);
+  font-size: 13px;
+  line-height: 22px;
+}
+
+.gb-handover-assets {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.gb-handover-asset {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--gb-border-light);
+  border-radius: 8px;
+  background: var(--gb-white);
+}
+
+.gb-handover-asset span,
+.gb-handover-asset em {
+  display: block;
+  color: var(--gb-text-muted);
+  font-size: 12px;
+  font-style: normal;
+}
+
+.gb-handover-asset strong {
+  display: block;
+  margin: 4px 0 2px;
+  color: var(--gb-primary);
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.gb-handover-field-label {
+  margin-bottom: 6px;
+  color: var(--gb-text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
 /* 角色与权限 */
 .gb-role-list {
   display: flex;
@@ -86,37 +208,90 @@
 /* 权限树分组 */
 .gb-perm-group {
   border: 1px solid var(--gb-border-light);
-  border-radius: 10px;
-  margin-bottom: 12px;
+  border-radius: 12px;
+  margin-bottom: 14px;
   overflow: hidden;
+  background: var(--gb-white);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
 }
 
 .gb-perm-group-head {
-  background: var(--gb-bg-elevated, #F1F4F8);
-  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f5f7fb;
+  padding: 11px 16px;
   font-size: 13px;
   font-weight: 600;
   color: var(--gb-text);
+  border-bottom: 1px solid var(--gb-border-light);
+}
+
+.gb-perm-group-head em {
+  color: var(--gb-text-muted);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
 }
 
 .gb-perm-module {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 10px 14px;
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  align-items: center;
+  min-height: 58px;
+  padding: 12px 16px;
   border-top: 1px solid var(--gb-border-light);
 }
 
+.gb-perm-group-head + .gb-perm-module {
+  border-top: 0;
+}
+
 .gb-perm-module-name {
-  width: 140px;
-  flex-shrink: 0;
-  font-size: 13px;
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.gb-perm-module-name strong {
   color: var(--gb-text);
-  padding-top: 2px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.gb-perm-module-name span {
+  color: var(--gb-text-muted);
+  font-size: 12px;
+  line-height: 18px;
 }
 
 .gb-perm-ops {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 16px;
+  gap: 10px 12px;
+}
+
+.gb-perm-op {
+  min-width: 92px;
+  margin-inline-start: 0 !important;
+  padding: 5px 8px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--gb-text-secondary);
+  transition: background-color 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+}
+
+.gb-perm-op:hover {
+  background: #f8fafc;
+}
+
+.gb-perm-op.is-checked {
+  background: #eef5ff;
+  border-color: #c9ddff;
+  color: var(--gb-text);
+}
+
+.gb-perm-op .ant-checkbox + span {
+  padding-inline-start: 8px;
 }

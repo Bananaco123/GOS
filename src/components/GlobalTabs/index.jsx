@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { CloseOutlined, AppstoreOutlined } from '@ant-design/icons'
+import { CloseOutlined } from '@ant-design/icons'
 
 import { NAV_TOP, NAV_BOTTOM } from '../../router/nav'
 import { SETTINGS_TITLES } from '../../router/settingsNav'
@@ -88,17 +88,16 @@ export default function GlobalTabs({ tabs, setTabs }) {
     })
   }
 
-  if (tabs.length === 0) return null
+  const visibleTabs = tabs.filter((tab) => tab?.label !== 'false' && tab?.path !== 'false')
+
+  if (visibleTabs.length === 0) return null
 
   return (
     <div className="gb-global-tabs">
-      <div className="gb-global-tabs-icon">
-        <AppstoreOutlined />
-      </div>
       <div className="gb-global-tabs-scroll" ref={scrollRef}>
-        {tabs.map((tab, idx) => {
+        {visibleTabs.map((tab, idx) => {
           const isActive = tab.path === activePath
-          const closable = tabs.length > 1 && idx !== 0
+          const closable = visibleTabs.length > 1 && idx !== 0
           return (
             <div
               key={tab.path}

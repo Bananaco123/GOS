@@ -80,3 +80,16 @@ export const USER_STATUS = {
 }
 
 export const userById = (id) => USERS.find((u) => u.id === id)
+
+// ============================================================
+// 2.0 组织目录中「尚未启用为营销 OS 用户」的人员
+//   —— 「新增用户」按姓名搜索匹配；选中后部门 / 职务 / 手机自动带出，仅需再选角色
+// ============================================================
+export const CANDIDATE_USERS = [
+  { id: 'cu-anna', name: 'Anna Park', avatar: 'AP', dept_id: 'd-os-1', title: '北美组 · 销售助理', phone: '138 0013 8013', account: 'anna@okgroup.com' },
+  { id: 'cu-david', name: 'David Kim', avatar: 'DK', dept_id: 'd-os-1', title: '北美组 · 销售', phone: '138 0013 8014', account: 'david@okgroup.com' },
+  { id: 'cu-fatima', name: 'Fatima Noor', avatar: 'FN', dept_id: 'd-os-1', title: '中东组 · 销售', phone: '138 0013 8015', account: 'fatima@okgroup.com' },
+  { id: 'cu-ray', name: 'Ray Tan', avatar: 'RT', dept_id: 'd-os-2', title: '东南亚组 · 销售', phone: '138 0013 8016', account: 'ray@okgroup.com' },
+  { id: 'cu-mei', name: 'Mei Lin', avatar: 'ME', dept_id: 'd-os-2', title: '东南亚组 · 销售助理', phone: '138 0013 8017', account: 'meilin@okgroup.com' },
+  { id: 'cu-john', name: 'John Doe', avatar: 'JD', dept_id: 'd-pd-1', title: '平台研发', phone: '138 0013 8018', account: 'johndoe@okgroup.com' },
+]

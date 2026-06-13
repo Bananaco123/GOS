@@ -53,70 +53,12 @@
 }
 
 /* ---- 中间搜索框 ---- */
-.gb-topbar-search {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  position: relative;
-  max-width: 480px;
-  margin: 0 auto;
-}
-
-.gb-topbar-search .ant-input-affix-wrapper {
-  width: 100%;
-  max-width: 480px;
-}
-
-.gb-topbar-search-dropdown {
-  position: absolute;
-  top: 44px;
-  left: 0;
-  right: 0;
-  background: var(--gb-white);
-  border: 1px solid var(--gb-border);
-  border-radius: 12px;
-  box-shadow: var(--gb-shadow-popover);
-  padding: 16px;
-  z-index: 1000;
-}
-
-.gb-topbar-search-section {
-  margin-bottom: 12px;
-}
-
-.gb-topbar-search-section:last-child {
-  margin-bottom: 0;
-}
-
-.gb-topbar-search-section-title {
-  font-size: 12px;
-  color: var(--gb-text-muted);
-  margin-bottom: 8px;
-}
-
-.gb-topbar-search-chip {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 6px;
-  background: var(--gb-bg-secondary);
-  font-size: 13px;
-  color: var(--gb-text);
-  margin-right: 6px;
-  margin-bottom: 6px;
-  cursor: pointer;
-  transition: background 200ms;
-}
-
-.gb-topbar-search-chip:hover {
-  background: var(--gb-primary-bg);
-  color: var(--gb-primary);
-}
-
 /* ---- 右侧 ---- */
 .gb-topbar-right {
   display: flex;
   align-items: center;
   gap: 16px;
+  margin-left: auto;
   flex-shrink: 0;
 }
 

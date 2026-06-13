@@ -28,6 +28,7 @@
   /* ---- 尺寸 ---- */
   --gb-topbar-h: 56px;
   --gb-sidebar-w: 240px;
+  --gb-sidebar-collapsed-w: 68px;
   --gb-breadcrumb-h: 40px;
 
   /* ---- 圆角 ---- */

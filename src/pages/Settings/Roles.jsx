@@ -9,6 +9,25 @@ import {
 import { useAuth } from '../../auth/AuthContext'
 import { PERMISSION_TREE, DATA_SCOPES, dataScopeLabel } from '../../mock/rbac'
 
+function getModuleViewKey(module) {
+  return module.ops.some((op) => op.key === 'view') ? `${module.key}.view` : null
+}
+
+function normalizePermissions(keys) {
+  const next = new Set(keys)
+  PERMISSION_TREE.forEach((group) => {
+    group.modules.forEach((module) => {
+      const viewKey = getModuleViewKey(module)
+      if (!viewKey) return
+      const hasAnyOperation = module.ops
+        .filter((op) => op.key !== 'view')
+        .some((op) => next.has(`${module.key}.${op.key}`))
+      if (hasAnyOperation) next.add(viewKey)
+    })
+  })
+  return [...next]
+}
+
 export default function Roles() {
   const { message, modal } = App.useApp()
   const { roles, hasPerm, updateRole, addRole, removeRole, countUsersOfRole } = useAuth()
@@ -31,17 +50,24 @@ export default function Roles() {
 
   const openEdit = (role) => {
     setEditing(role)
-    setPermState([...role.permissions])
+    setPermState(normalizePermissions(role.permissions))
     form.setFieldsValue({ name: role.name, data_scope: role.data_scope, desc: role.desc })
   }
 
   const togglePerm = (key, checked) => {
-    setPermState((prev) => (checked ? [...new Set([...prev, key])] : prev.filter((k) => k !== key)))
-  }
+    const [moduleKey, opKey] = key.split('.')
+    setPermState((prev) => {
+      if (checked) {
+        const viewKey = opKey === 'view' ? key : `${moduleKey}.view`
+        return normalizePermissions([...prev, key, viewKey])
+      }
 
-  const toggleModule = (module, checked) => {
-    const keys = module.ops.map((o) => `${module.key}.${o.key}`)
-    setPermState((prev) => (checked ? [...new Set([...prev, ...keys])] : prev.filter((k) => !keys.includes(k))))
+      if (opKey === 'view') {
+        return prev.filter((k) => !k.startsWith(`${moduleKey}.`))
+      }
+
+      return normalizePermissions(prev.filter((k) => k !== key))
+    })
   }
 
   const handleSave = async () => {
@@ -54,12 +80,12 @@ export default function Roles() {
       const id = `role-custom-${Date.now().toString(36)}`
       addRole({
         id, name: values.name, preset: false, locked: false,
-        data_scope: values.data_scope, desc: values.desc || '自定义角色', permissions: permState,
+        data_scope: values.data_scope, desc: values.desc || '自定义角色', permissions: normalizePermissions(permState),
       })
       message.success(`已新增角色「${values.name}」`)
     } else {
       updateRole(editing.id, {
-        name: values.name, data_scope: values.data_scope, desc: values.desc, permissions: permState,
+        name: values.name, data_scope: values.data_scope, desc: values.desc, permissions: normalizePermissions(permState),
       })
       message.success(`已更新角色「${values.name}」权限，已对该角色下用户即时生效`)
     }
@@ -159,30 +185,28 @@ export default function Roles() {
 
         {PERMISSION_TREE.map((group) => (
           <div key={group.group} className="gb-perm-group">
-            <div className="gb-perm-group-head">{group.group}</div>
+            <div className="gb-perm-group-head">
+              <span>{group.group}</span>
+              <em>{group.modules.length} 个模块</em>
+            </div>
             {group.modules.map((m) => {
-              const moduleKeys = m.ops.map((o) => `${m.key}.${o.key}`)
-              const allChecked = moduleKeys.every((k) => permState.includes(k))
-              const someChecked = moduleKeys.some((k) => permState.includes(k))
+              const viewKey = `${m.key}.view`
+              const viewEnabled = permState.includes(viewKey)
               return (
                 <div key={m.key} className="gb-perm-module">
                   <div className="gb-perm-module-name">
-                    <Checkbox
-                      checked={allChecked}
-                      indeterminate={!allChecked && someChecked}
-                      disabled={isLocked}
-                      onChange={(e) => toggleModule(m, e.target.checked)}
-                    >
-                      <strong>{m.label}</strong>
-                    </Checkbox>
+                    <strong>{m.label}</strong>
+                    <span>{viewEnabled ? '已开放页面入口' : '未开放页面入口'}</span>
                   </div>
                   <div className="gb-perm-ops">
                     {m.ops.map((o) => {
                       const key = `${m.key}.${o.key}`
+                      const checked = permState.includes(key)
                       return (
                         <Checkbox
                           key={key}
-                          checked={permState.includes(key)}
+                          className={checked ? 'gb-perm-op is-checked' : 'gb-perm-op'}
+                          checked={checked}
                           disabled={isLocked}
                           onChange={(e) => togglePerm(key, e.target.checked)}
                         >

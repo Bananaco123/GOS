@@ -1,4 +1,5 @@
 const STORAGE_KEY = 'os-scrm-im-v1-state-20260604'
+const AI_AGENT_NAME = 'AI业务员'
 
 const accountLabels = {
   north: [
@@ -82,6 +83,9 @@ export function createInitialImState() {
         pinned: true,
         muted: false,
         archived: false,
+        aiTouched: true,
+        aiManaged: false,
+        aiAgentName: AI_AGENT_NAME,
         lastAt: '今天 17:31',
         sortIndex: 1000,
         lastMessage: 'Abhishek: How about your project progress?',
@@ -198,6 +202,7 @@ export function createInitialImState() {
         { id: 'm-g-2', type: 'text', direction: 'in', sender: 'Abhishek', text: 'Hi! Dear Abhishek, How are you?', time: '17:31', status: 'read' },
         { id: 'm-g-3', type: 'text', direction: 'in', sender: 'Scarlett', text: 'How about your project progress?', time: '17:40', status: 'read', mentionable: true },
         { id: 'm-g-4', type: 'system', text: 'Timmy Guo 将 SM 报价师加入群聊', time: '18:02' },
+        { id: 'm-g-ai-1', type: 'text', direction: 'out', sender: AI_AGENT_NAME, agentType: 'ai', text: 'Thanks 🙏 Please send them here when you’re ready. Which country is the project in?', time: '18:09', status: 'read' },
         { id: 'm-g-5', type: 'voice', direction: 'out', sender: '我', text: '语音消息', duration: '0:14', time: '18:15', status: 'read' },
         { id: 'm-g-6', type: 'file', direction: 'out', sender: '我', text: 'Cabinet_quotation_v3.pdf', meta: '2.4 MB · PDF', time: '18:18', status: 'delivered' },
         { id: 'm-g-7', type: 'text', direction: 'out', sender: '我', text: 'Please check the updated quotation and confirm the delivery date.', time: '18:20', status: 'failed', error: '账号连接短暂异常，消息未发出' },
@@ -380,6 +385,9 @@ function buildGeneratedHistory() {
       if (index % 2 === 0) labels.push('diy')
       if (index % 7 === 0) labels.push('factory')
 
+      const aiManaged = spec.prefix === 'north' && index === 0
+      const aiTouched = aiManaged || index % 5 === 0
+
       conversations.push({
         id,
         accountId: spec.accountId,
@@ -397,17 +405,31 @@ function buildGeneratedHistory() {
         pinned: index === 0,
         muted: index % 6 === 0,
         archived: false,
+        aiTouched,
+        aiManaged,
+        aiAgentName: aiTouched ? AI_AGENT_NAME : undefined,
         lastAt: index < 7 ? `今天 ${String(20 - index).padStart(2, '0')}:${String(12 + index).padStart(2, '0')}` : `2026年5月${String(28 - (index % 18)).padStart(2, '0')}日`,
         sortIndex: 900 - index,
-        lastMessage: group
-          ? `${index % 2 ? '设计师' : '客户'}: ${index % 3 ? 'Please confirm the latest drawing.' : 'Quotation has been updated.'}`
-          : `${index % 2 ? '客户' : '我'}: ${index % 3 ? 'Can you share more details?' : 'I will check and reply soon.'}`,
+        lastMessage: aiManaged
+          ? 'AI：I will check and reply soon.'
+          : group
+            ? `${index % 2 ? '设计师' : '客户'}: ${index % 3 ? 'Please confirm the latest drawing.' : 'Quotation has been updated.'}`
+            : `${index % 2 ? '客户' : '我'}: ${index % 3 ? 'Can you share more details?' : 'I will check and reply soon.'}`,
       })
 
       messages[id] = [
         { id: `${id}-sys`, type: 'system', text: index < 6 ? '今天' : '2026年5月', time: '09:00' },
         { id: `${id}-in-1`, type: 'text', direction: 'in', sender: group ? '客户' : name, text: 'Hi, I would like to confirm the latest project details.', time: '10:12', status: 'sent' },
-        { id: `${id}-out-1`, type: 'text', direction: 'out', sender: '我', text: 'Sure, I will check the file and send you an updated answer.', time: '10:16', status: 'delivered' },
+        {
+          id: `${id}-out-1`,
+          type: 'text',
+          direction: 'out',
+          sender: aiTouched ? AI_AGENT_NAME : '我',
+          agentType: aiTouched ? 'ai' : undefined,
+          text: aiTouched ? 'Thanks 🙏 Please send them here when you’re ready. Which country is the project in?' : 'Sure, I will check the file and send you an updated answer.',
+          time: '10:16',
+          status: 'delivered',
+        },
         { id: `${id}-in-2`, type: group ? 'file' : 'text', direction: 'in', sender: group ? '设计师' : name, text: group ? 'project_reference.pdf' : 'Thanks, please keep me updated.', meta: group ? '1.2 MB · PDF' : undefined, time: '10:24', status: 'sent' },
       ]
 
@@ -438,12 +460,130 @@ function attachGeneratedHistory(state) {
     ...(state.conversations || []),
     ...generated.conversations.filter((item) => !existingIds.has(item.id)),
   ]
-  return {
+  return hydrateAiAgentState({
     ...state,
     conversations,
     messages: { ...generated.messages, ...(state.messages || {}) },
     groups: { ...generated.groups, ...(state.groups || {}) },
+  })
+}
+
+function ensureMessage(messages, conversationId, message) {
+  const list = messages[conversationId] || []
+  if (list.some((item) => item.id === message.id)) return list
+  const insertIndex = Math.min(4, list.length)
+  return [...list.slice(0, insertIndex), message, ...list.slice(insertIndex)]
+}
+
+function ensureMessages(messages, conversationId, nextMessages) {
+  return nextMessages.reduce(
+    (list, message) => ensureMessage({ ...messages, [conversationId]: list }, conversationId, message),
+    messages[conversationId] || [],
+  )
+}
+
+function hydrateAiAgentState(state) {
+  const conversations = (state.conversations || []).map((conversation) => {
+    if (conversation.id === 'c-george-group') {
+      return {
+        ...conversation,
+        aiTouched: true,
+        aiManaged: false,
+        aiAgentName: AI_AGENT_NAME,
+      }
+    }
+    if (conversation.id === 'c-north-history-1' || conversation.title === 'Kanchan Rajput') {
+      return {
+        ...conversation,
+        aiTouched: true,
+        aiManaged: true,
+        aiAgentName: AI_AGENT_NAME,
+        lastMessage: 'AI：I will check and reply soon.',
+      }
+    }
+    return conversation
+  })
+
+  const sourceMessages = state.messages || {}
+  const messages = {
+    ...sourceMessages,
+    'c-george-group': ensureMessages(sourceMessages, 'c-george-group', [
+      {
+        id: 'm-g-ai-1',
+        type: 'text',
+        direction: 'out',
+        sender: AI_AGENT_NAME,
+        agentType: 'ai',
+        text: 'Thanks 🙏 Please send them here when you’re ready. Which country is the project in?',
+        time: '18:09',
+        status: 'read',
+      },
+      {
+        id: 'm-g-img-1',
+        type: 'image',
+        direction: 'in',
+        sender: 'Abhishek',
+        text: 'site_kitchen_reference.jpg',
+        meta: '图片 · 本月',
+        time: '18:11',
+        status: 'sent',
+      },
+      {
+        id: 'm-g-video-1',
+        type: 'video',
+        direction: 'in',
+        sender: 'Abhishek',
+        text: 'walkthrough_progress.mp4',
+        meta: '视频 · 00:18',
+        time: '18:12',
+        status: 'sent',
+      },
+    ]),
+    'c-north-history-1': ensureMessages(sourceMessages, 'c-north-history-1', [
+      {
+        id: 'c-north-history-1-ai-1',
+        type: 'text',
+        direction: 'out',
+        sender: AI_AGENT_NAME,
+        agentType: 'ai',
+        text: 'Thanks 🙏 Please send them here when you’re ready. Which country is the project in?',
+        time: '20:10',
+        status: 'delivered',
+      },
+      {
+        id: 'c-north-history-1-img-1',
+        type: 'image',
+        direction: 'in',
+        sender: 'Kanchan Rajput',
+        text: 'living_room_site_photo.jpg',
+        meta: '图片 · 本月',
+        time: '20:14',
+        status: 'sent',
+      },
+      {
+        id: 'c-north-history-1-video-1',
+        type: 'video',
+        direction: 'in',
+        sender: 'Kanchan Rajput',
+        text: 'cabinet_installation_reference.mp4',
+        meta: '视频 · 00:22',
+        time: '20:15',
+        status: 'sent',
+      },
+      {
+        id: 'c-north-history-1-file-1',
+        type: 'file',
+        direction: 'in',
+        sender: 'Kanchan Rajput',
+        text: '9452-Bd Gouin_21-01_PERMIS_178108.pdf',
+        meta: '2.7 MB · PDF',
+        time: '20:16',
+        status: 'sent',
+      },
+    ]),
   }
+
+  return { ...state, conversations, messages }
 }
 
 export function loadImState() {

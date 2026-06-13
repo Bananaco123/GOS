@@ -245,26 +245,40 @@ export function makeReceptionStrategy() {
       // AI 称谓：AI 在对话中的自称
       ai_title: 'Sales Assistant',
     },
-    // 2) 客户唤醒机制
+    // 2) 自动化任务（v9：客户唤醒机制升级；事件类型 = 唤醒客户 + 复合触发条件 AND）
     wakeup: {
       enabled: true,
       // 按客户所在时区择时发送（长期唤醒任务避免深夜打扰）
       respect_timezone: true,
-      // 唤醒序列：AI 推进后客户未回复达到时长 → 发送激活话术 + 推进任务目标
-      rules: [
+      tasks: [
         {
-          id: 'wk-1',
-          no_reply_minutes: 1440, // 24 小时
+          id: 'at-1',
+          enabled: true,
+          name: '北美客户 · 24h 沉默唤醒',
+          event_type: 'wakeup_customer',
+          match: 'all',
+          conditions: [
+            { id: 'at1-c1', attr: 'no_reply', op: 'gte', value: 1440 }, // 24 小时未回复
+            { id: 'at1-c2', attr: 'region', op: 'in', value: ['北美'] },
+          ],
+          output_mode: 'script',
           script: 'Hi {customer_name}, just checking in — do you have any questions about the cabinet options we discussed?',
           task_goal: '收集预算区间',
-          enabled: true,
         },
         {
-          id: 'wk-2',
-          no_reply_minutes: 4320, // 72 小时
+          id: 'at-2',
+          enabled: true,
+          name: '全案无图客户 · 72h 催图',
+          event_type: 'wakeup_customer',
+          match: 'all',
+          conditions: [
+            { id: 'at2-c1', attr: 'no_reply', op: 'gte', value: 4320 }, // 72 小时未回复
+            { id: 'at2-c2', attr: 'scale', op: 'in', value: ['全案'] },
+            { id: 'at2-c3', attr: 'design_doc', op: 'in', value: ['无'] },
+          ],
+          output_mode: 'goal',
           script: 'We have a spring promotion ending soon. Would you like me to send the latest catalog for your project?',
           task_goal: '推进项目阶段 / 索取设计图',
-          enabled: true,
         },
       ],
     },

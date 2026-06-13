@@ -8,21 +8,24 @@ import RequirePerm from '../auth/RequirePerm'
 
 import LoginPage from '../pages/Login'
 import HomePage from '../pages/Home'
+import ScrmWorkbench from '../pages/Scrm'
+import LeadAssignmentPage from '../pages/Conversation/LeadAssignment'
+import HandoverPage from '../pages/Conversation/Handover'
 import AgentList from '../pages/Agent/AgentList'
 import AgentSalesRep from '../pages/Agent/SalesRep'
 import KnowledgeBase from '../pages/Knowledge'
 import LibraryDetail from '../pages/Knowledge/LibraryDetail'
-import ScrmWorkbench from '../pages/Scrm'
 
 import Members from '../pages/Settings/Members'
 import Roles from '../pages/Settings/Roles'
+import SystemLog from '../pages/Settings/SystemLog'
 import CenterPlaceholder from '../pages/Settings/CenterPlaceholder'
 
 /**
  * 路由（v8）
  *   - /login 独立登录页（外壳之外）
  *   - / 业务外壳（需登录）：首页 + AI 业务员 + 知识库 + 占位入口
- *   - /settings 设置中心外壳（需登录 + 页面级权限）：组织架构 / 产品中心 / 费用中心
+ *   - /settings 设置中心外壳（需登录 + 页面级权限）：组织架构
  */
 export const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
@@ -43,15 +46,12 @@ export const router = createBrowserRouter([
       { path: 'agent/sales-rep/:agentId', element: <RequirePerm perm="agent-sales-rep.view"><AgentSalesRep /></RequirePerm> },
       { path: 'knowledge', element: <RequirePerm perm="knowledge.view"><KnowledgeBase /></RequirePerm> },
       { path: 'knowledge/lib/:libraryId', element: <RequirePerm perm="knowledge.view"><LibraryDetail /></RequirePerm> },
-      { path: 'scrm', element: <ScrmWorkbench /> },
 
       // ---- 占位入口 ----
-      { path: 'workbench', element: <PlaceholderPage navKey="workbench" /> },
-      { path: 'conversation/lead-assignment', element: <PlaceholderPage navKey="lead" /> },
-      { path: 'conversation/handover', element: <PlaceholderPage navKey="handover" /> },
+      { path: 'scrm', element: <RequirePerm perm="scrm.view"><ScrmWorkbench /></RequirePerm> },
+      { path: 'conversation/lead-assignment', element: <RequirePerm perm="conversation-lead.view"><LeadAssignmentPage /></RequirePerm> },
+      { path: 'conversation/handover', element: <RequirePerm perm="conversation-handover.view"><HandoverPage /></RequirePerm> },
       { path: 'agent/sales-king', element: <PlaceholderPage navKey="sales-king" /> },
-      { path: 'dashboard/pm', element: <PlaceholderPage navKey="pm" /> },
-      { path: 'dashboard/department', element: <PlaceholderPage navKey="dept" /> },
 
       { path: '*', element: <Navigate to="/home" replace /> },
     ],
@@ -66,10 +66,10 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Navigate to="/settings/org/members" replace /> },
+      { path: 'scrm/cloud-accounts', element: <RequirePerm perm="settings-cloud-accounts.view"><CenterPlaceholder type="cloudAccounts" /></RequirePerm> },
       { path: 'org/members', element: <RequirePerm perm="settings-members.view"><Members /></RequirePerm> },
       { path: 'org/roles', element: <RequirePerm perm="settings-roles.view"><Roles /></RequirePerm> },
-      { path: 'product', element: <RequirePerm perm="settings-product.view"><CenterPlaceholder type="product" /></RequirePerm> },
-      { path: 'billing', element: <RequirePerm perm="settings-billing.view"><CenterPlaceholder type="billing" /></RequirePerm> },
+      { path: 'org/logs', element: <RequirePerm perm="settings-log.view"><SystemLog /></RequirePerm> },
       { path: '*', element: <Navigate to="/settings/org/members" replace /> },
     ],
   },

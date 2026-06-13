@@ -1,12 +1,13 @@
 {
-  "name": "web-im-v9",
+  "name": "gos-v1-demo",
   "private": true,
-  "version": "9.0.0",
+  "version": "1.1.0",
   "type": "module",
-  "description": "G-Builder OS V1 · SCRM 后台端 · AI 业务员 + 知识库 demo（基于 PRD SCRM-AI业务员配合功能-PRD v2 + g-builder-os-interaction-spec.md）",
+  "description": "GOS V1.1 demo with simplified login, navigation, and top bar.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:pages": "vite build --base=/GOS/",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Input, Badge, Dropdown, Avatar, Popover, List, Tag, Empty, Tooltip, App } from 'antd'
+import { Badge, Dropdown, Avatar, Popover, List, Tag, Empty, Tooltip, App } from 'antd'
 import {
-  SearchOutlined, BellOutlined, UserOutlined, LogoutOutlined,
+  BellOutlined, UserOutlined, LogoutOutlined,
   SettingOutlined, SwapOutlined,
 } from '@ant-design/icons'
 
@@ -16,28 +16,28 @@ const MOCK_NOTIFICATIONS = [
     id: 'n-1',
     type: 'warning',
     title: '转人工待接管：客户情绪异常',
-    desc: 'Agent「敬城-北美-正式接待」命中「客户情绪异常」规则，已通知 Aril / COCO，请尽快接管',
+    desc: 'AI 业务员命中客户情绪异常规则，已通知接管人，请尽快处理。',
     time: '3 分钟前',
   },
   {
     id: 'n-2',
     type: 'info',
     title: '线索转派提醒',
-    desc: '一条 A 级线索已从「敬城-北美组」转派给你，请在 15 分钟内响应',
+    desc: '一条 A 级线索已转派给你，请在 15 分钟内响应。',
     time: '12 分钟前',
   },
   {
     id: 'n-3',
     type: 'danger',
     title: '转人工超时预警',
-    desc: '规则「客户要求转人工」命中后超过 5 分钟未响应，已升级通知组长',
+    desc: '客户要求转人工后超过 5 分钟未响应，已升级通知组长。',
     time: '28 分钟前',
   },
   {
     id: 'n-4',
     type: 'success',
-    title: 'Agent 配置 v.13 已正式发布',
-    desc: '发布人 Gao Kui · 在途会话沿用旧版，新会话立即生效',
+    title: 'AI 业务员配置已发布',
+    desc: '新版本配置已生效，新会话将沿用最新接待策略。',
     time: '昨日 16:08',
   },
 ]
@@ -49,7 +49,6 @@ export default function TopBar() {
   const navigate = useNavigate()
   const { message } = App.useApp()
   const { user, role, login, logout } = useAuth()
-  const [searchOpen, setSearchOpen] = useState(false)
   const [unread, setUnread] = useState(MOCK_NOTIFICATIONS.length)
 
   const handleLogout = () => {
@@ -117,29 +116,8 @@ export default function TopBar() {
         <div className="gb-topbar-logo">G</div>
         <div className="gb-topbar-brand">
           <div className="gb-topbar-brand-name">G-Builder OS</div>
-          <div className="gb-topbar-brand-version">V1.0</div>
+          <div className="gb-topbar-brand-version">V1.1</div>
         </div>
-      </div>
-
-      <div className="gb-topbar-search">
-        <Input
-          prefix={<SearchOutlined style={{ color: 'var(--gb-text-muted)' }} />}
-          placeholder="搜索"
-          allowClear
-          onFocus={() => setSearchOpen(true)}
-          onBlur={() => setTimeout(() => setSearchOpen(false), 200)}
-          style={{ background: 'var(--gb-bg-secondary)', border: 'none', height: 36, borderRadius: 8 }}
-        />
-        {searchOpen && (
-          <div className="gb-topbar-search-dropdown">
-            <div className="gb-topbar-search-section">
-              <div className="gb-topbar-search-section-title">最近搜索</div>
-              <div className="gb-topbar-search-chip">敬城-北美-正式接待</div>
-              <div className="gb-topbar-search-chip">角色与权限</div>
-              <div className="gb-topbar-search-chip">部门与用户</div>
-            </div>
-          </div>
-        )}
       </div>
 
       <div className="gb-topbar-right">

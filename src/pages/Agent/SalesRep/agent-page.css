@@ -743,6 +743,98 @@
   margin-bottom: 6px;
 }
 
+/* ----- 自动化任务卡（v9 · UI 精修：三块一级信息 + 强对比平铺切换） ----- */
+.gb-task-card {
+  border: 1px solid var(--gb-border);
+  border-radius: var(--gb-radius-lg);
+  background: #fff;
+  padding: 20px 22px;
+  transition: border-color 140ms, box-shadow 140ms;
+}
+.gb-task-card:hover {
+  border-color: var(--gb-primary-light, #B7C9E0);
+  box-shadow: var(--gb-shadow-card-hover);
+}
+.gb-task-card.is-disabled { opacity: 0.6; }
+
+/* 头部：序号 + 事件名称（正常宽度）+ 实时保存小图标 + 开关/删除（靠右） */
+.gb-task-namebar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.gb-task-index {
+  flex-shrink: 0;
+  width: 24px; height: 24px;
+  border-radius: 7px;
+  background: var(--gb-primary);
+  color: #fff;
+  font-size: 13px; font-weight: 600;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.gb-task-name { width: 280px; }
+.gb-task-name .ant-input { font-weight: 500; }
+.gb-task-save.ant-btn { color: var(--gb-text-muted); flex-shrink: 0; }
+.gb-task-save.ant-btn:hover { color: var(--gb-primary); background: var(--gb-bg-secondary); }
+.gb-task-tools {
+  margin-left: auto;
+  display: flex; align-items: center; gap: 12px;
+  flex-shrink: 0;
+}
+
+/* 平铺切换（强对比 · 选中实底主色，明显可点击） */
+.gb-pill-toggle {
+  display: inline-flex;
+  background: #E7EDF5;
+  border-radius: 8px;
+  padding: 3px;
+  gap: 3px;
+}
+.gb-pill-toggle button {
+  border: 0; background: transparent; cursor: pointer;
+  padding: 4px 16px; border-radius: 6px;
+  font-size: 13px; line-height: 20px; font-weight: 500;
+  color: var(--gb-text-secondary);
+  transition: all 140ms ease;
+}
+.gb-pill-toggle button:hover { color: var(--gb-primary); }
+.gb-pill-toggle button.is-on {
+  background: var(--gb-primary);
+  color: #fff;
+  box-shadow: 0 1px 3px rgba(26, 77, 143, 0.32);
+}
+
+/* 一级信息块（满足条件 / 执行动作），与名称栏拉开层级 */
+.gb-task-block { margin-top: 18px; }
+.gb-cond-head {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 12px;
+}
+.gb-cond-head-text { font-size: 13px; font-weight: 600; color: var(--gb-text); }
+.gb-cond-group {
+  border: 1px solid var(--gb-border-light);
+  border-left: 3px solid var(--gb-primary);
+  border-radius: var(--gb-radius-sm);
+  background: var(--gb-bg-secondary);
+  padding: 14px 16px;
+}
+.gb-cond-row {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 10px; flex-wrap: wrap;
+}
+.gb-cond-row:last-of-type { margin-bottom: 12px; }
+.gb-cond-op {
+  font-size: 12px; color: var(--gb-text-muted);
+  padding: 0 2px; white-space: nowrap; flex-shrink: 0;
+}
+.gb-cond-empty { font-size: 12px; color: var(--gb-text-muted); margin-bottom: 10px; }
+
+.gb-task-action-head {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 12px;
+}
+.gb-task-action-label { font-size: 13px; font-weight: 600; color: var(--gb-text); }
+
 /* 档位校验通过提示 */
 .gb-grading-threshold-ok {
   margin-top: 16px;

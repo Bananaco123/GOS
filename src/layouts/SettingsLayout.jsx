@@ -2,7 +2,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Tooltip } from 'antd'
 import {
   ApartmentOutlined, SafetyCertificateOutlined,
-  AppstoreOutlined, WalletOutlined, ArrowLeftOutlined,
+  AppstoreOutlined, WalletOutlined, ArrowLeftOutlined, HistoryOutlined, CloudServerOutlined,
 } from '@ant-design/icons'
 
 import TopBar from '../components/TopBar'
@@ -19,6 +19,8 @@ import '../pages/Settings/settings.css'
 const ITEM_ICON = {
   'set-members': <ApartmentOutlined />,
   'set-roles': <SafetyCertificateOutlined />,
+  'set-log': <HistoryOutlined />,
+  'set-cloud-accounts': <CloudServerOutlined />,
   'set-product': <AppstoreOutlined />,
   'set-billing': <WalletOutlined />,
 }
