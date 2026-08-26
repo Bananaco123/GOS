@@ -1,0 +1,2829 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>业务看板 · G-Builder OS</title>
+  <style>
+    :root {
+      --primary: #1a4d8f;
+      --primary-2: #2e7bd6;
+      --primary-soft: #eaf2fc;
+      --accent: #00a3b4;
+      --page: #f5f7fa;
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --border: #e2e8f0;
+      --border-light: #edf1f5;
+      --text: #1d2939;
+      --text-2: #475467;
+      --text-3: #8492a6;
+      --up: #f53f3f;
+      --up-bg: #fff1f0;
+      --down: #00a870;
+      --down-bg: #eaf9f1;
+      --warning: #f7ba1e;
+      --shadow: 0 2px 10px rgba(31, 50, 77, 0.06);
+      --shadow-hover: 0 8px 24px rgba(31, 50, 77, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      color: var(--text);
+      background: var(--page);
+      font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      font-size: 14px;
+    }
+
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+
+    .svg-sprite {
+      position: absolute;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+    }
+
+    .icon {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex: none;
+    }
+
+    .app-shell {
+      display: flex;
+      min-width: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* 嵌入 GOS V1.3 时仅展示 V13 红框内的主内容，外层导航沿用 GOS。 */
+    .app-shell > .sidebar,
+    .workspace > .topbar,
+    .workspace > .tabbar { display: none; }
+
+    .sidebar {
+      width: 216px;
+      height: 100vh;
+      flex: none;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      border-right: 1px solid var(--border-light);
+      z-index: 10;
+    }
+
+    .brand {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 24px;
+      border-bottom: 1px solid var(--border-light);
+      font-weight: 600;
+      font-size: 16px;
+      color: #203044;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      color: var(--primary);
+    }
+
+    .brand-mark .icon { width: 24px; height: 24px; }
+
+    .side-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 10px;
+    }
+
+    .nav-item,
+    .nav-group-title {
+      height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 0 14px;
+      margin-bottom: 2px;
+      color: #4b5565;
+      border-radius: 6px;
+      user-select: none;
+      transition: .18s ease;
+    }
+
+    .nav-item:hover,
+    .nav-group-title:hover { background: #f5f8fc; color: var(--primary); }
+
+    .nav-item.active {
+      color: var(--primary);
+      background: var(--primary-soft);
+      font-weight: 500;
+    }
+
+    .nav-item.active::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 3px;
+      height: 22px;
+      border-radius: 0 3px 3px 0;
+      background: var(--primary-2);
+    }
+
+    .nav-item { position: relative; }
+    .nav-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .chevron { width: 14px; height: 14px; color: #9aa4b2; transition: transform .2s; }
+    .nav-group.expanded .chevron { transform: rotate(90deg); }
+
+    .nav-children {
+      margin: 2px 0 8px 38px;
+      border-left: 1px solid #e7ebf0;
+      padding-left: 10px;
+    }
+
+    .nav-child {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      color: #667085;
+      border-radius: 5px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .nav-child:hover { color: var(--primary); background: #f7f9fc; }
+
+    .workspace {
+      flex: 1;
+      min-width: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .topbar {
+      height: 56px;
+      flex: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      background: #fff;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .icon-button {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #fff;
+      color: #8b98a8;
+    }
+
+    .icon-button:hover { color: var(--primary); border-color: #b7cbea; background: #f8fbff; }
+
+    .user-entry {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #364152;
+      cursor: pointer;
+    }
+
+    .avatar {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--primary-2);
+      background: #edf5ff;
+    }
+
+    .avatar .icon { width: 16px; height: 16px; }
+
+    .tabbar {
+      height: 42px;
+      flex: none;
+      display: flex;
+      align-items: end;
+      padding-left: 16px;
+      background: #fff;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .page-tab {
+      position: relative;
+      height: 34px;
+      min-width: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 18px;
+      color: var(--primary);
+      background: #fff;
+      border: 1px solid var(--border);
+      border-bottom-color: #fff;
+      border-radius: 7px 7px 0 0;
+      font-size: 13px;
+    }
+
+    .page-tab::before {
+      content: "";
+      position: absolute;
+      top: -1px;
+      left: 9px;
+      right: 9px;
+      height: 2px;
+      border-radius: 2px;
+      background: var(--primary-2);
+    }
+
+    .dashboard {
+      --dashboard-padding-top: 22px;
+      flex: 1;
+      overflow-y: auto;
+      padding: 22px 28px 38px;
+      background: var(--page);
+    }
+
+    .dashboard::-webkit-scrollbar { width: 8px; }
+    .dashboard::-webkit-scrollbar-track { background: transparent; }
+    .dashboard::-webkit-scrollbar-thumb { background: #cfd7e3; border-radius: 8px; }
+
+    .content-wrap { width: 100%; max-width: 1680px; margin: 0 auto; }
+
+    .page-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 16px;
+    }
+
+    .page-heading h1 {
+      margin: 0 0 6px;
+      font-size: 22px;
+      line-height: 32px;
+      font-weight: 600;
+      color: #162438;
+    }
+
+    .page-heading p { margin: 0; color: var(--text-3); font-size: 13px; }
+
+    .update-state {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 6px;
+      color: var(--text-3);
+      font-size: 12px;
+    }
+
+    .state-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #00b578;
+      box-shadow: 0 0 0 3px rgba(0,181,120,.12);
+    }
+
+    .panel,
+    .module-card {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    .filter-panel {
+      position: sticky;
+      top: calc(0px - var(--dashboard-padding-top));
+      z-index: 30;
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 16px 18px;
+      margin-bottom: 20px;
+    }
+
+    .filter-block { display: flex; flex-direction: column; gap: 7px; }
+    .filter-block.period-block { flex: 1; min-width: 410px; }
+    .filter-label { color: #667085; font-size: 12px; line-height: 18px; }
+
+    .segment {
+      display: inline-flex;
+      height: 34px;
+      padding: 3px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: #f8fafc;
+    }
+
+    .segment button {
+      min-width: 62px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 5px;
+      color: #667085;
+      background: transparent;
+      font-size: 13px;
+    }
+
+    .segment button:hover { color: var(--primary); }
+    .segment button.active { color: var(--primary); background: #fff; box-shadow: 0 1px 4px rgba(31,50,77,.12); font-weight: 500; }
+
+    .select-control,
+    .date-control,
+    .multi-trigger {
+      height: 34px;
+      min-width: 156px;
+      padding: 0 32px 0 11px;
+      color: #344054;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background-color: #fff;
+      outline: none;
+      transition: .16s;
+    }
+
+    .select-control { appearance: none; background-image: linear-gradient(45deg, transparent 50%, #98a2b3 50%), linear-gradient(135deg, #98a2b3 50%, transparent 50%); background-position: calc(100% - 15px) 14px, calc(100% - 10px) 14px; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; }
+    .select-control:focus, .date-control:focus, .multi-trigger:focus { border-color: #7aa8e4; box-shadow: 0 0 0 3px rgba(46,123,214,.10); }
+
+    .custom-range { display: none; align-items: center; gap: 6px; }
+    .custom-range.show { display: flex; }
+    .custom-range .date-control { min-width: 132px; padding-right: 8px; }
+    .range-separator { color: #98a2b3; }
+
+    .multi-select { position: relative; }
+
+    .multi-trigger {
+      width: 178px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-right: 10px;
+      background: #fff;
+      text-align: left;
+    }
+
+    .multi-trigger .trigger-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .multi-trigger .icon { width: 14px; height: 14px; color: #98a2b3; transform: rotate(90deg); }
+
+    .multi-menu {
+      position: absolute;
+      top: 39px;
+      left: 0;
+      width: 220px;
+      display: none;
+      padding: 6px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 12px 30px rgba(31,50,77,.16);
+      z-index: 20;
+    }
+
+    .multi-menu.open { display: block; }
+
+    .multi-option {
+      height: 34px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 0 8px;
+      border-radius: 5px;
+      color: #475467;
+      cursor: pointer;
+    }
+
+    .multi-option:hover { background: #f5f8fc; }
+    .multi-option input { accent-color: var(--primary-2); }
+
+    .filter-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+
+    .btn {
+      height: 34px;
+      min-width: 68px;
+      padding: 0 16px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: #475467;
+      background: #fff;
+      transition: .16s;
+    }
+
+    .btn:hover { color: var(--primary); border-color: #9bbde8; background: #f8fbff; }
+    .btn.primary { color: #fff; border-color: var(--primary-2); background: var(--primary-2); }
+    .btn.primary:hover { background: #236fc7; border-color: #236fc7; }
+    .btn.loading { color: transparent; position: relative; pointer-events: none; }
+    .btn.loading::after { content: ""; position: absolute; left: 50%; top: 50%; width: 14px; height: 14px; margin: -8px 0 0 -8px; border: 2px solid rgba(255,255,255,.45); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .module-section { margin-bottom: 22px; }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0;
+      color: #203044;
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .section-title::before {
+      content: "";
+      width: 4px;
+      height: 17px;
+      border-radius: 4px;
+      background: var(--primary-2);
+    }
+
+    .section-note { color: var(--text-3); font-size: 12px; }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .metric-grid.five { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .metric-grid.six { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+
+    .metric-card {
+      position: relative;
+      min-height: 116px;
+      padding: 17px 16px 15px;
+      overflow: hidden;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+
+    .metric-card:hover { transform: translateY(-2px); border-color: #d4e1f1; box-shadow: var(--shadow-hover); }
+
+    .metric-card::after {
+      content: "";
+      position: absolute;
+      top: -28px;
+      right: -22px;
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(46,123,214,.10) 0, rgba(46,123,214,0) 68%);
+    }
+
+    .metric-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+    .metric-name { color: #667085; font-size: 13px; }
+
+    .metric-icon {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 7px;
+      color: var(--primary-2);
+      background: #edf5ff;
+    }
+
+    .metric-icon.teal { color: var(--accent); background: #e9f8fa; }
+    .metric-icon.purple { color: #6956d8; background: #f0edff; }
+    .metric-icon.amber { color: #c68400; background: #fff7e4; }
+    .metric-icon .icon { width: 15px; height: 15px; }
+
+    .metric-body { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; }
+
+    .metric-value {
+      color: #17243a;
+      font-size: 26px;
+      line-height: 32px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .metric-unit { margin-left: 3px; color: #667085; font-size: 12px; font-weight: 400; letter-spacing: 0; }
+
+    .delta {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      height: 22px;
+      padding: 0 7px;
+      border-radius: 11px;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .delta.up { color: var(--up); background: var(--up-bg); }
+    .delta.down { color: var(--down); background: var(--down-bg); }
+    .metric-caption { margin-top: 7px; color: #98a2b3; font-size: 11px; }
+
+    .secondary-metric {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 7px;
+      color: #98a2b3;
+      font-size: 11px;
+    }
+
+    .secondary-value {
+      display: inline-flex;
+      align-items: center;
+      height: 20px;
+      padding: 0 7px;
+      color: var(--primary-2);
+      background: #edf5ff;
+      border-radius: 10px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .business-grid { margin-bottom: 0; }
+
+    .business-object-card {
+      min-height: 154px;
+      padding: 17px 16px 14px;
+      overflow: visible;
+    }
+
+    .business-object-card:hover { z-index: 4; }
+
+    .business-total-line {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 11px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .business-total-label { color: #98a2b3; font-size: 11px; }
+    .business-total-value { color: #17243a; font-size: 25px; line-height: 32px; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+    .source-breakdown {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 11px;
+    }
+
+    .source-row {
+      position: relative;
+      min-width: 0;
+      padding: 8px 9px;
+      border-radius: 7px;
+      background: #f8fafc;
+    }
+
+    .source-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #667085;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .source-dot { width: 7px; height: 7px; border-radius: 2px; flex: none; }
+    .source-dot.scrm { background: var(--primary-2); }
+    .source-dot.crm { background: var(--accent); }
+
+    .source-stat {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-top: 5px;
+    }
+
+    .source-count {
+      display: block;
+      color: #344054;
+      font-size: 16px;
+      line-height: 20px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .source-share {
+      color: #98a2b3;
+      font-size: 10px;
+      line-height: 16px;
+      font-weight: 400;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .customer-scrm-source { cursor: help; }
+
+    .source-help {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 12px;
+      height: 12px;
+      margin-left: -1px;
+      color: #7a91ac;
+      border: 1px solid #b8c9dc;
+      border-radius: 50%;
+      font-size: 8px;
+      font-style: normal;
+      line-height: 1;
+    }
+
+    .customer-source-tooltip {
+      position: absolute;
+      z-index: 20;
+      left: 0;
+      top: calc(100% + 8px);
+      width: 206px;
+      padding: 10px 11px;
+      color: #667085;
+      background: #fff;
+      border: 1px solid #dce6f2;
+      border-radius: 8px;
+      box-shadow: 0 10px 28px rgba(31, 61, 99, .16);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-4px);
+      transition: opacity .16s ease, transform .16s ease, visibility .16s ease;
+      pointer-events: none;
+    }
+
+    .customer-source-tooltip::before {
+      content: "";
+      position: absolute;
+      left: 22px;
+      top: -5px;
+      width: 8px;
+      height: 8px;
+      background: #fff;
+      border-top: 1px solid #dce6f2;
+      border-left: 1px solid #dce6f2;
+      transform: rotate(45deg);
+    }
+
+    .customer-source-tooltip span {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 11px;
+      line-height: 20px;
+      white-space: nowrap;
+    }
+
+    .customer-source-tooltip strong {
+      color: #344054;
+      font-size: 12px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .customer-scrm-source:hover .customer-source-tooltip,
+    .customer-scrm-source:focus .customer-source-tooltip,
+    .customer-scrm-source:focus-within .customer-source-tooltip {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .customer-scrm-source:focus-visible {
+      outline: 2px solid rgba(46, 123, 214, .24);
+      outline-offset: 2px;
+    }
+
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.75fr) minmax(320px, .8fr);
+      gap: 12px;
+    }
+
+    .robot-analysis-row {
+      grid-template-columns: minmax(0, 7fr) minmax(300px, 3fr);
+    }
+
+    .robot-analysis-row + .robot-analysis-row { margin-top: 12px; }
+
+    .chart-card,
+    .rank-card,
+    .donut-card { min-height: 360px; padding: 16px 18px; }
+
+    .card-heading {
+      min-height: 34px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+
+    .card-title { margin: 0; color: #344054; font-size: 14px; font-weight: 600; }
+    .card-subtitle { margin-top: 5px; color: #98a2b3; font-size: 11px; }
+
+    .chart-tabs,
+    .rank-tabs {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 3px;
+      background: #f3f6fa;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+
+    .chart-tabs button,
+    .rank-tabs button {
+      height: 28px;
+      padding: 0 11px;
+      color: #667085;
+      border: 0;
+      border-radius: 5px;
+      background: transparent;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .chart-tabs button:hover,
+    .rank-tabs button:hover { color: var(--primary); }
+
+    .chart-tabs button.active,
+    .rank-tabs button.active { color: var(--primary); background: #fff; box-shadow: 0 1px 4px rgba(31,50,77,.10); font-weight: 500; }
+
+    .line-chart {
+      position: relative;
+      width: 100%;
+      height: 270px;
+      overflow: hidden;
+    }
+
+    .line-chart svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+    .chart-tooltip {
+      position: absolute;
+      min-width: 118px;
+      padding: 8px 10px;
+      color: #344054;
+      background: rgba(255,255,255,.98);
+      border: 1px solid #dfe5ec;
+      border-radius: 6px;
+      box-shadow: 0 8px 20px rgba(31,50,77,.14);
+      font-size: 11px;
+      line-height: 20px;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-50%, -100%);
+      transition: opacity .12s;
+      z-index: 5;
+    }
+
+    .chart-tooltip.show { opacity: 1; }
+    .tooltip-value { color: var(--primary-2); font-size: 13px; font-weight: 600; }
+
+    .country-rank-card { min-height: 360px; padding: 16px 18px; }
+
+    .country-chart {
+      position: relative;
+      height: 276px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .country-row {
+      display: grid;
+      grid-template-columns: 22px minmax(90px, 1fr) 96px;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .country-row { height: 30px; }
+    .country-row:focus { outline: none; }
+    .country-row:focus-visible .country-bar-track { box-shadow: 0 0 0 2px rgba(46, 123, 214, .2); }
+
+    .country-rank-no {
+      color: #98a2b3;
+      text-align: center;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .country-row:nth-child(-n+3) .country-rank-no { color: var(--primary-2); }
+
+    .country-bar-track {
+      position: relative;
+      display: flex;
+      align-items: stretch;
+      height: 12px;
+      overflow: hidden;
+      border-radius: 2px;
+      background: #f3f6fa;
+    }
+
+    .country-bar-fill {
+      display: block;
+      height: 100%;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #1a4d8f, #5d9ee5);
+      transition: width .35s ease;
+    }
+
+    .country-bar-segment {
+      display: block;
+      height: 100%;
+      opacity: .9;
+      transition: width .35s ease, opacity .12s ease;
+    }
+
+    .country-row:hover .country-bar-segment,
+    .country-row:focus .country-bar-segment { opacity: 1; }
+
+    .country-bar-label {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      align-items: baseline;
+      column-gap: 6px;
+      color: #667085;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .country-bar-label strong {
+      color: #344054;
+      font-size: 12px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    .country-bar-label > span { text-align: left; }
+
+    .hourly-bar-chart {
+      position: relative;
+      width: 100%;
+      height: 270px;
+      overflow: hidden;
+    }
+
+    .hourly-bar-chart svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+    .hour-bar { transition: opacity .12s ease; }
+    .hour-bar-point:focus { outline: none; }
+    .hour-bar-point:focus .hour-bar { stroke: #1a4d8f; stroke-width: 1.2; }
+
+    .department-usage-card {
+      min-height: 390px;
+      margin-top: 12px;
+      padding: 16px 18px;
+    }
+
+    .department-usage-card .card-heading { align-items: center; margin-bottom: 6px; }
+
+    .department-usage-controls {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .department-metric-tabs { flex: none; }
+
+    .lead-grade-filters {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      color: #667085;
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .lead-grade-filters.show { display: flex; }
+    .lead-grade-filters > span { color: #98a2b3; }
+
+    .lead-grade-option {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .lead-grade-option input { width: 13px; height: 13px; margin: 0; accent-color: var(--primary-2); }
+    .lead-grade-option i { width: 7px; height: 7px; border-radius: 2px; }
+
+    .department-usage-chart {
+      position: relative;
+      width: 100%;
+      height: 318px;
+      overflow: hidden;
+    }
+
+    .department-usage-chart svg { display: block; width: 100%; height: 100%; overflow: visible; }
+    .department-bar { transition: opacity .12s ease; }
+    .department-bar-point:focus { outline: none; }
+    .department-bar-point:focus .department-bar { stroke: #1a4d8f; stroke-width: 1.2; }
+
+    .department-lead-tooltip-line {
+      display: grid;
+      grid-template-columns: 9px 1fr auto;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .department-lead-tooltip-line.total {
+      grid-template-columns: 1fr auto;
+      padding-bottom: 4px;
+      margin-bottom: 3px;
+      border-bottom: 1px solid #edf1f6;
+    }
+
+    .business-department-card {
+      min-height: 390px;
+      margin-top: 12px;
+      padding: 16px 18px;
+    }
+
+    .business-department-card .card-heading { align-items: center; margin-bottom: 6px; }
+
+    .business-department-heading,
+    .business-department-controls,
+    .business-source-legend {
+      display: flex;
+      align-items: center;
+    }
+
+    .business-department-heading { gap: 14px; }
+    .business-department-controls { justify-content: flex-end; gap: 10px; min-width: 0; }
+    .business-source-legend { gap: 10px; color: #667085; font-size: 10px; }
+    .business-source-legend span { display: inline-flex; align-items: center; gap: 4px; }
+    .business-source-legend i { width: 7px; height: 7px; border-radius: 2px; }
+
+    .business-department-chart {
+      position: relative;
+      width: 100%;
+      height: 318px;
+      overflow: hidden;
+    }
+
+    .business-department-chart svg { display: block; width: 100%; height: 100%; overflow: visible; }
+    .business-department-bar { transition: opacity .12s ease; }
+    .business-department-point:focus { outline: none; }
+    .business-department-point:focus .business-department-bar { stroke: #1a4d8f; stroke-width: 1.2; }
+
+    .business-tooltip-line {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 14px;
+      white-space: nowrap;
+    }
+
+    .business-tooltip-line.total {
+      padding-bottom: 4px;
+      margin-bottom: 3px;
+      border-bottom: 1px solid #edf1f6;
+    }
+
+    .business-tooltip-line.detail { padding-left: 10px; color: #98a2b3; }
+
+    .country-mode-tabs { flex: none; }
+    .country-mode-tabs button:focus { outline: none; }
+    .country-mode-tabs button:focus-visible { box-shadow: 0 0 0 2px rgba(46, 123, 214, .2); }
+
+    .country-transfer-legend {
+      position: absolute;
+      top: -2px;
+      right: 0;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #667085;
+      font-size: 10px;
+    }
+
+    .country-transfer-legend span { display: inline-flex; align-items: center; gap: 4px; }
+    .country-transfer-legend i { width: 7px; height: 7px; border-radius: 2px; }
+
+    .country-chart.is-transfer .chart-tooltip { min-width: 168px; }
+
+    .transfer-tooltip-line {
+      display: grid;
+      grid-template-columns: 10px 1fr auto;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .transfer-tooltip-line.summary { grid-template-columns: 1fr auto; padding-bottom: 4px; margin-bottom: 3px; border-bottom: 1px solid #edf1f6; }
+    .transfer-tooltip-dot { width: 7px; height: 7px; border-radius: 2px; }
+    .transfer-tooltip-number { color: #344054; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+    .rank-list { margin-top: 12px; }
+
+    .rank-row {
+      display: grid;
+      grid-template-columns: 26px 86px minmax(80px, 1fr) 56px;
+      align-items: center;
+      gap: 10px;
+      height: 46px;
+      border-bottom: 1px solid #f0f2f5;
+    }
+
+    .rank-row:last-child { border-bottom: 0; }
+
+    .rank-no {
+      width: 20px;
+      height: 20px;
+      display: grid;
+      place-items: center;
+      border-radius: 5px;
+      color: #667085;
+      background: #f0f3f7;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .rank-row:nth-child(1) .rank-no { color: #fff; background: var(--primary-2); }
+    .rank-row:nth-child(2) .rank-no { color: #fff; background: #5b95dc; }
+    .rank-row:nth-child(3) .rank-no { color: #fff; background: #8bb5e8; }
+
+    .route-name { color: #344054; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .bar-track { height: 7px; overflow: hidden; border-radius: 7px; background: #edf1f6; }
+    .bar-fill { height: 100%; border-radius: 7px; background: linear-gradient(90deg, var(--primary-2), #62a7ec); transition: width .35s ease; }
+    .rank-value { color: #475467; text-align: right; font-size: 12px; font-variant-numeric: tabular-nums; }
+
+    .translation-trend-card { margin-bottom: 12px; }
+
+    .translation-ranking-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .translation-ranking-card,
+    .translation-route-card {
+      position: relative;
+      height: 410px;
+      min-height: 410px;
+      min-width: 0;
+      padding: 16px 14px;
+    }
+
+    .translation-ranking-card .card-heading,
+    .translation-route-card .card-heading { margin-bottom: 8px; }
+
+    .translation-route-card .rank-row {
+      grid-template-columns: 24px 66px minmax(42px, 1fr) 58px;
+      gap: 8px;
+    }
+
+    .rank-filter-select {
+      width: 118px;
+      height: 28px;
+      padding: 0 26px 0 9px;
+      color: #475467;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      outline: 0;
+      background: #fff;
+      font-size: 11px;
+    }
+
+    .rank-filter-select:focus { border-color: #7fb3ef; box-shadow: 0 0 0 2px rgba(46,123,214,.10); }
+
+    .usage-rank-scroll {
+      height: 330px;
+      padding-right: 4px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      scrollbar-color: #c9d3e1 transparent;
+    }
+
+    .usage-rank-scroll::-webkit-scrollbar { width: 5px; }
+    .usage-rank-scroll::-webkit-scrollbar-thumb { border-radius: 5px; background: #c9d3e1; }
+    .usage-rank-scroll::-webkit-scrollbar-track { background: transparent; }
+
+    .usage-rank-row {
+      display: grid;
+      grid-template-columns: 22px minmax(70px, 90px) minmax(44px, 1fr) 60px;
+      align-items: center;
+      gap: 8px;
+      height: 46px;
+      border-bottom: 1px solid #f0f2f5;
+      border-radius: 5px;
+      outline: 0;
+      transition: background .12s ease;
+    }
+
+    .usage-rank-row:hover,
+    .usage-rank-row:focus-visible { background: #f8fbff; }
+    .usage-rank-row:last-child { border-bottom: 0; }
+
+    .usage-rank-label { min-width: 0; }
+    .usage-rank-label strong,
+    .usage-rank-label small {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .usage-rank-label strong { color: #344054; font-size: 12px; font-weight: 500; }
+    .usage-rank-label small { margin-top: 3px; color: #98a2b3; font-size: 10px; }
+    .usage-bar-track { height: 8px; overflow: hidden; border-radius: 8px; background: #edf1f6; }
+    .usage-bar-fill { display: block; height: 100%; border-radius: 8px; background: linear-gradient(90deg, #2e7bd6, #62a7ec); transition: width .25s ease; }
+    .usage-rank-value { color: #475467; text-align: right; white-space: nowrap; font-size: 11px; font-variant-numeric: tabular-nums; }
+
+    .usage-load-state,
+    .usage-empty {
+      min-height: 34px;
+      display: grid;
+      place-items: center;
+      color: #98a2b3;
+      font-size: 10px;
+    }
+
+    .usage-empty { height: 100%; }
+
+    .usage-detail-tooltip {
+      position: absolute;
+      z-index: 8;
+      min-width: 188px;
+      padding: 9px 10px;
+      color: #667085;
+      border: 1px solid #e4e9f0;
+      border-radius: 7px;
+      background: rgba(255,255,255,.98);
+      box-shadow: 0 8px 24px rgba(31,50,77,.14);
+      font-size: 11px;
+      line-height: 20px;
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .12s ease;
+    }
+
+    .usage-detail-tooltip.show { opacity: 1; visibility: visible; }
+    .usage-detail-title { margin-bottom: 4px; padding-bottom: 5px; color: #344054; border-bottom: 1px solid #edf1f6; font-weight: 600; }
+    .usage-detail-line { display: grid; grid-template-columns: 1fr auto; gap: 12px; }
+    .usage-detail-line strong { color: #344054; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+    .donut-layout {
+      height: 275px;
+      display: grid;
+      grid-template-columns: minmax(175px, 1fr) minmax(154px, .9fr);
+      align-items: center;
+      gap: 16px;
+    }
+
+    .donut-wrap { position: relative; width: 180px; height: 180px; margin: 0 auto; }
+
+    .donut {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: conic-gradient(#2e7bd6 0 21%, #00a3b4 21% 63%, #7a6ff0 63% 88%, #f7ba1e 88% 100%);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.5);
+      transition: transform .25s ease;
+    }
+
+    .donut:hover { transform: scale(1.025); }
+
+    .donut::after {
+      content: "";
+      position: absolute;
+      inset: 34px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 0 1px rgba(226,232,240,.8);
+    }
+
+    .donut-center {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .donut-total { color: #17243a; font-size: 24px; line-height: 30px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .donut-label { margin-top: 2px; color: #98a2b3; font-size: 11px; }
+
+    .legend-list { display: flex; flex-direction: column; gap: 17px; }
+    .legend-item { display: grid; grid-template-columns: 10px 1fr auto; align-items: center; gap: 8px; color: #667085; font-size: 12px; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+    .legend-value { color: #344054; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+    .toast {
+      position: fixed;
+      top: 72px;
+      left: 50%;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      color: #344054;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      box-shadow: 0 10px 30px rgba(31,50,77,.16);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, -12px);
+      transition: .22s ease;
+    }
+
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .toast-mark { width: 18px; height: 18px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: #00b578; font-size: 12px; }
+
+    @media (max-width: 1440px) {
+      .dashboard { --dashboard-padding-top: 20px; padding: 20px 22px 34px; }
+      .metric-value { font-size: 23px; }
+      .metric-grid { gap: 10px; }
+      .metric-grid.six .metric-card { padding-right: 13px; padding-left: 13px; }
+      .metric-grid.six .metric-body { gap: 5px; }
+      .metric-grid.six .metric-value { font-size: 21px; }
+      .metric-grid.six .delta { padding: 0 5px; }
+      .filter-panel { gap: 12px; }
+      .chart-tabs button { padding: 0 8px; }
+      #robotService .chart-card .card-heading { display: block; }
+      #robotService .chart-card .card-heading > div:first-child { margin-bottom: 8px; }
+      #robotService .chart-card .chart-tabs { width: 100%; overflow-x: hidden; }
+      #robotService .chart-card .chart-tabs button { padding: 0 6px; }
+      .donut-layout { grid-template-columns: 140px minmax(108px, 1fr); gap: 8px; }
+      .donut-wrap, .donut { width: 140px; height: 140px; }
+      .donut::after { inset: 27px; }
+      .donut-total { font-size: 21px; }
+      .legend-list { gap: 14px; }
+      .legend-item { gap: 6px; }
+      .business-object-card { padding-right: 13px; padding-left: 13px; }
+      .source-breakdown { gap: 6px; }
+      .source-row { padding-right: 7px; padding-left: 7px; }
+    }
+  </style>
+</head>
+<body>
+  <svg class="svg-sprite" aria-hidden="true">
+    <symbol id="i-logo" viewBox="0 0 24 24"><path d="M12 2.2 21 7v10l-9 4.8L3 17V7l9-4.8Z"/><path d="m8 14 4-6 4 6M9.2 12h5.6"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3.5 10 8.5-7 8.5 7v9a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2v-9Z"/><path d="M9 21v-7h6v7"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20 15a3 3 0 0 1-3 3H9l-5 3v-6a3 3 0 0 1-1-2V7a3 3 0 0 1 3-3h11a3 3 0 0 1 3 3v8Z"/><path d="M8 10h.01M12 10h.01M16 10h.01"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.5 20 6v5c0 5.1-3.4 8.7-8 10.5C7.4 19.7 4 16.1 4 11V6l8-3.5Z"/><path d="m9 12 2 2 4-5"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 16v-4M12 16V8M17 16v-6"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V21h-4v-.08A1.7 1.7 0 0 0 9 19.37a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.63 15 1.7 1.7 0 0 0 3.08 14H3v-4h.08A1.7 1.7 0 0 0 4.63 9a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.63h.01A1.7 1.7 0 0 0 10 3.08V3h4v.08A1.7 1.7 0 0 0 15 4.63a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.37 9v.01A1.7 1.7 0 0 0 20.92 10H21v4h-.08A1.7 1.7 0 0 0 19.4 15Z"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-collapse" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16M13 9h4M13 13h4"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+    <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M3 12h4l2-6 4 12 2-6h6"/></symbol>
+    <symbol id="i-message" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3v-7a4 4 0 0 1-1-3V7a4 4 0 0 1 4-4h11a4 4 0 0 1 4 4v8Z"/></symbol>
+    <symbol id="i-coins" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v5c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 11v5c0 1.7 3.6 3 8 3s8-1.3 8-3v-5"/></symbol>
+    <symbol id="i-robot" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="13" rx="3"/><path d="M12 3v4M8 12h.01M16 12h.01M8 16h8"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+  </svg>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark"><svg class="icon"><use href="#i-logo" /></svg></span>
+        <span>George-SCRM1.0</span>
+      </div>
+      <nav class="side-nav" aria-label="主导航">
+        <div class="nav-item active" data-nav="首页"><svg class="icon"><use href="#i-home" /></svg><span class="nav-label">首页</span></div>
+        <div class="nav-group">
+          <div class="nav-group-title" data-nav="会话管理"><svg class="icon"><use href="#i-chat" /></svg><span class="nav-label">会话管理</span><svg class="icon chevron"><use href="#i-chevron" /></svg></div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title" data-nav="代理IP管理"><svg class="icon"><use href="#i-shield" /></svg><span class="nav-label">代理IP管理</span><svg class="icon chevron"><use href="#i-chevron" /></svg></div>
+        </div>
+        <div class="nav-group expanded">
+          <div class="nav-group-title" data-nav="功能使用统计"><svg class="icon"><use href="#i-chart" /></svg><span class="nav-label">功能使用统计</span><svg class="icon chevron"><use href="#i-chevron" /></svg></div>
+          <div class="nav-children">
+            <div class="nav-child" data-nav="客户端使用统计">客户端使用统计</div>
+            <div class="nav-child" data-nav="AI业务员使用统计">AI业务员使用统计</div>
+          </div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title" data-nav="客户中心"><svg class="icon"><use href="#i-users" /></svg><span class="nav-label">客户中心</span><svg class="icon chevron"><use href="#i-chevron" /></svg></div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-title" data-nav="系统管理"><svg class="icon"><use href="#i-settings" /></svg><span class="nav-label">系统管理</span><svg class="icon chevron"><use href="#i-chevron" /></svg></div>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <button class="icon-button" type="button" aria-label="收起侧边栏" id="collapseBtn"><svg class="icon"><use href="#i-collapse" /></svg></button>
+        <div class="user-entry" id="userEntry">
+          <span class="avatar"><svg class="icon"><use href="#i-user" /></svg></span>
+          <span>张奥</span>
+          <svg class="icon chevron"><use href="#i-chevron" /></svg>
+        </div>
+      </header>
+      <div class="tabbar"><div class="page-tab">首页</div></div>
+
+      <main class="dashboard" id="dashboard">
+        <div class="content-wrap">
+          <div class="page-heading">
+            <div>
+              <h1>业务看板</h1>
+              <p>统一查看系统用户、翻译服务、AI 业务员与客户业务对象创建情况</p>
+            </div>
+            <div class="update-state"><span class="state-dot"></span><span id="updateText">数据已更新 · 10:30</span></div>
+          </div>
+
+          <section class="panel filter-panel" aria-label="全局筛选">
+            <div class="filter-block period-block">
+              <span class="filter-label">统计周期</span>
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <div class="segment" id="periodSegment">
+                  <button type="button" data-period="today">今日</button>
+                  <button type="button" data-period="yesterday">昨日</button>
+                  <button type="button" data-period="last7" class="active">近7天</button>
+                  <button type="button" data-period="last30">近30天</button>
+                  <button type="button" data-period="custom">自定义</button>
+                </div>
+                <div class="custom-range" id="customRange">
+                  <input class="date-control" id="startDate" type="date" />
+                  <span class="range-separator">—</span>
+                  <input class="date-control" id="endDate" type="date" />
+                </div>
+              </div>
+            </div>
+
+            <label class="filter-block">
+              <span class="filter-label">部门</span>
+              <select class="select-control" id="departmentSelect">
+                <option value="all">全部部门</option>
+              </select>
+            </label>
+
+            <div class="filter-block">
+              <span class="filter-label">WhatsApp 账号</span>
+              <div class="multi-select" id="accountSelect">
+                <button class="multi-trigger" id="accountTrigger" type="button"><span class="trigger-text">全部账号</span><svg class="icon"><use href="#i-chevron" /></svg></button>
+                <div class="multi-menu" id="accountMenu">
+                  <label class="multi-option"><input type="checkbox" value="01" checked />WA-销售一组</label>
+                  <label class="multi-option"><input type="checkbox" value="02" checked />WA-销售二组</label>
+                  <label class="multi-option"><input type="checkbox" value="03" checked />WA-海外客服</label>
+                  <label class="multi-option"><input type="checkbox" value="04" checked />WA-活动承接</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="filter-actions">
+              <button class="btn" type="button" id="resetBtn">重置</button>
+              <button class="btn primary" type="button" id="queryBtn">查询</button>
+            </div>
+          </section>
+
+          <section class="module-section" id="systemOverview">
+            <div class="section-heading">
+              <h2 class="section-title">SCRM数据总览</h2>
+            </div>
+            <div class="metric-grid">
+              <article class="module-card metric-card">
+                <div class="metric-head"><span class="metric-name">总用户数</span><span class="metric-icon"><svg class="icon"><use href="#i-users" /></svg></span></div>
+                <div class="metric-body"><div class="metric-value" data-metric="totalUsers">12,486</div><span class="delta up">↑ 4.6%</span></div>
+                <div class="metric-caption">较上周期</div>
+              </article>
+              <article class="module-card metric-card">
+                <div class="metric-head"><span class="metric-name">新增用户数</span><span class="metric-icon teal"><svg class="icon"><use href="#i-user" /></svg></span></div>
+                <div class="metric-body"><div class="metric-value" data-metric="newUsers">386</div><span class="delta up">↑ 12.8%</span></div>
+                <div class="metric-caption">较上周期</div>
+              </article>
+              <article class="module-card metric-card">
+                <div class="metric-head"><span class="metric-name">活跃用户数</span><span class="metric-icon purple"><svg class="icon"><use href="#i-pulse" /></svg></span></div>
+                <div class="metric-body"><div class="metric-value" data-metric="activeUsers">3,928</div><span class="delta up">↑ 8.6%</span></div>
+                <div class="metric-caption">较上周期</div>
+              </article>
+              <article class="module-card metric-card">
+                <div class="metric-head"><span class="metric-name">活跃用户占比</span><span class="metric-icon amber"><svg class="icon"><use href="#i-chart" /></svg></span></div>
+                <div class="metric-body"><div class="metric-value" data-metric="activeRate">31.5<span class="metric-unit">%</span></div><span class="delta down">↓ 1.3%</span></div>
+                <div class="metric-caption">较上周期</div>
+              </article>
+            </div>
+            <article class="module-card chart-card">
+              <div class="card-heading">
+                <div><h3 class="card-title">使用趋势</h3></div>
+                <div class="chart-tabs" data-chart="systemChart">
+                  <button class="active" type="button" data-metric-key="totalUsers">总用户数</button>
+                  <button type="button" data-metric-key="newUsers">新增用户数</button>
+                  <button type="button" data-metric-key="activeUsers">活跃用户数</button>
+                  <button type="button" data-metric-key="activeRate">活跃用户占比</button>
+                </div>
+              </div>
+              <div class="line-chart" id="systemChart"></div>
+            </article>
+          </section>
+
+          <section class="module-section" id="translationService">
+            <div class="section-heading">
+              <h2 class="section-title">翻译服务</h2>
+            </div>
+            <div class="metric-grid">
+              <article class="module-card metric-card">
+                <div class="metric-head"><span class="metric-name">翻译条数</span><span class="metric-icon"><svg class="icon"><use href="#i-message" /></svg></span></div>
+                <div class="metric-body"><div class="metric-value" data-metric="translationCount">18,642</div><span class="delta up">↑ 10.2%</span></div>
+                <div class="metric-caption">当前周期累计</div>
+              </article>
+              <article class="module-card metric-card">
+                <div class="metric-head"><span class="metric-name">Token 消耗量</span><span class="metric-icon teal"><svg class="icon"><use href="#i-pulse" /></svg></span></div>
+                <div class="metric-body"><div class="metric-value" data-metric="tokens">8.36<span class="metric-unit">M</span></div><span class="delta up">↑ 6.8%</span></div>
+                <div class="metric-caption">当前周期累计</div>
+              </article>
+              <article class="module-card metric-card">
+                <div class="metric-head"><span class="metric-name">Token 总成本</span><span class="metric-icon amber"><svg class="icon"><use href="#i-coins" /></svg></span></div>
+                <div class="metric-body"><div class="metric-value" data-metric="tokenCost">¥1,284.60</div><span class="delta up">↑ 5.4%</span></div>
+                <div class="metric-caption">按线路单价折算</div>
+              </article>
+              <article class="module-card metric-card">
+                <div class="metric-head"><span class="metric-name">单次成本</span><span class="metric-icon purple"><svg class="icon"><use href="#i-coins" /></svg></span></div>
+                <div class="metric-body"><div class="metric-value" data-metric="avgCost">¥0.069</div><span class="delta down">↓ 3.1%</span></div>
+                <div class="metric-caption">Token 总成本 / 翻译条数</div>
+              </article>
+            </div>
+            <article class="module-card chart-card translation-trend-card">
+                <div class="card-heading">
+                  <div><h3 class="card-title">翻译使用趋势</h3></div>
+                  <div class="chart-tabs" data-chart="translationChart">
+                    <button class="active" type="button" data-metric-key="translationCount">翻译条数</button>
+                    <button type="button" data-metric-key="tokens">Token 消耗</button>
+                    <button type="button" data-metric-key="tokenCost">Token 成本</button>
+                    <button type="button" data-metric-key="avgCost">单次成本</button>
+                  </div>
+                </div>
+                <div class="line-chart" id="translationChart"></div>
+              </article>
+            <div class="translation-ranking-grid">
+              <article class="module-card translation-ranking-card" id="departmentUsageCard">
+                <div class="card-heading">
+                  <div><h3 class="card-title">部门使用排行</h3></div>
+                </div>
+                <div class="usage-rank-scroll" id="departmentUsageScroll">
+                  <div class="usage-rank-list" id="departmentUsageRanking"></div>
+                </div>
+                <div class="usage-detail-tooltip" id="departmentUsageTooltip" aria-hidden="true"></div>
+              </article>
+              <article class="module-card translation-ranking-card" id="peopleUsageCard">
+                <div class="card-heading">
+                  <div><h3 class="card-title">人员使用排行</h3></div>
+                </div>
+                <div class="usage-rank-scroll" id="peopleUsageScroll">
+                  <div class="usage-rank-list" id="peopleUsageRanking"></div>
+                </div>
+                <div class="usage-detail-tooltip" id="peopleUsageTooltip" aria-hidden="true"></div>
+              </article>
+              <article class="module-card rank-card translation-route-card">
+                <div class="card-heading">
+                  <div><h3 class="card-title">模型线路分析</h3></div>
+                </div>
+                <div class="rank-list" id="routeRanking"></div>
+              </article>
+            </div>
+          </section>
+
+          <section class="module-section" id="robotService">
+            <div class="section-heading">
+              <h2 class="section-title">AI 业务员</h2>
+            </div>
+            <div class="metric-grid six">
+              <article class="module-card metric-card">
+                <div class="metric-head"><span class="metric-name">Agent总数</span><span class="metric-icon"><svg class="icon"><use href="#i-robot" /></svg></span></div>
+                <div class="metric-body"><div class="metric-value" data-metric="robotTotal">268</div><span class="delta up">↑ 6.3%</span></div>
+                <div class="metric-caption">当前在线 / 可用</div>
+              </article>
+              <article class="module-card metric-card">
+                <div class="metric-head"><span class="metric-name">新增Agent数</span><span class="metric-icon teal"><svg class="icon"><use href="#i-user" /></svg></span></div>
+                <div class="metric-body"><div class="metric-value" data-metric="newAgents">24</div><span class="delta up">↑ 9.1%</span></div>
+                <div class="metric-caption">当前周期新增</div>
+              </article>
+              <article class="module-card metric-card">
+                <div class="metric-head"><span class="metric-name">处理消息数</span><span class="metric-icon purple"><svg class="icon"><use href="#i-message" /></svg></span></div>
+                <div class="metric-body"><div class="metric-value" data-metric="messages">26,493</div><span class="delta up">↑ 9.8%</span></div>
+                <div class="metric-caption">当前周期累计</div>
+              </article>
+              <article class="module-card metric-card">
+                <div class="metric-head"><span class="metric-name">接待会话数</span><span class="metric-icon teal"><svg class="icon"><use href="#i-chat" /></svg></span></div>
+                <div class="metric-body"><div class="metric-value" data-metric="sessions">5,842</div><span class="delta up">↑ 11.6%</span></div>
+                <div class="metric-caption">独立会话口径</div>
+              </article>
+              <article class="module-card metric-card">
+                <div class="metric-head"><span class="metric-name">完成接待数</span><span class="metric-icon teal"><svg class="icon"><use href="#i-check" /></svg></span></div>
+                <div class="metric-body"><div class="metric-value" data-metric="completed">4,976</div><span class="delta up">↑ 8.1%</span></div>
+                <div class="secondary-metric"><span>完成接待率</span><strong class="secondary-value" data-metric="completionRate">85.2%</strong></div>
+              </article>
+              <article class="module-card metric-card">
+                <div class="metric-head"><span class="metric-name">线索推送数</span><span class="metric-icon amber"><svg class="icon"><use href="#i-pulse" /></svg></span></div>
+                <div class="metric-body"><div class="metric-value" data-metric="leads">842</div><span class="delta up">↑ 14.2%</span></div>
+                <div class="secondary-metric"><span>线索推送率</span><strong class="secondary-value" data-metric="leadPushRate">14.4%</strong></div>
+              </article>
+            </div>
+            <div class="analysis-grid robot-analysis-row">
+              <article class="module-card chart-card">
+                <div class="card-heading">
+                  <div><h3 class="card-title">Agent趋势</h3></div>
+                  <div class="chart-tabs" data-chart="robotChart">
+                    <button class="active" type="button" data-metric-key="robotTotal">Agent总数</button>
+                    <button type="button" data-metric-key="newAgents">新增Agent数</button>
+                    <button type="button" data-metric-key="messages">处理消息</button>
+                    <button type="button" data-metric-key="sessions">接待会话</button>
+                    <button type="button" data-metric-keys="completed,completionRate">完成接待</button>
+                    <button type="button" data-metric-keys="leads,leadPushRate">线索推送</button>
+                  </div>
+                </div>
+                <div class="line-chart" id="robotChart"></div>
+              </article>
+              <article class="module-card country-rank-card">
+                <div class="card-heading">
+                  <div><h3 class="card-title">来源国家</h3></div>
+                  <div class="chart-tabs country-mode-tabs" id="countryModeTabs" aria-label="来源国家统计类型切换">
+                    <button class="active" type="button" data-country-mode="inbound">进线</button>
+                    <button type="button" data-country-mode="transfer">转派</button>
+                  </div>
+                </div>
+                <div class="country-chart" id="countryLeadChart" aria-label="按来源国家统计的进线与转派排行榜"></div>
+              </article>
+            </div>
+            <div class="analysis-grid robot-analysis-row">
+              <article class="module-card chart-card hourly-card">
+                <div class="card-heading">
+                  <div><h3 class="card-title">进线时间</h3></div>
+                </div>
+                <div class="hourly-bar-chart" id="hourlyInboundChart" aria-label="按24小时统计的进线数量柱状图"></div>
+              </article>
+              <article class="module-card donut-card">
+                <div class="card-heading">
+                  <div><h3 class="card-title">会话轮次分布</h3></div>
+                </div>
+                <div class="donut-layout">
+                  <div class="donut-wrap">
+                    <div class="donut" title="会话轮次占比分布"></div>
+                    <div class="donut-center"><strong class="donut-total" id="donutTotal">5,842</strong><span class="donut-label">会话总数</span></div>
+                  </div>
+                  <div class="legend-list">
+                    <div class="legend-item"><span class="legend-dot" style="background:#2e7bd6"></span><span>1 轮</span><span class="legend-value">21%</span></div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#00a3b4"></span><span>2–5 轮</span><span class="legend-value">42%</span></div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#7a6ff0"></span><span>6–10 轮</span><span class="legend-value">25%</span></div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#f7ba1e"></span><span>10 轮以上</span><span class="legend-value">12%</span></div>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <article class="module-card department-usage-card">
+              <div class="card-heading">
+                <div><h3 class="card-title">部门使用情况</h3></div>
+                <div class="department-usage-controls">
+                  <div class="lead-grade-filters" id="leadGradeFilters" aria-label="线索等级筛选">
+                    <span>线索等级</span>
+                    <label class="lead-grade-option"><input type="checkbox" value="a" checked><i style="background:#2e7bd6"></i>A</label>
+                    <label class="lead-grade-option"><input type="checkbox" value="b" checked><i style="background:#00a3b4"></i>B</label>
+                    <label class="lead-grade-option"><input type="checkbox" value="c" checked><i style="background:#7a6ff0"></i>C</label>
+                    <label class="lead-grade-option"><input type="checkbox" value="d" checked><i style="background:#f7ba1e"></i>D</label>
+                  </div>
+                  <div class="chart-tabs department-metric-tabs" id="departmentMetricTabs" aria-label="部门使用指标切换">
+                    <button class="active" type="button" data-department-metric="sessions">接待会话数</button>
+                    <button type="button" data-department-metric="leads">线索推送数</button>
+                    <button type="button" data-department-metric="messages">处理消息数</button>
+                    <button type="button" data-department-metric="agents">挂载 Agent 数</button>
+                  </div>
+                </div>
+              </div>
+              <div class="department-usage-chart" id="departmentUsageChart" aria-label="AI 业务员部门使用情况排行"></div>
+            </article>
+          </section>
+
+          <section class="module-section" id="businessCreation">
+            <div class="section-heading">
+              <h2 class="section-title">业务创建统计</h2>
+            </div>
+
+            <div class="metric-grid business-grid">
+              <article class="module-card metric-card business-object-card">
+                <div class="metric-head"><span class="metric-name">客户</span><span class="metric-icon"><svg class="icon"><use href="#i-users" /></svg></span></div>
+                <div class="business-total-line"><span class="business-total-label">创建总数</span><strong class="business-total-value" data-business-total="customer">480</strong></div>
+                <div class="source-breakdown">
+                  <div class="source-row customer-scrm-source" data-customer-scrm tabindex="0" aria-describedby="customerSourceTooltip">
+                    <span class="source-label"><i class="source-dot scrm"></i>SCRM<i class="source-help" aria-hidden="true">i</i></span>
+                    <div class="source-stat"><strong class="source-count" data-business-source="scrmCustomers">286</strong><span class="source-share" data-business-share="scrmCustomers">59.6%</span></div>
+                    <div class="customer-source-tooltip" id="customerSourceTooltip" role="tooltip">
+                      <span>手动创建<strong data-business-tooltip="scrmManualCustomers">216</strong></span>
+                      <span>AI 业务员创建<strong data-business-tooltip="scrmAiCustomers">70</strong></span>
+                    </div>
+                  </div>
+                  <div class="source-row"><span class="source-label"><i class="source-dot crm"></i>CRM</span><div class="source-stat"><strong class="source-count" data-business-source="crmCustomers">194</strong><span class="source-share" data-business-share="crmCustomers">40.4%</span></div></div>
+                </div>
+              </article>
+
+              <article class="module-card metric-card business-object-card">
+                <div class="metric-head"><span class="metric-name">项目</span><span class="metric-icon teal"><svg class="icon"><use href="#i-chart" /></svg></span></div>
+                <div class="business-total-line"><span class="business-total-label">创建总数</span><strong class="business-total-value" data-business-total="project">244</strong></div>
+                <div class="source-breakdown">
+                  <div class="source-row"><span class="source-label"><i class="source-dot scrm"></i>SCRM</span><div class="source-stat"><strong class="source-count" data-business-source="scrmProjects">148</strong><span class="source-share" data-business-share="scrmProjects">60.7%</span></div></div>
+                  <div class="source-row"><span class="source-label"><i class="source-dot crm"></i>CRM</span><div class="source-stat"><strong class="source-count" data-business-source="crmProjects">96</strong><span class="source-share" data-business-share="crmProjects">39.3%</span></div></div>
+                </div>
+              </article>
+
+              <article class="module-card metric-card business-object-card">
+                <div class="metric-head"><span class="metric-name">商机</span><span class="metric-icon purple"><svg class="icon"><use href="#i-pulse" /></svg></span></div>
+                <div class="business-total-line"><span class="business-total-label">创建总数</span><strong class="business-total-value" data-business-total="opportunity">159</strong></div>
+                <div class="source-breakdown">
+                  <div class="source-row"><span class="source-label"><i class="source-dot scrm"></i>SCRM</span><div class="source-stat"><strong class="source-count" data-business-source="scrmOpportunities">92</strong><span class="source-share" data-business-share="scrmOpportunities">57.9%</span></div></div>
+                  <div class="source-row"><span class="source-label"><i class="source-dot crm"></i>CRM</span><div class="source-stat"><strong class="source-count" data-business-source="crmOpportunities">67</strong><span class="source-share" data-business-share="crmOpportunities">42.1%</span></div></div>
+                </div>
+              </article>
+
+              <article class="module-card metric-card business-object-card">
+                <div class="metric-head"><span class="metric-name">订单</span><span class="metric-icon amber"><svg class="icon"><use href="#i-coins" /></svg></span></div>
+                <div class="business-total-line"><span class="business-total-label">创建总数</span><strong class="business-total-value" data-business-total="order">87</strong></div>
+                <div class="source-breakdown">
+                  <div class="source-row"><span class="source-label"><i class="source-dot scrm"></i>SCRM</span><div class="source-stat"><strong class="source-count" data-business-source="scrmOrders">48</strong><span class="source-share" data-business-share="scrmOrders">55.2%</span></div></div>
+                  <div class="source-row"><span class="source-label"><i class="source-dot crm"></i>CRM</span><div class="source-stat"><strong class="source-count" data-business-source="crmOrders">39</strong><span class="source-share" data-business-share="crmOrders">44.8%</span></div></div>
+                </div>
+              </article>
+            </div>
+
+            <article class="module-card business-department-card">
+              <div class="card-heading">
+                <div class="business-department-heading">
+                  <h3 class="card-title">部门创建情况</h3>
+                  <div class="business-source-legend" aria-label="创建来源图例">
+                    <span><i style="background:#2e7bd6"></i>SCRM</span>
+                    <span><i style="background:#00a3b4"></i>CRM</span>
+                  </div>
+                </div>
+                <div class="business-department-controls">
+                  <div class="chart-tabs" id="businessObjectTabs" aria-label="业务创建对象切换">
+                    <button class="active" type="button" data-business-object="customer">客户</button>
+                    <button type="button" data-business-object="project">项目</button>
+                    <button type="button" data-business-object="opportunity">商机</button>
+                    <button type="button" data-business-object="order">订单</button>
+                  </div>
+                </div>
+              </div>
+              <div class="business-department-chart" id="businessDepartmentChart" aria-label="按部门统计的业务创建情况"></div>
+            </article>
+
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"><span class="toast-mark">✓</span><span id="toastText">已更新</span></div>
+
+  <script>
+    (() => {
+      const metricBase = {
+        totalUsers: 12486,
+        newUsers: 386,
+        activeUsers: 3928,
+        activeRate: 31.5,
+        translationCount: 18642,
+        tokens: 8.36,
+        tokenCost: 1284.6,
+        avgCost: 0.069,
+        robotTotal: 268,
+        newAgents: 24,
+        sessions: 5842,
+        messages: 26493,
+        completed: 4976,
+        completionRate: 85.2,
+        leads: 842,
+        leadPushRate: 14.4
+      };
+
+      const businessBase = {
+        scrmManualCustomers: 216,
+        scrmAiCustomers: 70,
+        crmCustomers: 194,
+        scrmProjects: 148,
+        crmProjects: 96,
+        scrmOpportunities: 92,
+        crmOpportunities: 67,
+        scrmOrders: 48,
+        crmOrders: 39
+      };
+
+      const businessObjects = [
+        { key: "customer", name: "客户", scrm: "scrmCustomers", crm: "crmCustomers" },
+        { key: "project", name: "项目", scrm: "scrmProjects", crm: "crmProjects" },
+        { key: "opportunity", name: "商机", scrm: "scrmOpportunities", crm: "crmOpportunities" },
+        { key: "order", name: "订单", scrm: "scrmOrders", crm: "crmOrders" }
+      ];
+
+      const metricConfig = {
+        totalUsers: { name: "总用户数", base: 12486, variance: 0.045, unit: "人", decimals: 0 },
+        newUsers: { name: "新增用户数", base: 386, variance: 0.18, unit: "人", decimals: 0 },
+        activeUsers: { name: "活跃用户数", base: 3928, variance: 0.13, unit: "人", decimals: 0 },
+        activeRate: { name: "活跃用户占比", base: 31.5, variance: 0.10, unit: "%", decimals: 1 },
+        translationCount: { name: "翻译条数", base: 18642, variance: 0.16, unit: "条", decimals: 0 },
+        tokens: { name: "Token 消耗量", base: 8.36, variance: 0.19, unit: "M", decimals: 2 },
+        tokenCost: { name: "Token 总成本", base: 1284.6, variance: 0.15, unit: "元", decimals: 2 },
+        avgCost: { name: "单次成本", base: 0.069, variance: 0.08, unit: "元", decimals: 3 },
+        robotTotal: { name: "Agent总数", base: 268, variance: 0.05, unit: "个", decimals: 0 },
+        newAgents: { name: "新增Agent数", base: 24, variance: 0.20, unit: "个", decimals: 0 },
+        sessions: { name: "接待会话数", base: 5842, variance: 0.17, unit: "次", decimals: 0 },
+        messages: { name: "处理消息数", base: 26493, variance: 0.18, unit: "条", decimals: 0 },
+        completed: { name: "完成接待数", base: 4976, variance: 0.14, unit: "次", decimals: 0 },
+        completionRate: { name: "完成接待率", base: 85.2, variance: 0.025, unit: "%", decimals: 1 },
+        leads: { name: "线索推送数", base: 842, variance: 0.20, unit: "条", decimals: 0 },
+        leadPushRate: { name: "线索推送率", base: 14.4, variance: 0.06, unit: "%", decimals: 1 }
+      };
+
+      const state = {
+        period: "last7",
+        factor: 1,
+        countryMode: "inbound",
+        peopleDepartment: "all",
+        peopleVisibleCount: 20,
+        peoplePageSize: 20,
+        departmentUsageMetric: "sessions",
+        leadGrades: ["a", "b", "c", "d"],
+        businessObject: "customer",
+        activeMetrics: {
+          systemChart: "totalUsers",
+          translationChart: "translationCount",
+          robotChart: "robotTotal"
+        }
+      };
+
+      const routeData = [
+        { name: "Google", value: 6842, share: 100 },
+        { name: "阿里 AI", value: 5286, share: 77 },
+        { name: "OpenAI", value: 3610, share: 53 },
+        { name: "Azure AI", value: 1948, share: 28 },
+        { name: "DeepSeek", value: 956, share: 14 }
+      ];
+
+      const departmentCatalog = [
+        { id: "d01", name: "威猛", shortName: "威猛" },
+        { id: "d02", name: "定制二", shortName: "定制二" },
+        { id: "d03", name: "家具二", shortName: "家具二" },
+        { id: "d04", name: "启明", shortName: "启明" },
+        { id: "d05", name: "天马", shortName: "天马" },
+        { id: "d06", name: "木兰", shortName: "木兰" },
+        { id: "d07", name: "星链", shortName: "星链" },
+        { id: "d08", name: "星辉", shortName: "星辉" },
+        { id: "d09", name: "本分", shortName: "本分" },
+        { id: "d10", name: "极点", shortName: "极点" },
+        { id: "d11", name: "紫韵", shortName: "紫韵" },
+        { id: "d12", name: "Wisdom", shortName: "Wisdom" },
+        { id: "d13", name: "赤橙", shortName: "赤橙" },
+        { id: "d14", name: "方舟", shortName: "方舟" },
+        { id: "d15", name: "无限", shortName: "无限" }
+      ];
+
+      const rankedDepartmentWeights = departmentCatalog.map((_, index) => departmentCatalog.length - index);
+
+      function allocateRankedTotal(total, weights = rankedDepartmentWeights) {
+        const weightTotal = weights.reduce((sum, value) => sum + value, 0);
+        const raw = weights.map(value => total * value / weightTotal);
+        const values = raw.map(Math.floor);
+        let remainder = total - values.reduce((sum, value) => sum + value, 0);
+        raw.map((value, index) => ({ index, fraction: value - Math.floor(value) }))
+          .sort((a, b) => b.fraction - a.fraction || a.index - b.index)
+          .slice(0, remainder)
+          .forEach(item => { values[item.index] += 1; });
+        return values;
+      }
+
+      const translationDepartmentValues = allocateRankedTotal(metricBase.translationCount);
+      const departmentUsageBase = departmentCatalog.map((department, index) => ({
+        id: department.id,
+        name: department.name,
+        value: translationDepartmentValues[index]
+      }));
+
+      const peopleUsageBase = departmentUsageBase.flatMap((department, departmentIndex) => {
+        const weights = Array.from({ length: 24 }, (_, index) => 25 - index);
+        const weightTotal = weights.reduce((total, value) => total + value, 0);
+        return weights.map((weight, memberIndex) => ({
+          id: `${department.id}-${memberIndex + 1}`,
+          name: `员工${String(departmentIndex * 24 + memberIndex + 1).padStart(3, "0")}`,
+          departmentId: department.id,
+          departmentName: department.name,
+          value: Math.max(1, Math.round(department.value * weight / weightTotal))
+        }));
+      });
+
+      const countryLeadBase = [
+        { country: "美国", value: 214 },
+        { country: "巴西", value: 168 },
+        { country: "墨西哥", value: 139 },
+        { country: "英国", value: 104 },
+        { country: "德国", value: 86 },
+        { country: "法国", value: 72 },
+        { country: "加拿大", value: 59 }
+      ];
+
+      const countryTransferBase = [
+        { country: "美国", a: 2, b: 1, c: 1 },
+        { country: "巴西", a: 1, b: 1, c: 1 },
+        { country: "墨西哥", a: 2, b: 1, c: 0 },
+        { country: "英国", a: 1, b: 1, c: 0 },
+        { country: "德国", a: 1, b: 0, c: 1 },
+        { country: "法国", a: 1, b: 0, c: 0 },
+        { country: "加拿大", a: 0, b: 1, c: 0 }
+      ];
+
+      const aiDepartmentValues = {
+        sessions: allocateRankedTotal(metricBase.sessions),
+        leads: allocateRankedTotal(metricBase.leads),
+        messages: allocateRankedTotal(metricBase.messages),
+        agents: allocateRankedTotal(metricBase.robotTotal)
+      };
+
+      const aiDepartmentUsageBase = departmentCatalog.map((department, index) => ({
+        ...department,
+        sessions: aiDepartmentValues.sessions[index],
+        leads: aiDepartmentValues.leads[index],
+        messages: aiDepartmentValues.messages[index],
+        agents: aiDepartmentValues.agents[index]
+      })).map(item => {
+        const a = Math.round(item.leads * .38);
+        const b = Math.round(item.leads * .28);
+        const c = Math.round(item.leads * .20);
+        return { ...item, leadGrades: { a, b, c, d: item.leads - a - b - c } };
+      });
+
+      const businessDepartmentWeights = rankedDepartmentWeights;
+
+      function allocateBusinessTotal(total) {
+        const weightTotal = businessDepartmentWeights.reduce((sum, value) => sum + value, 0);
+        const raw = businessDepartmentWeights.map(value => total * value / weightTotal);
+        const values = raw.map(Math.floor);
+        let remainder = total - values.reduce((sum, value) => sum + value, 0);
+        raw.map((value, index) => ({ index, fraction: value - Math.floor(value) }))
+          .sort((a, b) => b.fraction - a.fraction || a.index - b.index)
+          .slice(0, remainder)
+          .forEach(item => { values[item.index] += 1; });
+        return values;
+      }
+
+      const businessDepartmentAllocations = {
+        customerManual: allocateBusinessTotal(businessBase.scrmManualCustomers),
+        customerAi: allocateBusinessTotal(businessBase.scrmAiCustomers),
+        customerCrm: allocateBusinessTotal(businessBase.crmCustomers),
+        projectScrm: allocateBusinessTotal(businessBase.scrmProjects),
+        projectCrm: allocateBusinessTotal(businessBase.crmProjects),
+        opportunityScrm: allocateBusinessTotal(businessBase.scrmOpportunities),
+        opportunityCrm: allocateBusinessTotal(businessBase.crmOpportunities),
+        orderScrm: allocateBusinessTotal(businessBase.scrmOrders),
+        orderCrm: allocateBusinessTotal(businessBase.crmOrders)
+      };
+
+      const businessDepartmentCreationBase = aiDepartmentUsageBase.map((department, index) => {
+        const customerManual = businessDepartmentAllocations.customerManual[index];
+        const customerAi = businessDepartmentAllocations.customerAi[index];
+        return {
+          id: department.id,
+          name: department.name,
+          shortName: department.shortName,
+          customer: { scrm: customerManual + customerAi, crm: businessDepartmentAllocations.customerCrm[index], manual: customerManual, ai: customerAi },
+          project: { scrm: businessDepartmentAllocations.projectScrm[index], crm: businessDepartmentAllocations.projectCrm[index] },
+          opportunity: { scrm: businessDepartmentAllocations.opportunityScrm[index], crm: businessDepartmentAllocations.opportunityCrm[index] },
+          order: { scrm: businessDepartmentAllocations.orderScrm[index], crm: businessDepartmentAllocations.orderCrm[index] }
+        };
+      });
+
+      const transferClasses = [
+        { key: "a", name: "A类", color: "#2e7bd6" },
+        { key: "b", name: "B类", color: "#00a3b4" },
+        { key: "c", name: "C类", color: "#7a6ff0" }
+      ];
+
+      const hourlyInboundBase = [307, 350, 371, 406, 444, 470, 448, 418, 384, 333, 290, 248, 205, 154, 128, 120, 111, 107, 102, 98, 94, 90, 85, 79];
+
+      function pad(n) { return String(n).padStart(2, "0"); }
+      function dateText(date) { return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`; }
+
+      function setupDates() {
+        const end = new Date();
+        const start = new Date(end);
+        start.setDate(start.getDate() - 6);
+        document.getElementById("startDate").value = dateText(start);
+        document.getElementById("endDate").value = dateText(end);
+      }
+
+      function getPeriodLabels() {
+        const now = new Date();
+        if (state.period === "today" || state.period === "yesterday") {
+          return ["00:00", "02:00", "04:00", "06:00", "08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00"];
+        }
+        if (state.period === "last30") {
+          return Array.from({ length: 10 }, (_, i) => {
+            const d = new Date(now);
+            d.setDate(d.getDate() - (27 - i * 3));
+            return `${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+          });
+        }
+        if (state.period === "custom") {
+          const startVal = document.getElementById("startDate").value;
+          const endVal = document.getElementById("endDate").value;
+          const start = startVal ? new Date(startVal + "T00:00:00") : new Date(now.getTime() - 6 * 86400000);
+          const end = endVal ? new Date(endVal + "T00:00:00") : now;
+          const days = Math.max(2, Math.round((end - start) / 86400000) + 1);
+          const count = Math.min(10, days);
+          return Array.from({ length: count }, (_, i) => {
+            const d = new Date(start.getTime() + ((end - start) * i / Math.max(1, count - 1)));
+            return `${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+          });
+        }
+        return Array.from({ length: 7 }, (_, i) => {
+          const d = new Date(now);
+          d.setDate(d.getDate() - (6 - i));
+          return `${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+        });
+      }
+
+      function seededNoise(index, seed) {
+        const x = Math.sin((index + 1) * (seed + 1) * 2.137) * 43758.5453;
+        return (x - Math.floor(x)) * 2 - 1;
+      }
+
+      function generateSeries(metricKey) {
+        const cfg = metricConfig[metricKey];
+        const labels = getPeriodLabels();
+        const seed = Object.keys(metricConfig).indexOf(metricKey) + state.factor * 3.7;
+        const values = labels.map((_, i) => {
+          const direction = ((i / Math.max(1, labels.length - 1)) - 0.45) * cfg.variance * 0.55;
+          const wave = Math.sin(i * 1.45 + seed) * cfg.variance * 0.38;
+          const noise = seededNoise(i, seed) * cfg.variance * 0.22;
+          let value = cfg.base * state.factor * (1 + direction + wave + noise);
+          if (metricKey === "activeRate") value = Math.min(60, Math.max(10, cfg.base + (direction + wave + noise) * 15));
+          if (metricKey === "completionRate") value = Math.min(99, Math.max(60, cfg.base + (direction + wave + noise) * 12));
+          if (metricKey === "leadPushRate") value = Math.min(45, Math.max(3, cfg.base + (direction + wave + noise) * 12));
+          return Number(value.toFixed(cfg.decimals));
+        });
+        return { labels, values, cfg };
+      }
+
+      function niceNumber(value, decimals = 0) {
+        if (decimals > 0) return Number(value).toFixed(decimals);
+        return Math.round(value).toLocaleString("zh-CN");
+      }
+
+      function tooltipValue(value, cfg) {
+        const prefix = cfg.unit === "元" ? "¥" : "";
+        const suffix = cfg.unit === "元" ? "" : cfg.unit;
+        return `${prefix}${niceNumber(value, cfg.decimals)}${suffix}`;
+      }
+
+      function axisValue(value, cfg) {
+        if (cfg.unit === "%") return `${Number(value).toFixed(cfg.decimals > 1 ? 1 : cfg.decimals)}%`;
+        if (cfg.unit === "M") return `${Number(value).toFixed(1)}M`;
+        if (cfg.unit === "元" && value < 1) return `¥${Number(value).toFixed(3)}`;
+        if (cfg.unit === "元") return `¥${Math.round(value).toLocaleString("zh-CN")}`;
+        if (value >= 10000 && value < 100000) return `${(value / 10000).toFixed(2)}万`;
+        if (value >= 100000) return `${(value / 10000).toFixed(1)}万`;
+        return Math.round(value).toLocaleString("zh-CN");
+      }
+
+      function renderLineChart(chartId, metricSelection) {
+        const container = document.getElementById(chartId);
+        const metricKeys = Array.isArray(metricSelection) ? metricSelection : [metricSelection];
+        const series = metricKeys.map(generateSeries);
+        const labels = series[0].labels;
+        const isDual = series.length > 1;
+        const colors = ["#2e7bd6", "#00a3b4"];
+        const width = 920;
+        const height = 265;
+        const padLeft = 62;
+        const padRight = isDual ? 66 : 22;
+        const padTop = isDual ? 36 : 18;
+        const padBottom = 37;
+        const innerW = width - padLeft - padRight;
+        const innerH = height - padTop - padBottom;
+        const bounds = series.map(item => {
+          let min = Math.min(...item.values);
+          let max = Math.max(...item.values);
+          const span = Math.max(max - min, Math.abs(max) * 0.08, 1);
+          min = Math.max(0, min - span * 0.35);
+          max = max + span * 0.35;
+          return { min, max };
+        });
+        const x = i => padLeft + (innerW * i / Math.max(1, labels.length - 1));
+        const yFor = (seriesIndex, value) => {
+          const { min, max } = bounds[seriesIndex];
+          return padTop + innerH - ((value - min) / Math.max(0.000001, max - min)) * innerH;
+        };
+        const pointSeries = series.map((item, seriesIndex) => item.values.map((value, i) => [x(i), yFor(seriesIndex, value)]));
+        const linePaths = pointSeries.map(points => points.map((point, i) => `${i ? "L" : "M"}${point[0].toFixed(2)},${point[1].toFixed(2)}`).join(" "));
+        const primaryPoints = pointSeries[0];
+        const areaPath = `${linePaths[0]} L${primaryPoints[primaryPoints.length - 1][0].toFixed(2)},${(padTop + innerH).toFixed(2)} L${primaryPoints[0][0].toFixed(2)},${(padTop + innerH).toFixed(2)} Z`;
+        const gradientId = `gradient-${chartId}`;
+        let grid = "";
+        for (let i = 0; i <= 4; i++) {
+          const gy = padTop + innerH * i / 4;
+          const leftValue = bounds[0].max - (bounds[0].max - bounds[0].min) * i / 4;
+          grid += `<line x1="${padLeft}" y1="${gy}" x2="${width - padRight}" y2="${gy}" stroke="#e9eef4" stroke-width="1" stroke-dasharray="4 4" />`;
+          grid += `<text x="${padLeft - 10}" y="${gy + 4}" fill="#98a2b3" font-size="10" text-anchor="end">${axisValue(leftValue, series[0].cfg)}</text>`;
+          if (isDual) {
+            const rightValue = bounds[1].max - (bounds[1].max - bounds[1].min) * i / 4;
+            grid += `<text x="${width - padRight + 10}" y="${gy + 4}" fill="#00a3b4" font-size="10" text-anchor="start">${axisValue(rightValue, series[1].cfg)}</text>`;
+          }
+        }
+        const labelStep = Math.max(1, Math.ceil(labels.length / 7));
+        const xLabels = labels.map((label, i) => (i % labelStep === 0 || i === labels.length - 1)
+          ? `<text x="${x(i)}" y="${height - 10}" fill="#98a2b3" font-size="10" text-anchor="middle">${label}</text>`
+          : "").join("");
+        const circles = labels.map((_, index) => {
+          const hitWidth = Math.max(24, innerW / Math.max(1, labels.length - 1) * .72);
+          const cores = pointSeries.map((points, seriesIndex) => `<circle class="point-core" data-series="${seriesIndex}" cx="${points[index][0]}" cy="${points[index][1]}" r="3" fill="#fff" stroke="${colors[seriesIndex]}" stroke-width="2" opacity="${index === labels.length - 1 ? 1 : .78}" />`).join("");
+          return `<g class="chart-point" data-index="${index}" tabindex="0"><rect x="${x(index) - hitWidth / 2}" y="${padTop}" width="${hitWidth}" height="${innerH}" fill="transparent" />${cores}</g>`;
+        }).join("");
+        const paths = linePaths.map((path, seriesIndex) => `<path class="trend-line" data-series="${seriesIndex}" d="${path}" fill="none" stroke="${colors[seriesIndex]}" stroke-width="${seriesIndex ? 2.3 : 2.6}" stroke-linecap="round" stroke-linejoin="round" />`).join("");
+        const legend = isDual ? `<g aria-label="图例"><line x1="${padLeft}" y1="14" x2="${padLeft + 18}" y2="14" stroke="${colors[0]}" stroke-width="3" stroke-linecap="round"/><text x="${padLeft + 25}" y="18" fill="#667085" font-size="10">${series[0].cfg.name}</text><line x1="${padLeft + 128}" y1="14" x2="${padLeft + 146}" y2="14" stroke="${colors[1]}" stroke-width="3" stroke-linecap="round"/><text x="${padLeft + 153}" y="18" fill="#667085" font-size="10">${series[1].cfg.name}</text></g>` : "";
+        const ariaLabel = `${series.map(item => item.cfg.name).join("与")}趋势图`;
+        container.innerHTML = `
+          <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-label="${ariaLabel}">
+            <defs><linearGradient id="${gradientId}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2e7bd6" stop-opacity=".25"/><stop offset="100%" stop-color="#2e7bd6" stop-opacity=".015"/></linearGradient></defs>
+            ${legend}${grid}${xLabels}
+            <path d="${areaPath}" fill="url(#${gradientId})" />
+            ${paths}
+            ${circles}
+          </svg>
+          <div class="chart-tooltip"><div class="tooltip-date"></div><div class="tooltip-series"></div></div>`;
+
+        const tooltip = container.querySelector(".chart-tooltip");
+        const showTooltip = (point, index) => {
+          const box = container.getBoundingClientRect();
+          const px = (pointSeries[0][index][0] / width) * box.width;
+          const py = (Math.min(...pointSeries.map(points => points[index][1])) / height) * box.height;
+          tooltip.querySelector(".tooltip-date").textContent = labels[index];
+          tooltip.querySelector(".tooltip-series").innerHTML = series.map((item, seriesIndex) => `<div><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${colors[seriesIndex]};margin-right:6px"></span>${item.cfg.name} <span class="tooltip-value" style="color:${colors[seriesIndex]}">${tooltipValue(item.values[index], item.cfg)}</span></div>`).join("");
+          tooltip.style.left = `${px}px`;
+          tooltip.style.top = `${Math.max(52, py)}px`;
+          tooltip.classList.add("show");
+          point.querySelectorAll(".point-core").forEach(core => core.setAttribute("r", "5"));
+        };
+        const hideTooltip = point => {
+          tooltip.classList.remove("show");
+          point.querySelectorAll(".point-core").forEach(core => core.setAttribute("r", "3"));
+        };
+        container.querySelectorAll(".chart-point").forEach(point => {
+          const index = Number(point.dataset.index);
+          point.addEventListener("mouseenter", () => showTooltip(point, index));
+          point.addEventListener("mouseleave", () => hideTooltip(point));
+          point.addEventListener("focus", () => showTooltip(point, index));
+          point.addEventListener("blur", () => hideTooltip(point));
+        });
+      }
+
+      function renderCountryLeadChart() {
+        const container = document.getElementById("countryLeadChart");
+        const isTransfer = state.countryMode === "transfer";
+        const inboundByCountry = Object.fromEntries(countryLeadBase.map(item => [item.country, Math.round(item.value * state.factor)]));
+        const data = (isTransfer ? countryTransferBase : countryLeadBase)
+          .map(item => {
+            if (!isTransfer) return { ...item, value: Math.round(item.value * state.factor) };
+            const classes = Object.fromEntries(transferClasses.map(type => [type.key, Math.round(item[type.key] * state.factor)]));
+            return { country: item.country, ...classes, value: classes.a + classes.b + classes.c };
+          })
+          .sort((a, b) => b.value - a.value);
+        const maxValue = Math.max(...data.map(item => item.value), 1);
+        container.classList.toggle("is-transfer", isTransfer);
+        const rows = data.map((item, index) => {
+          const barMarkup = isTransfer
+            ? transferClasses.map(type => `<span class="country-bar-segment" data-transfer-class="${type.key}" style="width:${(item[type.key] / maxValue * 100).toFixed(1)}%;background:${type.color}"></span>`).join("")
+            : `<span class="country-bar-fill" style="width:${(item.value / maxValue * 100).toFixed(1)}%"></span>`;
+          const ariaLabel = isTransfer
+            ? `第${index + 1}名，${item.country}，转派${item.value}条，A类${item.a}条，B类${item.b}条，C类${item.c}条`
+            : `第${index + 1}名，${item.country}，进线${item.value}条`;
+          return `<div class="country-row" data-index="${index}" tabindex="0" role="img" aria-label="${ariaLabel}">
+            <span class="country-rank-no">${index + 1}</span>
+            <span class="country-bar-track">${barMarkup}</span>
+            <span class="country-bar-label"><strong>${item.value.toLocaleString("zh-CN")}</strong><span>${item.country}</span></span>
+          </div>`;
+        }).join("");
+        const legend = isTransfer ? `<div class="country-transfer-legend" aria-label="转派分类图例">${transferClasses.map(type => `<span><i style="background:${type.color}"></i>${type.name}</span>`).join("")}</div>` : "";
+        const tooltip = isTransfer ? `<div class="chart-tooltip"><div class="tooltip-date"></div><div class="tooltip-series"></div></div>` : "";
+        container.innerHTML = `${rows}${legend}${tooltip}`;
+
+        if (!isTransfer) return;
+        const tooltipNode = container.querySelector(".chart-tooltip");
+        const showTooltip = (row, index) => {
+          const item = data[index];
+          const inboundValue = inboundByCountry[item.country] || 0;
+          const transferRate = inboundValue ? item.value / inboundValue * 100 : 0;
+          tooltipNode.querySelector(".tooltip-date").textContent = item.country;
+          tooltipNode.querySelector(".tooltip-series").innerHTML = `
+            <div class="transfer-tooltip-line summary"><span>转派：</span><span class="transfer-tooltip-number">${item.value.toLocaleString("zh-CN")}（${Math.round(transferRate)}%）</span></div>
+            ${transferClasses.map(type => {
+              const classValue = item[type.key];
+              const classRate = item.value ? classValue / item.value * 100 : 0;
+              return `<div class="transfer-tooltip-line"><i class="transfer-tooltip-dot" style="background:${type.color}"></i><span>${type.name}：</span><span class="transfer-tooltip-number">${classValue.toLocaleString("zh-CN")}（${Math.round(classRate)}%）</span></div>`;
+            }).join("")}`;
+          const rowCenter = row.offsetTop + row.offsetHeight / 2;
+          const placeBelow = rowCenter < container.clientHeight / 2;
+          tooltipNode.style.left = "50%";
+          tooltipNode.style.top = `${rowCenter}px`;
+          tooltipNode.style.transform = placeBelow
+            ? "translate(-50%, 8px)"
+            : "translate(-50%, calc(-100% - 8px))";
+          tooltipNode.classList.add("show");
+        };
+        const hideTooltip = () => tooltipNode.classList.remove("show");
+        container.querySelectorAll(".country-row").forEach(row => {
+          const index = Number(row.dataset.index);
+          row.addEventListener("mouseenter", () => showTooltip(row, index));
+          row.addEventListener("mouseleave", hideTooltip);
+          row.addEventListener("focus", () => showTooltip(row, index));
+          row.addEventListener("blur", hideTooltip);
+        });
+      }
+
+      function renderHourlyInboundChart() {
+        const container = document.getElementById("hourlyInboundChart");
+        const values = hourlyInboundBase.map(value => Math.round(value * state.factor));
+        const width = 920;
+        const height = 265;
+        const padLeft = 54;
+        const padRight = 18;
+        const padTop = 16;
+        const padBottom = 40;
+        const innerW = width - padLeft - padRight;
+        const innerH = height - padTop - padBottom;
+        const slotWidth = innerW / 24;
+        const barWidth = slotWidth * .58;
+        const maxValue = Math.max(...values, 1);
+        const tickStep = Math.max(50, Math.ceil(maxValue / 4 / 50) * 50);
+        const axisMax = tickStep * 4;
+        const y = value => padTop + innerH - value / axisMax * innerH;
+        let grid = "";
+        for (let index = 0; index <= 4; index++) {
+          const value = axisMax - tickStep * index;
+          const gy = padTop + innerH * index / 4;
+          grid += `<line x1="${padLeft}" y1="${gy}" x2="${width - padRight}" y2="${gy}" stroke="#e9eef4" stroke-width="1" stroke-dasharray="4 4" />`;
+          grid += `<text x="${padLeft - 10}" y="${gy + 4}" fill="#98a2b3" font-size="10" text-anchor="end">${value}</text>`;
+        }
+        const bars = values.map((value, index) => {
+          const centerX = padLeft + slotWidth * index + slotWidth / 2;
+          const barX = centerX - barWidth / 2;
+          const barY = y(value);
+          const barHeight = padTop + innerH - barY;
+          return `<g class="hour-bar-point" data-index="${index}" tabindex="0" role="img" aria-label="${pad(index)}时，进线${value}条">
+            <rect class="hour-bar" x="${barX.toFixed(2)}" y="${barY.toFixed(2)}" width="${barWidth.toFixed(2)}" height="${barHeight.toFixed(2)}" rx="2" fill="url(#hourBarGradient)" opacity=".88" />
+            <rect x="${(centerX - slotWidth / 2).toFixed(2)}" y="${padTop}" width="${slotWidth.toFixed(2)}" height="${innerH}" fill="transparent" />
+          </g>`;
+        }).join("");
+        const xLabels = values.map((_, index) => {
+          const centerX = padLeft + slotWidth * index + slotWidth / 2;
+          return `<text x="${centerX.toFixed(2)}" y="${height - 12}" fill="#98a2b3" font-size="9" text-anchor="middle">${pad(index)}</text>`;
+        }).join("");
+        container.innerHTML = `
+          <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-label="24小时进线时间分布">
+            <defs><linearGradient id="hourBarGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2e7bd6"/><stop offset="100%" stop-color="#77ade8"/></linearGradient></defs>
+            ${grid}${bars}${xLabels}
+          </svg>
+          <div class="chart-tooltip"><div class="tooltip-date"></div><div class="tooltip-series"></div></div>`;
+
+        const tooltip = container.querySelector(".chart-tooltip");
+        const showTooltip = (point, index) => {
+          const value = values[index];
+          const centerX = padLeft + slotWidth * index + slotWidth / 2;
+          const box = container.getBoundingClientRect();
+          tooltip.querySelector(".tooltip-date").textContent = `${pad(index)}:00–${pad((index + 1) % 24)}:00`;
+          tooltip.querySelector(".tooltip-series").innerHTML = `进线数量 <span class="tooltip-value">${value.toLocaleString("zh-CN")} 条</span>`;
+          tooltip.style.left = `${centerX / width * box.width}px`;
+          tooltip.style.top = `${Math.max(54, y(value) / height * box.height)}px`;
+          tooltip.classList.add("show");
+          point.querySelector(".hour-bar").setAttribute("opacity", "1");
+        };
+        const hideTooltip = point => {
+          tooltip.classList.remove("show");
+          point.querySelector(".hour-bar").setAttribute("opacity", ".88");
+        };
+        container.querySelectorAll(".hour-bar-point").forEach(point => {
+          const index = Number(point.dataset.index);
+          point.addEventListener("mouseenter", () => showTooltip(point, index));
+          point.addEventListener("mouseleave", () => hideTooltip(point));
+          point.addEventListener("focus", () => showTooltip(point, index));
+          point.addEventListener("blur", () => hideTooltip(point));
+        });
+      }
+
+      function departmentPeriodFactor() {
+        const periodFactors = { today: .86, yesterday: .82, last7: 1, last30: 1.16, custom: .94 };
+        return periodFactors[state.period] || 1;
+      }
+
+      function departmentAxisScale(maxValue) {
+        const roughStep = Math.max(1, maxValue * 1.12 / 4);
+        const power = Math.pow(10, Math.floor(Math.log10(roughStep)));
+        const normalized = roughStep / power;
+        const steps = [1, 1.25, 1.5, 2, 2.5, 3, 4, 5, 7.5, 10];
+        const normalizedStep = steps.find(value => value >= normalized) || 10;
+        const step = normalizedStep * power;
+        return { step, max: step * 4 };
+      }
+
+      function departmentAxisValue(value) {
+        if (value >= 10000) return `${(value / 10000).toFixed(value % 10000 ? 1 : 0)}万`;
+        return Math.round(value).toLocaleString("zh-CN");
+      }
+
+      function renderDepartmentUsageChart() {
+        const container = document.getElementById("departmentUsageChart");
+        const metric = state.departmentUsageMetric;
+        const factor = departmentPeriodFactor();
+        const metricMeta = {
+          sessions: { name: "接待会话数", unit: "次" },
+          leads: { name: "线索推送数", unit: "条" },
+          messages: { name: "处理消息数", unit: "条" },
+          agents: { name: "挂载 Agent 数", unit: "个" }
+        };
+        const gradeMeta = [
+          { key: "a", name: "A类", color: "#2e7bd6" },
+          { key: "b", name: "B类", color: "#00a3b4" },
+          { key: "c", name: "C类", color: "#7a6ff0" },
+          { key: "d", name: "D类", color: "#f7ba1e" }
+        ];
+        const selectedGrades = gradeMeta.filter(item => state.leadGrades.includes(item.key));
+        const data = aiDepartmentUsageBase.map(item => {
+          if (metric !== "leads") return { ...item, total: Math.round(item[metric] * factor), gradeValues: {} };
+          const gradeValues = Object.fromEntries(gradeMeta.map(grade => [grade.key, Math.round(item.leadGrades[grade.key] * factor)]));
+          const total = selectedGrades.reduce((sum, grade) => sum + gradeValues[grade.key], 0);
+          return { ...item, total, gradeValues };
+        }).sort((a, b) => b.total - a.total);
+
+        const width = 1040;
+        const height = 312;
+        const padLeft = 60;
+        const padRight = 20;
+        const padTop = 32;
+        const padBottom = 42;
+        const innerW = width - padLeft - padRight;
+        const innerH = height - padTop - padBottom;
+        const slotWidth = innerW / data.length;
+        const barWidth = Math.min(44, slotWidth * .48);
+        const { step: tickStep, max: axisMax } = departmentAxisScale(Math.max(...data.map(item => item.total), 1));
+        const y = value => padTop + innerH - value / axisMax * innerH;
+
+        let grid = "";
+        for (let index = 0; index <= 4; index++) {
+          const value = axisMax - tickStep * index;
+          const gy = padTop + innerH * index / 4;
+          grid += `<line x1="${padLeft}" y1="${gy}" x2="${width - padRight}" y2="${gy}" stroke="#e9eef4" stroke-width="1" stroke-dasharray="4 4" />`;
+          grid += `<text x="${padLeft - 10}" y="${gy + 4}" fill="#98a2b3" font-size="10" text-anchor="end">${departmentAxisValue(value)}</text>`;
+        }
+
+        const columns = data.map((item, index) => {
+          const centerX = padLeft + slotWidth * index + slotWidth / 2;
+          const barX = centerX - barWidth / 2;
+          const topY = y(item.total);
+          let barMarkup = "";
+          if (metric === "leads") {
+            let accumulated = 0;
+            barMarkup = selectedGrades.map(grade => {
+              const value = item.gradeValues[grade.key];
+              const segmentTop = y(accumulated + value);
+              const segmentBottom = y(accumulated);
+              accumulated += value;
+              return `<rect class="department-bar" x="${barX.toFixed(2)}" y="${segmentTop.toFixed(2)}" width="${barWidth.toFixed(2)}" height="${Math.max(0, segmentBottom - segmentTop).toFixed(2)}" fill="${grade.color}" opacity=".90" />`;
+            }).join("");
+          } else {
+            barMarkup = `<rect class="department-bar" x="${barX.toFixed(2)}" y="${topY.toFixed(2)}" width="${barWidth.toFixed(2)}" height="${Math.max(0, padTop + innerH - topY).toFixed(2)}" rx="3" fill="url(#departmentUsageGradient)" opacity=".90" />`;
+          }
+          return `<g class="department-bar-point" data-index="${index}" tabindex="0" role="img" aria-label="${item.name}，${metricMeta[metric].name}${item.total}${metricMeta[metric].unit}">
+            <title>${item.name}</title>
+            ${barMarkup}
+            <text x="${centerX.toFixed(2)}" y="${Math.max(13, topY - 8).toFixed(2)}" fill="#344054" font-size="10" font-weight="600" text-anchor="middle">${item.total.toLocaleString("zh-CN")}</text>
+            <text x="${centerX.toFixed(2)}" y="${height - 14}" fill="#667085" font-size="10" text-anchor="middle">${item.shortName}</text>
+            <rect x="${(centerX - slotWidth / 2).toFixed(2)}" y="${padTop}" width="${slotWidth.toFixed(2)}" height="${height - padTop}" fill="transparent" />
+          </g>`;
+        }).join("");
+
+        container.innerHTML = `<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-label="${metricMeta[metric].name}部门排行">
+            <defs><linearGradient id="departmentUsageGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2e7bd6"/><stop offset="100%" stop-color="#77ade8"/></linearGradient></defs>
+            ${grid}${columns}
+          </svg>
+          <div class="chart-tooltip"><div class="tooltip-date"></div><div class="tooltip-series"></div></div>`;
+
+        const tooltip = container.querySelector(".chart-tooltip");
+        const showTooltip = (point, index) => {
+          const item = data[index];
+          const centerX = padLeft + slotWidth * index + slotWidth / 2;
+          const box = container.getBoundingClientRect();
+          tooltip.querySelector(".tooltip-date").textContent = item.name;
+          tooltip.querySelector(".tooltip-series").innerHTML = metric === "leads"
+            ? `<div class="department-lead-tooltip-line total"><span>线索推送数</span><span class="tooltip-value">${item.total.toLocaleString("zh-CN")} 条</span></div>${selectedGrades.map(grade => `<div class="department-lead-tooltip-line"><i style="width:7px;height:7px;border-radius:2px;background:${grade.color}"></i><span>${grade.name}</span><span class="tooltip-value">${item.gradeValues[grade.key].toLocaleString("zh-CN")} 条</span></div>`).join("")}`
+            : `${metricMeta[metric].name} <span class="tooltip-value">${item.total.toLocaleString("zh-CN")} ${metricMeta[metric].unit}</span>`;
+          tooltip.style.left = `${centerX / width * box.width}px`;
+          tooltip.style.top = `${Math.max(56, y(item.total) / height * box.height)}px`;
+          tooltip.classList.add("show");
+          point.querySelectorAll(".department-bar").forEach(bar => bar.setAttribute("opacity", "1"));
+        };
+        const hideTooltip = point => {
+          tooltip.classList.remove("show");
+          point.querySelectorAll(".department-bar").forEach(bar => bar.setAttribute("opacity", ".90"));
+        };
+        container.querySelectorAll(".department-bar-point").forEach(point => {
+          const index = Number(point.dataset.index);
+          point.addEventListener("mouseenter", () => showTooltip(point, index));
+          point.addEventListener("mouseleave", () => hideTooltip(point));
+          point.addEventListener("focus", () => showTooltip(point, index));
+          point.addEventListener("blur", () => hideTooltip(point));
+        });
+      }
+
+      function renderBusinessDepartmentChart() {
+        const container = document.getElementById("businessDepartmentChart");
+        const objectKey = state.businessObject;
+        const objectMeta = {
+          customer: { name: "客户", unit: "个" },
+          project: { name: "项目", unit: "个" },
+          opportunity: { name: "商机", unit: "个" },
+          order: { name: "订单", unit: "个" }
+        }[objectKey];
+        const data = businessDepartmentCreationBase
+          .map(item => {
+            const source = item[objectKey];
+            const scrm = Math.round(source.scrm * state.factor);
+            const crm = Math.round(source.crm * state.factor);
+            return {
+              ...item,
+              scrm,
+              crm,
+              manual: objectKey === "customer" ? Math.round(source.manual * state.factor) : null,
+              ai: objectKey === "customer" ? Math.round(source.ai * state.factor) : null,
+              total: scrm + crm
+            };
+          })
+          .sort((a, b) => b.total - a.total || a.name.localeCompare(b.name, "zh-CN"));
+
+        if (!data.length) {
+          container.innerHTML = `<div class="usage-empty">当前筛选条件下暂无部门创建数据</div>`;
+          return;
+        }
+
+        const width = 1040;
+        const height = 312;
+        const padLeft = 60;
+        const padRight = 20;
+        const padTop = 32;
+        const padBottom = 42;
+        const innerW = width - padLeft - padRight;
+        const innerH = height - padTop - padBottom;
+        const slotWidth = innerW / data.length;
+        const barWidth = Math.min(48, slotWidth * .50);
+        const { step: tickStep, max: axisMax } = departmentAxisScale(Math.max(...data.map(item => item.total), 1));
+        const y = value => padTop + innerH - value / axisMax * innerH;
+
+        let grid = "";
+        for (let index = 0; index <= 4; index++) {
+          const value = axisMax - tickStep * index;
+          const gy = padTop + innerH * index / 4;
+          grid += `<line x1="${padLeft}" y1="${gy}" x2="${width - padRight}" y2="${gy}" stroke="#e9eef4" stroke-width="1" stroke-dasharray="4 4" />`;
+          grid += `<text x="${padLeft - 10}" y="${gy + 4}" fill="#98a2b3" font-size="10" text-anchor="end">${departmentAxisValue(value)}</text>`;
+        }
+
+        const columns = data.map((item, index) => {
+          const centerX = padLeft + slotWidth * index + slotWidth / 2;
+          const barX = centerX - barWidth / 2;
+          const totalTop = y(item.total);
+          const scrmTop = y(item.scrm);
+          const baseline = y(0);
+          const scrmShare = item.total ? item.scrm / item.total * 100 : 0;
+          const crmShare = item.total ? item.crm / item.total * 100 : 0;
+          return `<g class="business-department-point" data-index="${index}" tabindex="0" role="img" aria-label="${item.name}，创建${objectMeta.name}${item.total}${objectMeta.unit}，SCRM ${item.scrm}${objectMeta.unit}，CRM ${item.crm}${objectMeta.unit}">
+            <title>${item.name}</title>
+            <rect class="business-department-bar" x="${barX.toFixed(2)}" y="${scrmTop.toFixed(2)}" width="${barWidth.toFixed(2)}" height="${Math.max(0, baseline - scrmTop).toFixed(2)}" fill="#2e7bd6" opacity=".90" />
+            <rect class="business-department-bar" x="${barX.toFixed(2)}" y="${totalTop.toFixed(2)}" width="${barWidth.toFixed(2)}" height="${Math.max(0, scrmTop - totalTop).toFixed(2)}" rx="3" fill="#00a3b4" opacity=".90" />
+            <text x="${centerX.toFixed(2)}" y="${Math.max(13, totalTop - 8).toFixed(2)}" fill="#344054" font-size="10" font-weight="600" text-anchor="middle">${item.total.toLocaleString("zh-CN")}</text>
+            <text x="${centerX.toFixed(2)}" y="${height - 14}" fill="#667085" font-size="10" text-anchor="middle">${item.shortName}</text>
+            <rect x="${(centerX - slotWidth / 2).toFixed(2)}" y="${padTop}" width="${slotWidth.toFixed(2)}" height="${height - padTop}" fill="transparent" />
+          </g>`;
+        }).join("");
+
+        container.innerHTML = `<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-label="${objectMeta.name}创建数量部门排行">
+            ${grid}${columns}
+          </svg>
+          <div class="chart-tooltip"><div class="tooltip-date"></div><div class="tooltip-series"></div></div>`;
+
+        const tooltip = container.querySelector(".chart-tooltip");
+        const showTooltip = (point, index) => {
+          const item = data[index];
+          const centerX = padLeft + slotWidth * index + slotWidth / 2;
+          const box = container.getBoundingClientRect();
+          const scrmShare = item.total ? item.scrm / item.total * 100 : 0;
+          const crmShare = item.total ? item.crm / item.total * 100 : 0;
+          tooltip.querySelector(".tooltip-date").textContent = item.name;
+          tooltip.querySelector(".tooltip-series").innerHTML = `<div class="business-tooltip-line total"><span>${objectMeta.name}创建总数</span><span class="tooltip-value">${item.total.toLocaleString("zh-CN")} ${objectMeta.unit}</span></div>
+            <div class="business-tooltip-line"><span><i style="display:inline-block;width:7px;height:7px;border-radius:2px;background:#2e7bd6;margin-right:6px"></i>SCRM</span><span class="tooltip-value">${item.scrm.toLocaleString("zh-CN")} · ${scrmShare.toFixed(1)}%</span></div>
+            ${objectKey === "customer" ? `<div class="business-tooltip-line detail"><span>手动创建</span><span>${item.manual.toLocaleString("zh-CN")}</span></div><div class="business-tooltip-line detail"><span>AI 业务员创建</span><span>${item.ai.toLocaleString("zh-CN")}</span></div>` : ""}
+            <div class="business-tooltip-line"><span><i style="display:inline-block;width:7px;height:7px;border-radius:2px;background:#00a3b4;margin-right:6px"></i>CRM</span><span class="tooltip-value">${item.crm.toLocaleString("zh-CN")} · ${crmShare.toFixed(1)}%</span></div>`;
+          tooltip.style.left = `${centerX / width * box.width}px`;
+          tooltip.style.top = `${Math.max(56, y(item.total) / height * box.height)}px`;
+          tooltip.classList.add("show");
+          point.querySelectorAll(".business-department-bar").forEach(bar => bar.setAttribute("opacity", "1"));
+        };
+        const hideTooltip = point => {
+          tooltip.classList.remove("show");
+          point.querySelectorAll(".business-department-bar").forEach(bar => bar.setAttribute("opacity", ".90"));
+        };
+        container.querySelectorAll(".business-department-point").forEach(point => {
+          const index = Number(point.dataset.index);
+          point.addEventListener("mouseenter", () => showTooltip(point, index));
+          point.addEventListener("mouseleave", () => hideTooltip(point));
+          point.addEventListener("focus", () => showTooltip(point, index));
+          point.addEventListener("blur", () => hideTooltip(point));
+        });
+      }
+
+      function renderAllCharts() {
+        Object.entries(state.activeMetrics).forEach(([chartId, metricKey]) => renderLineChart(chartId, metricKey));
+        renderCountryLeadChart();
+        renderHourlyInboundChart();
+        renderDepartmentUsageChart();
+        renderBusinessDepartmentChart();
+      }
+
+      function metricMarkup(metricKey, value) {
+        switch (metricKey) {
+          case "activeRate": return `${value.toFixed(1)}<span class="metric-unit">%</span>`;
+          case "completionRate": return `${value.toFixed(1)}%`;
+          case "leadPushRate": return `${value.toFixed(1)}%`;
+          case "tokens": return `${value.toFixed(2)}<span class="metric-unit">M</span>`;
+          case "tokenCost": return `¥${value.toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+          case "avgCost": return `¥${value.toFixed(3)}`;
+          default: return Math.round(value).toLocaleString("zh-CN");
+        }
+      }
+
+      function updateMetrics() {
+        document.querySelectorAll("[data-metric]").forEach(node => {
+          const key = node.dataset.metric;
+          let value = metricBase[key] * state.factor;
+          if (key === "activeRate") value = Math.max(10, Math.min(55, metricBase[key] + (state.factor - 1) * 9));
+          if (key === "completionRate") value = metricBase.completed / metricBase.sessions * 100;
+          if (key === "leadPushRate") value = metricBase.leads / metricBase.sessions * 100;
+          if (key === "avgCost") value = metricBase[key] * (1 + (state.factor - 1) * .16);
+          node.innerHTML = metricMarkup(key, value);
+        });
+        document.getElementById("donutTotal").textContent = Math.round(metricBase.sessions * state.factor).toLocaleString("zh-CN");
+        renderBusinessStats();
+      }
+
+      function renderBusinessStats() {
+        const values = Object.fromEntries(Object.entries(businessBase).map(([key, value]) => [key, Math.round(value * state.factor)]));
+        values.scrmCustomers = values.scrmManualCustomers + values.scrmAiCustomers;
+        document.querySelectorAll("[data-business-source]").forEach(node => {
+          node.textContent = values[node.dataset.businessSource].toLocaleString("zh-CN");
+        });
+        document.querySelectorAll("[data-business-tooltip]").forEach(node => {
+          node.textContent = values[node.dataset.businessTooltip].toLocaleString("zh-CN");
+        });
+
+        businessObjects.forEach(item => {
+          const total = values[item.scrm] + values[item.crm];
+          document.querySelector(`[data-business-total="${item.key}"]`).textContent = total.toLocaleString("zh-CN");
+          [item.scrm, item.crm].forEach(sourceKey => {
+            const shareNode = document.querySelector(`[data-business-share="${sourceKey}"]`);
+            if (shareNode) shareNode.textContent = `${total ? (values[sourceKey] / total * 100).toFixed(1) : "0.0"}%`;
+          });
+        });
+
+        const customerSource = document.querySelector("[data-customer-scrm]");
+        if (customerSource) {
+          customerSource.setAttribute(
+            "aria-label",
+            `SCRM 创建客户 ${values.scrmCustomers.toLocaleString("zh-CN")}，其中手动创建 ${values.scrmManualCustomers.toLocaleString("zh-CN")}，AI 业务员创建 ${values.scrmAiCustomers.toLocaleString("zh-CN")}`
+          );
+        }
+      }
+
+      function usageDetail(item) {
+        return {
+          ...item,
+          translations: Math.round(item.value * state.factor),
+          tokens: Math.round(item.value * 448.45 * state.factor),
+          cost: item.value * .0689 * state.factor
+        };
+      }
+
+      function usageRowMarkup(item, index, maxValue, showDepartment) {
+        const percentage = maxValue ? Math.max(3, item.translations / maxValue * 100) : 0;
+        return `<div class="usage-rank-row" tabindex="0" role="button" aria-label="${item.name}，翻译 ${item.translations.toLocaleString("zh-CN")} 条">
+          <span class="rank-no">${index + 1}</span>
+          <span class="usage-rank-label">
+            <strong title="${item.name}">${item.name}</strong>
+            ${showDepartment ? `<small title="${item.departmentName}">${item.departmentName}</small>` : ""}
+          </span>
+          <span class="usage-bar-track"><span class="usage-bar-fill" style="width:${percentage.toFixed(1)}%"></span></span>
+          <span class="usage-rank-value">${item.translations.toLocaleString("zh-CN")} 条</span>
+        </div>`;
+      }
+
+      function hideUsageTooltip(tooltip) {
+        tooltip.classList.remove("show");
+        tooltip.setAttribute("aria-hidden", "true");
+      }
+
+      function bindUsageTooltip(cardId, tooltipId, items) {
+        const card = document.getElementById(cardId);
+        const tooltip = document.getElementById(tooltipId);
+        const rows = card.querySelectorAll(".usage-rank-row");
+
+        rows.forEach((row, index) => {
+          const item = items[index];
+          if (!item) return;
+          const show = () => {
+            tooltip.innerHTML = `<div class="usage-detail-title">${item.name}${item.departmentName ? ` · ${item.departmentName}` : ""}</div>
+              <div class="usage-detail-line"><span>翻译条数</span><strong>${item.translations.toLocaleString("zh-CN")} 条</strong></div>
+              <div class="usage-detail-line"><span>Token 消耗量</span><strong>${item.tokens.toLocaleString("zh-CN")}</strong></div>
+              <div class="usage-detail-line"><span>Token 总成本</span><strong>¥${item.cost.toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></div>`;
+            const cardRect = card.getBoundingClientRect();
+            const rowRect = row.getBoundingClientRect();
+            const rowCenter = rowRect.top - cardRect.top + rowRect.height / 2;
+            const rawLeft = rowRect.left - cardRect.left + rowRect.width / 2;
+            tooltip.style.left = `${Math.min(card.clientWidth - 100, Math.max(100, rawLeft))}px`;
+            tooltip.style.top = `${rowCenter}px`;
+            tooltip.style.transform = rowCenter < card.clientHeight / 2 ? "translate(-50%, 10px)" : "translate(-50%, calc(-100% - 10px))";
+            tooltip.classList.add("show");
+            tooltip.setAttribute("aria-hidden", "false");
+          };
+          row.addEventListener("mouseenter", show);
+          row.addEventListener("mouseleave", () => hideUsageTooltip(tooltip));
+          row.addEventListener("focus", show);
+          row.addEventListener("blur", () => hideUsageTooltip(tooltip));
+        });
+      }
+
+      function renderDepartmentRanking() {
+        const items = departmentUsageBase.map(usageDetail).sort((a, b) => b.translations - a.translations);
+        const container = document.getElementById("departmentUsageRanking");
+        if (!items.length) {
+          container.innerHTML = `<div class="usage-empty">当前时间段暂无部门使用数据</div>`;
+          return;
+        }
+        const maxValue = items[0].translations;
+        container.innerHTML = items.map((item, index) => usageRowMarkup(item, index, maxValue, false)).join("");
+        bindUsageTooltip("departmentUsageCard", "departmentUsageTooltip", items);
+      }
+
+      function filteredPeopleUsage() {
+        return peopleUsageBase
+          .filter(item => state.peopleDepartment === "all" || item.departmentId === state.peopleDepartment)
+          .map(usageDetail)
+          .sort((a, b) => b.translations - a.translations);
+      }
+
+      function renderPeopleRanking({ preserveScroll = true } = {}) {
+        const scroll = document.getElementById("peopleUsageScroll");
+        const previousTop = preserveScroll ? scroll.scrollTop : 0;
+        const allItems = filteredPeopleUsage();
+        const visibleItems = allItems.slice(0, state.peopleVisibleCount);
+        const container = document.getElementById("peopleUsageRanking");
+
+        if (!allItems.length) {
+          container.innerHTML = `<div class="usage-empty">当前筛选条件下暂无人员使用数据</div>`;
+          hideUsageTooltip(document.getElementById("peopleUsageTooltip"));
+          return;
+        }
+
+        const maxValue = allItems[0].translations;
+        const rows = visibleItems.map((item, index) => usageRowMarkup(item, index, maxValue, true)).join("");
+        const loadState = visibleItems.length < allItems.length
+          ? `<div class="usage-load-state">下滑继续加载 · 已显示 ${visibleItems.length} / ${allItems.length}</div>`
+          : `<div class="usage-load-state">已展示全部 ${allItems.length} 人</div>`;
+        container.innerHTML = rows + loadState;
+        scroll.scrollTop = previousTop;
+        bindUsageTooltip("peopleUsageCard", "peopleUsageTooltip", visibleItems);
+      }
+
+      function renderRanking() {
+        document.getElementById("routeRanking").innerHTML = routeData.map((item, index) => {
+          const value = Math.round(item.value * state.factor);
+          return `<div class="rank-row">
+            <span class="rank-no">${index + 1}</span>
+            <span class="route-name" title="${item.name}">${item.name}</span>
+            <span class="bar-track"><span class="bar-fill" style="width:${item.share}%;background:linear-gradient(90deg,#2e7bd6,#62a7ec)"></span></span>
+            <span class="rank-value">${value.toLocaleString("zh-CN")} 条</span>
+          </div>`;
+        }).join("");
+        renderDepartmentRanking();
+        renderPeopleRanking();
+      }
+
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        document.getElementById("toastText").textContent = message;
+        toast.classList.add("show");
+        clearTimeout(showToast.timer);
+        showToast.timer = setTimeout(() => toast.classList.remove("show"), 1800);
+      }
+
+      function selectedAccounts() {
+        return [...document.querySelectorAll("#accountMenu input:checked")];
+      }
+
+      function updateAccountLabel() {
+        const checked = selectedAccounts();
+        const label = document.querySelector("#accountTrigger .trigger-text");
+        if (checked.length === 4) label.textContent = "全部账号";
+        else if (checked.length === 0) label.textContent = "请选择账号";
+        else label.textContent = `已选 ${checked.length} 个账号`;
+      }
+
+      function calculateFactor() {
+        const periodFactors = { today: .86, yesterday: .82, last7: 1, last30: 1.16, custom: .94 };
+        const selectedDepartment = document.getElementById("departmentSelect").value;
+        const departmentIndex = departmentCatalog.findIndex(item => item.id === selectedDepartment);
+        const departmentFactor = selectedDepartment === "all" ? 1 : Math.max(.42, .76 - Math.max(0, departmentIndex) * .02);
+        const selectedCount = selectedAccounts().length;
+        const accountFactor = selectedCount === 4 ? 1 : Math.max(.18, selectedCount / 4);
+        return periodFactors[state.period] * departmentFactor * accountFactor;
+      }
+
+      const globalDepartmentFilter = document.getElementById("departmentSelect");
+      globalDepartmentFilter.innerHTML = `<option value="all">全部部门</option>${departmentCatalog.map(item => `<option value="${item.id}">${item.name}</option>`).join("")}`;
+
+      document.getElementById("businessObjectTabs").addEventListener("click", event => {
+        const button = event.target.closest("button[data-business-object]");
+        if (!button) return;
+        state.businessObject = button.dataset.businessObject;
+        document.querySelectorAll("#businessObjectTabs button").forEach(item => item.classList.toggle("active", item === button));
+        renderBusinessDepartmentChart();
+      });
+
+      document.getElementById("peopleUsageScroll").addEventListener("scroll", event => {
+        const scroll = event.currentTarget;
+        if (scroll.scrollTop + scroll.clientHeight < scroll.scrollHeight - 24) return;
+        const total = filteredPeopleUsage().length;
+        if (state.peopleVisibleCount >= total) return;
+        state.peopleVisibleCount = Math.min(total, state.peopleVisibleCount + state.peoplePageSize);
+        renderPeopleRanking();
+      });
+
+      document.getElementById("periodSegment").addEventListener("click", event => {
+        const button = event.target.closest("button[data-period]");
+        if (!button) return;
+        document.querySelectorAll("#periodSegment button").forEach(item => item.classList.toggle("active", item === button));
+        state.period = button.dataset.period;
+        document.getElementById("customRange").classList.toggle("show", state.period === "custom");
+      });
+
+      document.getElementById("accountTrigger").addEventListener("click", event => {
+        event.stopPropagation();
+        document.getElementById("accountMenu").classList.toggle("open");
+      });
+
+      document.getElementById("accountMenu").addEventListener("change", updateAccountLabel);
+      document.addEventListener("click", event => {
+        if (!document.getElementById("accountSelect").contains(event.target)) document.getElementById("accountMenu").classList.remove("open");
+      });
+
+      document.querySelectorAll(".chart-tabs").forEach(tabGroup => {
+        tabGroup.addEventListener("click", event => {
+          const button = event.target.closest("button[data-metric-key], button[data-metric-keys]");
+          if (!button) return;
+          tabGroup.querySelectorAll("button").forEach(item => item.classList.toggle("active", item === button));
+          const chartId = tabGroup.dataset.chart;
+          const selection = button.dataset.metricKeys ? button.dataset.metricKeys.split(",") : button.dataset.metricKey;
+          state.activeMetrics[chartId] = selection;
+          renderLineChart(chartId, selection);
+        });
+      });
+
+      document.getElementById("countryModeTabs").addEventListener("click", event => {
+        const button = event.target.closest("button[data-country-mode]");
+        if (!button) return;
+        state.countryMode = button.dataset.countryMode;
+        document.querySelectorAll("#countryModeTabs button").forEach(item => item.classList.toggle("active", item === button));
+        renderCountryLeadChart();
+      });
+
+      document.getElementById("departmentMetricTabs").addEventListener("click", event => {
+        const button = event.target.closest("button[data-department-metric]");
+        if (!button) return;
+        state.departmentUsageMetric = button.dataset.departmentMetric;
+        document.querySelectorAll("#departmentMetricTabs button").forEach(item => item.classList.toggle("active", item === button));
+        document.getElementById("leadGradeFilters").classList.toggle("show", state.departmentUsageMetric === "leads");
+        renderDepartmentUsageChart();
+      });
+
+      document.getElementById("leadGradeFilters").addEventListener("change", event => {
+        const checkbox = event.target.closest('input[type="checkbox"]');
+        if (!checkbox) return;
+        const checked = [...document.querySelectorAll('#leadGradeFilters input[type="checkbox"]:checked')];
+        if (!checked.length) {
+          checkbox.checked = true;
+          showToast("至少保留一个线索等级");
+          return;
+        }
+        state.leadGrades = checked.map(item => item.value);
+        renderDepartmentUsageChart();
+      });
+
+      document.getElementById("queryBtn").addEventListener("click", () => {
+        if (selectedAccounts().length === 0) {
+          showToast("请至少选择一个 WhatsApp 账号");
+          return;
+        }
+        const button = document.getElementById("queryBtn");
+        button.classList.add("loading");
+        setTimeout(() => {
+          state.factor = calculateFactor();
+          updateMetrics();
+          renderAllCharts();
+          renderRanking();
+          const now = new Date();
+          document.getElementById("updateText").textContent = `数据已更新 · ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+          button.classList.remove("loading");
+          showToast("已按筛选条件更新看板");
+        }, 420);
+      });
+
+      document.getElementById("resetBtn").addEventListener("click", () => {
+        state.period = "last7";
+        state.factor = 1;
+        state.countryMode = "inbound";
+        state.peopleDepartment = "all";
+        state.peopleVisibleCount = state.peoplePageSize;
+        state.departmentUsageMetric = "sessions";
+        state.leadGrades = ["a", "b", "c", "d"];
+        state.businessObject = "customer";
+        document.querySelectorAll("#periodSegment button").forEach(item => item.classList.toggle("active", item.dataset.period === "last7"));
+        document.querySelectorAll("#countryModeTabs button").forEach(item => item.classList.toggle("active", item.dataset.countryMode === "inbound"));
+        document.querySelectorAll("#departmentMetricTabs button").forEach(item => item.classList.toggle("active", item.dataset.departmentMetric === "sessions"));
+        document.querySelectorAll('#leadGradeFilters input[type="checkbox"]').forEach(item => { item.checked = true; });
+        document.querySelectorAll("#businessObjectTabs button").forEach(item => item.classList.toggle("active", item.dataset.businessObject === "customer"));
+        document.getElementById("leadGradeFilters").classList.remove("show");
+        document.getElementById("customRange").classList.remove("show");
+        document.getElementById("departmentSelect").value = "all";
+        document.getElementById("peopleUsageScroll").scrollTop = 0;
+        document.querySelectorAll("#accountMenu input").forEach(input => { input.checked = true; });
+        updateAccountLabel();
+        setupDates();
+        updateMetrics();
+        renderAllCharts();
+        renderRanking();
+        showToast("筛选条件已重置");
+      });
+
+      document.querySelectorAll("[data-nav]").forEach(item => {
+        item.addEventListener("click", () => {
+          if (item.dataset.nav !== "首页") showToast(`${item.dataset.nav}不在本次看板原型范围内`);
+        });
+      });
+
+      document.getElementById("collapseBtn").addEventListener("click", () => showToast("当前原型固定展示完整导航框架"));
+      document.getElementById("userEntry").addEventListener("click", () => showToast("当前登录用户：张奥"));
+
+      let resizeTimer;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(renderAllCharts, 120);
+      });
+
+      setupDates();
+      updateAccountLabel();
+      updateMetrics();
+      renderAllCharts();
+      renderRanking();
+    })();
+  </script>
+</body>
+</html>
