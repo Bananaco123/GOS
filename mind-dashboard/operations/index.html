@@ -15,7 +15,7 @@
     }
     *{box-sizing:border-box} body{margin:0;min-width:0;background:var(--soft)}
     body.embedded .sidebar,body.embedded .topbar{display:none}
-    body.embedded main{margin-left:0;padding:0 18px 32px}
+    body.embedded main{margin-left:0;padding:22px 18px 32px}
     body.embedded .toolbar{top:0}
     button,select,input{font:inherit} button{border:0;cursor:pointer} a{color:inherit;text-decoration:none}
     .sidebar{position:fixed;inset:0 auto 0 0;z-index:30;width:var(--sidebar);color:#dce8f8;background:linear-gradient(180deg,#173f73,#0f2f59)}
@@ -32,9 +32,14 @@
     .avatar{width:32px;height:32px;display:grid;place-items:center;color:#fff;background:#2b69b4;border-radius:50%;font-weight:700}
     main{margin-left:var(--sidebar);padding:84px 26px 42px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 5px 18px rgba(31,65,105,.04)}
 
-    .toolbar{position:sticky;top:64px;z-index:20;height:66px;display:flex;align-items:center;gap:16px;padding:13px 14px;margin-bottom:16px;overflow:hidden;box-shadow:0 8px 22px rgba(31,65,105,.08)}
-    .toolbar h1{flex:0 0 auto;margin:0 8px 0 2px;font-size:24px;line-height:1;font-weight:720;letter-spacing:-.5px;white-space:nowrap}
-    .toolbar-divider{display:block;width:1px;height:34px;background:var(--line)}.range-preset{display:flex;gap:4px;padding:3px;background:#f2f5f9;border-radius:9px}
+    .dashboard-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:16px}
+    .dashboard-heading h1{margin:0 0 6px;color:var(--ink);font-size:22px;line-height:32px;font-weight:600}
+    .dashboard-heading p{margin:0;color:var(--muted);font-size:13px}
+    .update-state{display:flex;align-items:center;gap:7px;margin-top:6px;color:var(--muted);font-size:12px;white-space:nowrap}
+    .state-dot{width:7px;height:7px;border-radius:50%;background:#00b578;box-shadow:0 0 0 3px rgba(0,181,120,.12)}
+    .toolbar{position:sticky;top:64px;z-index:20;min-height:66px;display:flex;align-items:center;gap:16px;padding:13px 14px;margin-bottom:16px;overflow:visible;box-shadow:0 8px 22px rgba(31,65,105,.08)}
+    .toolbar:after{content:"";position:absolute;left:-1px;right:-1px;bottom:-17px;height:17px;background:var(--soft);pointer-events:none}
+    .range-preset{display:flex;gap:4px;padding:3px;background:#f2f5f9;border-radius:9px}
     .range-preset button{padding:7px 11px;color:var(--muted);background:transparent;border-radius:7px;font-size:12px;white-space:nowrap}
     .range-preset button.active{color:var(--blue);background:#e9f3ff;font-weight:650}.exact-range{display:flex;align-items:center;gap:6px}
     .date-input{width:112px;height:34px;padding:0 9px;color:var(--text);background:#fff;border:1px solid var(--line);border-radius:8px;font-size:11px;outline:none}.date-input:focus{border-color:#79aff2;box-shadow:0 0 0 2px #e8f3ff}
@@ -85,6 +90,9 @@
     .pm-grade-tabs button{position:relative;min-width:62px;height:34px;padding:0 10px;color:var(--muted);background:transparent;border:0;font-size:11px;font-weight:650;white-space:nowrap}
     .pm-grade-tabs button:hover{color:var(--blue)}.pm-grade-tabs button.active{color:var(--blue);background:transparent}.pm-grade-tabs button.active:after{content:"";position:absolute;left:10px;right:10px;bottom:-1px;height:2px;background:var(--blue);border-radius:2px 2px 0 0}
     .pm-table-wrap{overflow:hidden;border-top:1px solid var(--line)}
+    .table-pagination{min-height:54px;display:flex;align-items:center;justify-content:flex-end;padding:10px 16px;color:#66788f;background:#fff;border-top:1px solid #e5ebf2;font-size:10px}
+    .table-pagination[hidden]{display:none}.table-pagination-total{margin-right:6px;white-space:nowrap}
+    .table-pagination-controls,.page-number-list,.page-jump,.page-size-control{display:flex;align-items:center;justify-content:center;gap:6px}.page-button,.page-jump button{height:28px;min-width:28px;padding:0 8px;color:#51657e;background:#fff;border:1px solid #d7e1ed;border-radius:7px;font-size:10px;transition:border-color .14s ease,color .14s ease,background .14s ease}.page-button:hover,.page-jump button:hover{color:var(--blue);border-color:#8fbcf3}.page-button.active{color:#fff;background:var(--blue);border-color:var(--blue);font-weight:700}.page-button:disabled{color:#b7c1ce;background:#f7f9fb;border-color:#e8edf3;cursor:not-allowed}.page-ellipsis{min-width:18px;color:#9aa7b8;text-align:center}.page-jump{margin-left:6px;color:#7b8ca1;white-space:nowrap}.page-jump input{width:52px;height:28px;padding:0 6px;color:var(--ink);background:#fff;border:1px solid #d7e1ed;border-radius:7px;font-size:10px;text-align:center;outline:none}.page-jump input:focus{border-color:#79aff2;box-shadow:0 0 0 2px #e8f3ff}.page-size-control{margin-left:4px;white-space:nowrap}.page-size-control select{height:28px;padding:0 24px 0 8px;color:#51657e;background:#fff;border:1px solid #d7e1ed;border-radius:7px;font-size:10px;outline:none}.page-size-control select:focus{border-color:#79aff2;box-shadow:0 0 0 2px #e8f3ff}
     #pmBoard table{width:100%;min-width:0;table-layout:fixed;border-collapse:collapse}
     #pmBoard col.pm-col-name{width:14%}#pmBoard col.pm-col-base{width:10.5%}#pmBoard col.pm-col-grade{width:10.5%}#pmBoard col.pm-col-stage{width:11%}#pmBoard col.pm-col-amount{width:13%}
     #pmBoard th,#pmBoard td{padding:13px 8px;text-align:center;border-right:1px solid #e5ebf2;border-bottom:1px solid #e5ebf2;overflow:hidden}
@@ -112,8 +120,8 @@
     }
     @container (max-width:610px){#pmBoard tbody tr{grid-template-columns:repeat(2,minmax(0,1fr))}#pmBoard td:nth-child(3n){border-right:1px solid #e5ebf2}#pmBoard td:nth-child(2n){border-right:0}.pm-grade-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid #dbe4ef;border-radius:8px}.pm-grade-tabs button.active:after{left:18px;right:18px}}
 
-    @media(max-width:1320px){.toolbar{height:112px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:44px 40px;align-content:center;gap:6px 14px;padding:10px 14px}.toolbar h1{grid-column:1;grid-row:1;margin:0}.toolbar-divider,.filter-spacer{display:none}.range-preset{grid-column:2;grid-row:1;justify-self:start}.exact-range{grid-column:3;grid-row:1}.toolbox{grid-column:4;grid-row:1;justify-self:end}#accountFilter{grid-column:1;grid-row:2}#campaignFilter{grid-column:2;grid-row:2}#groupFilter{grid-column:3;grid-row:2}#adFilter{grid-column:4;grid-row:2}.select{width:100%;min-width:0}.summary-main{grid-template-columns:220px 1fr}.operator{padding:18px}.metric{padding:18px 7px}.metric-stat{padding:0 3px}}
-    @media(max-width:900px){:root{--sidebar:64px}.brand{justify-content:center;padding:0}.brand>div,.nav-title,.sidebar-foot{display:none}.nav{padding:14px 8px}.nav-item{justify-content:center;padding:10px 8px;font-size:0}.nav-icon{width:auto;font-size:14px}.topbar{padding:0 14px}main{padding:78px 14px 34px}.toolbar{top:64px}.toolbar h1{font-size:21px}.range-preset button{padding:7px 8px;font-size:11px}.date-input{width:100px}.summary-main{grid-template-columns:1fr}.operator{border-right:0;border-bottom:1px solid rgba(255,255,255,.16)}.metrics-strip{overflow-x:auto;grid-template-columns:repeat(6,minmax(130px,1fr))}.trend-tabs{grid-template-columns:repeat(6,minmax(120px,1fr));overflow-x:auto}.chart-wrap{min-height:210px}.board-switch{width:230px}}
+    @media(max-width:1320px){.toolbar{min-height:112px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:44px 40px;align-content:center;gap:6px 14px;padding:10px 14px}.filter-spacer{display:none}.range-preset{grid-column:1;grid-row:1;justify-self:start}.exact-range{grid-column:2 / 4;grid-row:1}.toolbox{grid-column:4;grid-row:1;justify-self:end}#accountFilter{grid-column:1;grid-row:2}#campaignFilter{grid-column:2;grid-row:2}#groupFilter{grid-column:3;grid-row:2}#adFilter{grid-column:4;grid-row:2}.select{width:100%;min-width:0}.summary-main{grid-template-columns:220px 1fr}.operator{padding:18px}.metric{padding:18px 7px}.metric-stat{padding:0 3px}}
+    @media(max-width:900px){:root{--sidebar:64px}.brand{justify-content:center;padding:0}.brand>div,.nav-title,.sidebar-foot{display:none}.nav{padding:14px 8px}.nav-item{justify-content:center;padding:10px 8px;font-size:0}.nav-icon{width:auto;font-size:14px}.topbar{padding:0 14px}main{padding:78px 14px 34px}.toolbar{top:64px}.dashboard-heading h1{font-size:22px}.range-preset button{padding:7px 8px;font-size:11px}.date-input{width:100px}.summary-main{grid-template-columns:1fr}.operator{border-right:0;border-bottom:1px solid rgba(255,255,255,.16)}.metrics-strip{overflow-x:auto;grid-template-columns:repeat(6,minmax(130px,1fr))}.trend-tabs{grid-template-columns:repeat(6,minmax(120px,1fr));overflow-x:auto}.chart-wrap{min-height:210px}.board-switch{width:230px}}
     @media(max-width:1320px){.analysis-trend{grid-template-columns:220px minmax(0,1fr)}.ai-insight-panel{padding:16px 14px}}
     @media(max-width:900px){.analysis-trend{grid-template-columns:1fr}.analysis-trend .trend-panel{border-left:0;border-top:1px solid var(--line)}.ai-insight-panel{min-height:230px}.metric-selector.active:before{display:none}}
 
@@ -121,7 +129,7 @@
     #adsBoard .table-wrap{overflow-x:hidden}
     #adsBoard .funnel-table{width:100%;min-width:0;table-layout:fixed}
     #adsBoard .funnel-table th,#adsBoard .funnel-table td{min-width:0;overflow:hidden}
-    #adsBoard .funnel-table .dimension-th{width:220px}
+    #adsBoard .funnel-table .dimension-th{width:200px}
     #adsBoard .metric-group-row th:first-child{width:48px}
     #adsBoard .metric-group-row th{height:40px;padding:10px 12px;border-left:1px solid #d7e3f1;font-size:12px}
     #adsBoard .metric-column-row th{height:46px;padding:10px 9px;font-size:12px}
@@ -129,13 +137,13 @@
     #adsBoard .metric-column-row th:nth-child(1),
     #adsBoard .metric-column-row th:nth-child(3),
     #adsBoard .metric-column-row th:nth-child(8),
-    #adsBoard .metric-column-row th:nth-child(10),
+    #adsBoard .metric-column-row th:nth-child(11),
     #adsBoard .funnel-summary-row td:nth-child(3),
     #adsBoard .funnel-summary-row td:nth-child(5),
     #adsBoard .funnel-summary-row td:nth-child(10),
-    #adsBoard .funnel-summary-row td:nth-child(12){border-left:1px solid #d7e3f1}
+    #adsBoard .funnel-summary-row td:nth-child(13){border-left:1px solid #d7e3f1}
     #adsBoard .metric-group-row th:first-child{width:64px!important}
-    #adsBoard .funnel-table .dimension-th{width:250px}
+    #adsBoard .funnel-table .dimension-th{width:210px}
     #adsBoard .funnel-summary-row td{height:76px;padding:15px 10px}
     #adsBoard .funnel-summary-row td:first-child{padding-left:14px;padding-right:14px;text-align:center}
     #adsBoard .funnel-summary-row .dimension-value{font-size:14px}
@@ -175,9 +183,9 @@
     #adsBoard .stage-loss-row>span:first-child{text-align:left}
     #adsBoard .stage-loss-row b{color:#31445c;font-size:10px}
     #adsBoard .stage-loss-row b.loss{color:#d96c37}#adsBoard .stage-loss-row b.pp-up{color:#16885f}#adsBoard .stage-loss-row b.pp-down{color:#d96c37}
-    #adsBoard .lead-trapezoid{display:flex;flex-direction:column;justify-content:center;gap:5px;min-height:166px;padding:2px 0}
-    #adsBoard .lead-axis-row{display:grid;grid-template-columns:48px minmax(0,1fr) 48px;align-items:center;gap:7px;min-height:31px}
-    #adsBoard .lead-axis-label{color:#5d718b;font-size:9px;font-weight:650;text-align:right;white-space:nowrap}
+    #adsBoard .lead-trapezoid{display:flex;flex-direction:column;justify-content:center;gap:7px;min-height:166px;padding:2px 0}
+    #adsBoard .lead-axis-row{display:grid;grid-template-columns:38px minmax(0,1fr) 48px 40px;align-items:center;gap:8px;min-height:31px}
+    #adsBoard .lead-axis-label{color:#5d718b;font-size:9px;font-weight:700;text-align:left;white-space:nowrap}
     #adsBoard .lead-layer-track{height:29px}
     #adsBoard .lead-layer{position:relative;width:var(--width);height:100%;transition:width .16s ease,filter .16s ease}
     #adsBoard .lead-layer:hover{filter:saturate(1.08)}
@@ -188,8 +196,7 @@
     #adsBoard .lead-card[data-grade-filter="a"] .lead-segment:not(.grade-a),#adsBoard .lead-card[data-grade-filter="b"] .lead-segment:not(.grade-b),#adsBoard .lead-card[data-grade-filter="c"] .lead-segment:not(.grade-c){display:none}
     #adsBoard .lead-card[data-grade-filter="a"] .lead-segment.grade-a,#adsBoard .lead-card[data-grade-filter="b"] .lead-segment.grade-b,#adsBoard .lead-card[data-grade-filter="c"] .lead-segment.grade-c{width:100%!important}
     #adsBoard .lead-axis-value{color:#203a5a;font-size:10px;font-weight:750;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-    #adsBoard .lead-x-axis{display:grid;grid-template-columns:48px minmax(0,1fr) 48px;align-items:center;gap:7px;margin-top:1px}
-    #adsBoard .lead-axis-scale{display:flex;justify-content:space-between;padding-top:4px;color:#8b9aae;border-top:1px solid #dce5ef;font-size:7px;font-style:normal;font-variant-numeric:tabular-nums}
+    #adsBoard .lead-axis-share{color:#7e8fa4;font-size:8px;font-weight:650;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
     #adsBoard .grade-filter-tabs{display:flex;align-items:center;overflow:hidden;border:1px solid #d4dfec;border-radius:6px}
     #adsBoard .grade-filter-tabs button{height:24px;min-width:30px;padding:0 8px;color:#60758f;background:#fff;border-right:1px solid #dbe4ef;font-size:8px;font-weight:700}
     #adsBoard .grade-filter-tabs button:last-child{border-right:0}#adsBoard .grade-filter-tabs button:hover{background:#f3f7fc}
@@ -198,13 +205,16 @@
     #adsBoard .funnel-step-wrap:nth-child(3) .funnel-step{background:linear-gradient(90deg,#3387d8,#65a9e7)}
     #adsBoard .funnel-step-wrap:nth-child(4) .funnel-step{background:linear-gradient(90deg,#4694d5,#7db5e6)}
     #adsBoard .funnel-step-wrap:nth-child(5) .funnel-step{background:linear-gradient(90deg,#5aa0d4,#91c1e5)}
-    #adsBoard .quality-grid{grid-template-columns:repeat(3,1fr);grid-auto-rows:1fr;min-height:166px;gap:0;overflow:hidden;border:1px solid #e0e8f1;border-radius:8px}
-    #adsBoard .quality-stat{min-height:0;padding:11px 9px;background:#fff;border-right:1px solid #e7edf4;border-bottom:1px solid #e7edf4;border-radius:0}
-    #adsBoard .quality-stat:nth-child(3n){border-right:0}
-    #adsBoard .quality-stat:nth-last-child(-n+3){border-bottom:0}
-    #adsBoard .quality-stat span{font-size:9px}
-    #adsBoard .quality-stat strong{font-size:16px}
-    #adsBoard .quality-stat small{display:block;margin-top:4px;color:#8392a5;font-size:8px;line-height:1.45}
+    #adsBoard .quality-sections{display:grid;gap:10px;min-height:166px}
+    #adsBoard .quality-section-title{display:block;margin-bottom:5px;color:#6f8198;font-size:8px;font-weight:700}
+    #adsBoard .quality-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));overflow:hidden;border:1px solid #e0e8f1;border-radius:8px}
+    #adsBoard .quality-stat{min-width:0;padding:9px 10px;background:#fff;border-right:1px solid #e7edf4;border-radius:0}
+    #adsBoard .quality-stat:last-child{border-right:0}
+    #adsBoard .quality-stat>span{display:block;color:#73859b;font-size:9px;white-space:nowrap}
+    #adsBoard .quality-primary{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:8px;margin-top:4px}
+    #adsBoard .quality-primary strong{display:block;min-width:0;margin:0;color:#1f5da7;font-size:16px;line-height:1.2;font-variant-numeric:tabular-nums;white-space:nowrap}
+    #adsBoard .quality-primary em{padding:2px 5px;color:#6f8198;background:#f3f6fa;border-radius:4px;font-size:7px;line-height:1.4;font-style:normal;font-variant-numeric:tabular-nums;white-space:nowrap}
+    #adsBoard .quality-stat small{display:block;margin-top:5px;color:#8392a5;font-size:8px;line-height:1.35;white-space:nowrap}
     #adsBoard .quality-stat.warn strong{color:#d57b08}
     #adsBoard .contribution-summary{gap:8px;margin-bottom:12px}
     #adsBoard .contribution-summary div{padding:10px 8px}
@@ -224,9 +234,10 @@
     #adsBoard .contribution-range input::-moz-range-thumb{width:12px;height:12px;background:#fff;border:5px solid var(--accent);border-radius:50%;box-shadow:0 2px 8px rgba(25,69,119,.25),0 0 0 3px rgba(46,123,214,.10);transition:transform .12s ease,box-shadow .12s ease}
     #adsBoard .contribution-range input:hover::-webkit-slider-thumb,#adsBoard .contribution-range input:focus-visible::-webkit-slider-thumb{transform:scale(1.08);box-shadow:0 3px 10px rgba(25,69,119,.30),0 0 0 5px rgba(46,123,214,.13)}
     #adsBoard .contribution-range input:hover::-moz-range-thumb,#adsBoard .contribution-range input:focus-visible::-moz-range-thumb{transform:scale(1.08);box-shadow:0 3px 10px rgba(25,69,119,.30),0 0 0 5px rgba(46,123,214,.13)}
-    #adsBoard .contribution-hint{font-size:9px;line-height:1.5}
+    #adsBoard .dimension-head{justify-content:center}
+    #adsBoard .dimension-select{width:170px;height:34px;padding:0 42px 0 14px;font-size:11px;appearance:none;-webkit-appearance:none;background-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.5 4.5L6 8l3.5-3.5' stroke='%23425168' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 18px center;background-size:12px 12px}
     @media(max-width:1500px){
-      #adsBoard .funnel-table .dimension-th{width:215px}
+      #adsBoard .funnel-table .dimension-th{width:185px}
       #adsBoard .metric-group-row th{padding:8px 5px;font-size:10px}
       #adsBoard .metric-column-row th{padding:8px 4px;font-size:9px}
       #adsBoard .metric-column-row .table-sort{font-size:9px}
@@ -238,7 +249,7 @@
       #adsBoard .funnel-detail{grid-template-columns:repeat(2,minmax(0,1fr))!important}
     }
     @media(max-width:1100px){
-      #adsBoard .funnel-table .dimension-th{width:170px}
+      #adsBoard .funnel-table .dimension-th{width:145px}
       #adsBoard .metric-group-row th:first-child{width:48px!important}
       #adsBoard .metric-group-row th,#adsBoard .metric-column-row th{padding-left:2px;padding-right:2px;font-size:8px}
       #adsBoard .metric-column-row .table-sort{gap:2px;font-size:8px}
@@ -252,7 +263,9 @@
       #adsBoard .grade-segments{height:18px}
       #adsBoard .grade-segments span{font-size:7px}
     }
-    @media(max-width:780px){#adsBoard .funnel-detail{grid-template-columns:1fr!important}}
+    @media(max-width:780px){#adsBoard .funnel-detail{grid-template-columns:1fr!important}.table-pagination{padding:10px;justify-content:flex-end}.table-pagination-controls{flex-wrap:wrap;justify-content:flex-end}}
+    /* 收紧投放溯源与订单分析看板之间的垂直留白。 */
+    .trace-wrap{padding-bottom:6px}
   </style>
 </head>
 <body class="embedded">
@@ -270,8 +283,11 @@
   <header class="topbar"><div class="crumb"><span>四维看板</span><span>/</span><strong>运营看板</strong></div><div class="user"><span class="avatar">KM</span><span>Kevin Ma<br><small style="color:#94a3b8">运营</small></span></div></header>
 
   <main>
+    <section class="dashboard-heading" aria-label="运营看板标题">
+      <div><h1>运营看板</h1><p>统一查看投放、询盘、转化与订单成效</p></div>
+      <div class="update-state"><span class="state-dot"></span><span>数据已更新 · 10:30</span></div>
+    </section>
     <section class="toolbar panel" aria-label="运营看板筛选">
-      <h1>运营看板</h1><span class="toolbar-divider"></span>
       <div class="range-preset" id="rangePreset"><button data-range="yesterday">昨天</button><button class="active" data-range="today">今天</button><button data-range="7">近7天</button><button data-range="30">近30天</button></div>
       <div class="exact-range"><input class="date-input" id="startDate" type="date" aria-label="开始日期"><span style="color:#9aa8b9">至</span><input class="date-input" id="endDate" type="date" aria-label="结束日期"></div>
       <span class="filter-spacer"></span>
@@ -308,7 +324,8 @@
     <div class="board-nav" aria-label="看板切换"><div class="board-switch" id="boardSwitch"><button class="active" data-board="ads">投放转化看板</button><button data-board="pm">PM转化看板</button><button data-board="orders">订单溯源看板</button></div></div>
 
     <section class="drill-panel panel board-view" id="adsBoard">
-      <div class="table-wrap"><table class="funnel-table"><thead id="planHead"><tr class="metric-group-row"><th rowspan="2" style="width:64px">条件</th><th rowspan="2" class="dimension-th" id="dimensionHead0"></th><th colspan="2">投放参考</th><th colspan="5">询盘质量</th><th colspan="2">销售转化</th><th colspan="2">成交结果</th></tr><tr class="metric-column-row"><th class="num"><button class="table-sort" type="button" data-sort-key="spend">消耗 <span class="table-sort-arrow">↕</span></button></th><th><button class="table-sort" type="button" data-sort-key="exposure">曝光 <span class="table-sort-arrow">↕</span></button></th><th><button class="table-sort" type="button" data-sort-key="inquiries">总进线 <span class="table-sort-arrow">↕</span></button></th><th><button class="table-sort" type="button" data-sort-key="transfers">有效询盘 <span class="table-sort-arrow">↕</span></button></th><th><span class="grade-header-title"><i class="a">A</i>/<i class="b">B</i>/<i class="c">C</i> 结构</span></th><th>有户型图</th><th>撞客</th><th>建联成功</th><th><button class="table-sort" type="button" data-sort-key="projects">立项 <span class="table-sort-arrow">↕</span></button></th><th><button class="table-sort" type="button" data-sort-key="deals">成交 <span class="table-sort-arrow">↕</span></button></th><th class="num"><button class="table-sort" type="button" data-sort-key="amount">订单金额 <span class="table-sort-arrow">↕</span></button></th></tr></thead><tbody id="planBody"></tbody></table><div class="empty" id="emptyState" hidden>当前筛选条件下暂无投放数据，请调整筛选条件。</div></div>
+      <div class="table-wrap"><table class="funnel-table"><thead id="planHead"><tr class="metric-group-row"><th rowspan="2" style="width:64px">条件</th><th rowspan="2" class="dimension-th" id="dimensionHead0"></th><th colspan="2">投放消耗</th><th colspan="5">询盘质量</th><th colspan="3">销售转化</th><th colspan="2">成交结果</th></tr><tr class="metric-column-row"><th class="num"><button class="table-sort" type="button" data-sort-key="spend">消耗 <span class="table-sort-arrow">↕</span></button></th><th><button class="table-sort" type="button" data-sort-key="exposure">曝光 <span class="table-sort-arrow">↕</span></button></th><th><button class="table-sort" type="button" data-sort-key="inquiries">总进线 <span class="table-sort-arrow">↕</span></button></th><th><button class="table-sort" type="button" data-sort-key="transfers">有效询盘 <span class="table-sort-arrow">↕</span></button></th><th><span class="grade-header-title"><i class="a">A</i>/<i class="b">B</i>/<i class="c">C</i> 等级</span></th><th>有图纸</th><th>撞客</th><th>建联成功</th><th><button class="table-sort" type="button" data-sort-key="visits">客户到店 <span class="table-sort-arrow">↕</span></button></th><th><button class="table-sort" type="button" data-sort-key="projects">立项 <span class="table-sort-arrow">↕</span></button></th><th><button class="table-sort" type="button" data-sort-key="deals">成交 <span class="table-sort-arrow">↕</span></button></th><th class="num"><button class="table-sort" type="button" data-sort-key="amount">订单金额 <span class="table-sort-arrow">↕</span></button></th></tr></thead><tbody id="planBody"></tbody></table><div class="empty" id="emptyState" hidden>当前筛选条件下暂无投放数据，请调整筛选条件。</div></div>
+      <div class="table-pagination" id="adsPagination" aria-label="投放转化看板分页"></div>
     </section>
 
     <section class="drill-panel panel board-view" id="ordersBoard" hidden>
@@ -346,6 +363,7 @@
         </table>
         <div class="pm-empty" id="pmEmpty" hidden>未找到匹配的 PM，请调整搜索条件。</div>
       </div>
+      <div class="table-pagination" id="pmPagination" aria-label="PM转化看板分页"></div>
     </section>
   </main>
   <div class="toast" id="toast"></div>
@@ -368,6 +386,13 @@
       {id:14,name:'菲律宾承包商合作',platform:'LinkedIn',account:'LinkedIn-B2B',group:'菲律宾承包商',ad:'承包商合作政策M',country:'菲律宾',language:'英文',age:'45–54岁',gender:'武装直升机',device:'桌面端 · Web',spend:7600,exposure:286174,inquiries:52,transfers:39,high:21,visits:6,projects:13,deals:3,amount:376000},
       {id:15,name:'巴西经销商招募',platform:'WhatsApp',account:'WhatsApp-拉美',group:'巴西家具经销商',ad:'经销商招募计划N',country:'巴西',language:'葡萄牙文',age:'65岁以上',gender:'沃尔玛塑料袋',device:'移动端 · Android',spend:5800,exposure:348921,inquiries:69,transfers:48,high:25,visits:8,projects:14,deals:3,amount:462000}
     ];
+    plans.push(
+      {id:16,name:'东南亚门店体验引流',platform:'Instagram',account:'Meta-亚洲华人',group:'门店到访兴趣组',ad:'门店体验短片N',country:'新加坡',language:'中文',age:'25–34岁',gender:'女',device:'移动端 · iOS',spend:8600,exposure:574286,inquiries:91,transfers:72,high:39,visits:18,projects:23,deals:5,amount:448000},
+      {id:17,name:'样板间预约推广',platform:'Facebook',account:'Meta-海外增长',group:'样板间预约人群',ad:'样板间预约广告O',country:'阿联酋',language:'英文',age:'35–44岁',gender:'男',device:'移动端 · Android',spend:10900,exposure:638451,inquiries:83,transfers:64,high:35,visits:16,projects:20,deals:4,amount:536000},
+      {id:18,name:'全屋定制预算工具',platform:'Google Ads',account:'Google-北美增长',group:'装修预算意向人群',ad:'预算测算工具P',country:'美国',language:'英文',age:'45–54岁',gender:'生理男认知女',device:'桌面端 · Windows',spend:12700,exposure:491368,inquiries:76,transfers:59,high:34,visits:15,projects:19,deals:4,amount:628000},
+      {id:19,name:'设计师联营计划',platform:'LinkedIn',account:'LinkedIn-B2B',group:'室内设计师合作人群',ad:'设计师联营权益Q',country:'英国',language:'英文',age:'35–44岁',gender:'生理女认知男',device:'桌面端 · macOS',spend:13400,exposure:365219,inquiries:58,transfers:46,high:29,visits:12,projects:16,deals:4,amount:792000},
+      {id:20,name:'老客转介绍活动',platform:'WhatsApp',account:'WhatsApp-拉美',group:'已成交客户相似人群',ad:'转介绍激励活动R',country:'巴西',language:'葡萄牙文',age:'45–54岁',gender:'武装直升机',device:'移动端 · Android',spend:6200,exposure:329845,inquiries:67,transfers:52,high:31,visits:14,projects:18,deals:4,amount:484000}
+    );
     const orders=[
       {id:'OS-202608-001',customer:'Joseph Chen',pm:'Kevin Ma',planId:1,touch:'Instagram · 全屋实拍竖版A',date:'2026-08-12',amount:386000,payment:'已收款'},
       {id:'OS-202608-002',customer:'Emma Wilson',pm:'Lisa Wang',planId:2,touch:'Messenger · 一对一方案咨询B',date:'2026-08-11',amount:428000,payment:'部分收款'},
@@ -385,8 +410,10 @@
       {name:'林杰 James Lin',assigned:2001,grades:{a:460,b:681,c:860},connected:{a:191,b:138,c:75},projects:{a:84,b:56,c:30},deals:{a:34,b:21,c:11},amount:{a:1089000,b:594000,c:297000}},
       {name:'赵睿 Eric Zhao',assigned:1938,grades:{a:459,b:653,c:826},connected:{a:195,b:141,c:76},projects:{a:81,b:54,c:29},deals:{a:33,b:20,c:11},amount:{a:1034000,b:564000,c:282000}}
     ];
-    const state={range:'today',start:'',end:'',account:'all',campaign:'all',group:'all',ad:'all',trend:'spend',board:'ads',lockedPoint:null,traceOrderId:'OS-202608-001',dimension:'ad',sortKey:'inquiries',sortDir:'desc',orderAnalysisDimension:'pm',expandedRowKeys:new Set(),expandedInitialized:false,pmGrade:'all',pmSearch:'',pmSortKey:'assigned',pmSortDir:'desc'};
-    const fmt=new Intl.NumberFormat('zh-CN'); const money=v=>`¥${fmt.format(Math.round(v))}`; const compact=v=>v>=1e6?`${(v/1e6).toFixed(2)}M`:v>=1e3?`${(v/1e3).toFixed(1)}k`:fmt.format(Math.round(v)); const cardCompact=v=>v>=1e6?`${(v/1e6).toFixed(1)}M`:v>=1e5?`${Math.round(v/1e3)}k`:v>=1e3?`${(v/1e3).toFixed(1)}k`:fmt.format(Math.round(v)); const cardMoney=v=>`¥${cardCompact(v)}`;
+    const pmDemoNames=['周悦 Joy Zhou','黄琳 Helen Huang','吴晨 Leo Wu','赵敏 Nina Zhao','孙涛 Tony Sun','钱菲 Faye Qian','郑凯 Kai Zheng','冯雪 Snow Feng','韩梅 May Han','杨帆 Frank Yang','何静 Jane He','郭明 Mark Guo','罗莎 Rosa Luo','谢宁 Nina Xie'];
+    pmDemoNames.forEach((name,index)=>{const base=pmRows[index%pmRows.length],factor=.72+(index%7)*.035,scaleMap=source=>Object.fromEntries(Object.entries(source).map(([key,value])=>[key,Math.round(value*factor)]));pmRows.push({name,assigned:Math.round(base.assigned*factor),grades:scaleMap(base.grades),connected:scaleMap(base.connected),projects:scaleMap(base.projects),deals:scaleMap(base.deals),amount:scaleMap(base.amount)})});
+    const state={range:'today',start:'',end:'',account:'all',campaign:'all',group:'all',ad:'all',trend:'spend',board:'ads',lockedPoint:null,traceOrderId:'OS-202608-001',dimension:'ad',sortKey:'inquiries',sortDir:'desc',orderAnalysisDimension:'pm',expandedRowKeys:new Set(),expandedInitialized:false,pmGrade:'all',pmSearch:'',pmSortKey:'assigned',pmSortDir:'desc',adsPage:1,pmPage:1,adsPageSize:15,pmPageSize:15};
+    const fmt=new Intl.NumberFormat('zh-CN'); const money=v=>`¥${fmt.format(Math.round(v))}`; const compact=v=>v>=1e6?`${(v/1e6).toFixed(2)}M`:v>=1e3?`${(v/1e3).toFixed(1)}k`:fmt.format(Math.round(v)); const cardCompact=v=>v>=1e6?`${(v/1e6).toFixed(1)}M`:v>=1e5?`${Math.round(v/1e3)}k`:v>=1e3?`${(v/1e3).toFixed(1)}k`:fmt.format(Math.round(v)); const cardMoney=v=>`¥${cardCompact(v)}`; const narrowMoney=v=>money(v/10); const narrowNumber=v=>fmt.format(Math.round(v/10));
     const sum=(rows,key)=>rows.reduce((n,x)=>n+x[key],0); const rangeFactor=()=>state.range==='yesterday'?.91:state.range==='today'?1:state.range==='7'?5.8:state.range==='30'?22.6:Math.max(1,(new Date(state.end)-new Date(state.start))/86400000+1);
     const rows=()=>plans.filter(x=>(state.account==='all'||x.account===state.account)&&(state.campaign==='all'||x.name===state.campaign)&&(state.group==='all'||x.group===state.group)&&(state.ad==='all'||x.ad===state.ad));
     const scaled=(v)=>Math.round(v*rangeFactor()); const unique=key=>[...new Set(plans.map(x=>x[key]))];
@@ -486,7 +513,7 @@
     function renderDimensionHeads(){
       const th=document.querySelector('#dimensionHead0');
       th.innerHTML=`<div class="dimension-head"><select class="dimension-select" aria-label="展示维度">${dimensionOptions(state.dimension)}</select></div>`;
-      th.querySelector('.dimension-select').addEventListener('change',e=>{state.dimension=e.target.value;state.expandedRowKeys.clear();state.expandedInitialized=false;renderTable()});
+      th.querySelector('.dimension-select').addEventListener('change',e=>{state.dimension=e.target.value;state.adsPage=1;state.expandedRowKeys.clear();state.expandedInitialized=false;renderTable()});
     }
     function renderSortHeaders(){document.querySelectorAll('#adsBoard [data-sort-key]').forEach(btn=>{const active=state.sortKey===btn.dataset.sortKey;btn.classList.toggle('active',active);btn.querySelector('.table-sort-arrow').textContent=active?(state.sortDir==='desc'?'↓':'↑'):'↕'})}
     const pct=(value,total)=>total?value/total*100:0;
@@ -498,40 +525,40 @@
       const floorRate=.58+(seed%8)/100,duplicateRate=.10+((seed*3)%7)/100;
       const floorplan=Math.round(valid*floorRate),duplicate=Math.round(valid*duplicateRate);
       const connected=Math.min(valid,Math.max(scaled(x.projects),Math.round(valid*(.62+(seed%7)/100))));
-      const projects=Math.min(connected,scaled(x.projects)),deals=Math.min(projects,scaled(x.deals));
+      const projects=Math.min(connected,scaled(x.projects)),arrivals=Math.min(connected,Math.max(projects,Math.round(connected*(.52+(seed%12)/100)+scaled(x.visits)*.08))),deals=Math.min(projects,scaled(x.deals));
       const aDeals=Math.min(gradeA,Math.round(deals*.56)),bDeals=Math.min(gradeB,Math.round(deals*.31)),cDeals=Math.max(0,deals-aDeals-bDeals);
-      return {seed,total,valid,gradeA,gradeB,gradeC,floorplan,duplicate,connected,projects,deals,aDeals,bDeals,cDeals,amount:x.amount*rangeFactor()};
+      return {seed,total,valid,gradeA,gradeB,gradeC,floorplan,duplicate,connected,arrivals,projects,deals,aDeals,bDeals,cDeals,amount:x.amount*rangeFactor()};
     }
     function gradeCell(m){
       const rates=[pct(m.gradeA,m.valid),pct(m.gradeB,m.valid),pct(m.gradeC,m.valid)];
       return `<div class="cell-stack grade-composition"><div class="grade-segments"><span class="grade-a" style="width:${rates[0]}%">${fmt.format(m.gradeA)}</span><span class="grade-b" style="width:${rates[1]}%">${fmt.format(m.gradeB)}</span><span class="grade-c" style="width:${rates[2]}%">${fmt.format(m.gradeC)}</span></div><div class="grade-counts"><span style="width:${rates[0]}%">${Math.round(rates[0])}%</span><span style="width:${rates[1]}%">${Math.round(rates[1])}%</span><span style="width:${rates[2]}%">${Math.round(rates[2])}%</span></div></div>`;
     }
     function stageLossRow(label,from,to,pp){const loss=Math.max(0,from-to),rate=pct(to,from),ppClass=pp>=0?'pp-up':'pp-down';return `<div class="stage-loss-row"><span>${label}</span><b class="loss">${fmt.format(loss)}</b><b>${pctText(rate)}</b><b class="${ppClass}">${pp>=0?'+':''}${pp.toFixed(1)}pp</b></div>`}
-    function leadLayer(label,a,b,c,width){const total=a+b+c,shares=[pct(a,total),pct(b,total),pct(c,total)];return `<div class="lead-axis-row"><span class="lead-axis-label">${label}</span><div class="lead-layer-track"><div class="lead-layer" style="--width:${width}%"><div class="lead-layer-shape"><div class="lead-distribution"><span class="lead-segment grade-a" style="--share:${shares[0]}%;width:${shares[0]}%"></span><span class="lead-segment grade-b" style="--share:${shares[1]}%;width:${shares[1]}%"></span><span class="lead-segment grade-c" style="--share:${shares[2]}%;width:${shares[2]}%"></span></div></div></div></div><strong class="lead-axis-value" data-all="${total}" data-a="${a}" data-b="${b}" data-c="${c}">${fmt.format(total)}</strong></div>`}
+    function leadLayer(label,a,b,c,width,base,baseA,baseB,baseC){const total=a+b+c,shares=[pct(a,total),pct(b,total),pct(c,total)],stageShare=pct(total,base),widthA=pct(a,baseA),widthB=pct(b,baseB),widthC=pct(c,baseC);return `<div class="lead-axis-row"><span class="lead-axis-label">${label}</span><div class="lead-layer-track"><div class="lead-layer" data-all-width="${width}" data-a-width="${widthA}" data-b-width="${widthB}" data-c-width="${widthC}" style="--width:${width}%"><div class="lead-layer-shape"><div class="lead-distribution"><span class="lead-segment grade-a" style="--share:${shares[0]}%;width:${shares[0]}%"></span><span class="lead-segment grade-b" style="--share:${shares[1]}%;width:${shares[1]}%"></span><span class="lead-segment grade-c" style="--share:${shares[2]}%;width:${shares[2]}%"></span></div></div></div></div><strong class="lead-axis-value" data-all="${total}" data-a="${a}" data-b="${b}" data-c="${c}">${fmt.format(total)}</strong><span class="lead-axis-share" data-all="${stageShare}" data-a="${widthA}" data-b="${widthB}" data-c="${widthC}">${pctText(stageShare)}</span></div>`}
     function funnelDetail(m,isTotal){
       const floorProjectRate=Math.min(100,pct(m.projects,Math.max(1,m.floorplan))),duplicateLoss=Math.min(100,pct(m.duplicate,m.valid)),floorProjects=Math.min(m.projects,Math.round(m.floorplan*.52));
       const noFloorplan=Math.max(0,m.valid-m.floorplan),noFloorProjectRate=Math.max(0,floorProjectRate-18.4);
       const connectedA=Math.round(m.connected*.31),connectedB=Math.round(m.connected*.45),connectedC=Math.max(0,m.connected-connectedA-connectedB);
       const projectA=Math.round(m.projects*.37),projectB=Math.round(m.projects*.42),projectC=Math.max(0,m.projects-projectA-projectB);
       const pp=isTotal?[0,0,0,0]:[-4.8,3.2,-6.1,2.4];
-      const globalOrderShare=20,globalAmountShare=71.6,initialOrderShare=isTotal?globalOrderShare:Math.max(10,Math.min(30,globalOrderShare+((m.seed%5)-2)*3)),initialAmountShare=amountContribution(initialOrderShare);
+      const globalOrderShare=20,globalAmountShare=80,initialOrderShare=isTotal?globalOrderShare:Math.max(10,Math.min(30,globalOrderShare+((m.seed%5)-2)*3)),initialAmountShare=amountContribution(initialOrderShare);
       return `<div class="funnel-detail">
-        <article class="funnel-card"><div class="funnel-card-head"><strong>各阶段流失</strong></div><div class="stage-loss-table"><div class="stage-loss-row head"><span>阶段</span><span>流失量</span><span>转化率</span><span>较全盘</span></div>${stageLossRow('进线 → 询盘',m.total,m.valid,pp[0])}${stageLossRow('询盘 → 建联',m.valid,m.connected,pp[1])}${stageLossRow('建联 → 立项',m.connected,m.projects,pp[2])}${stageLossRow('立项 → 成交',m.projects,m.deals,pp[3])}</div></article>
-        <article class="funnel-card lead-card" data-lead-card data-grade-filter="all"><div class="funnel-card-head"><strong>线索转化</strong><div class="grade-filter-tabs" role="tablist" aria-label="线索等级筛选"><button class="active" type="button" data-grade-filter="all">全部</button><button type="button" data-grade-filter="a">A</button><button type="button" data-grade-filter="b">B</button><button type="button" data-grade-filter="c">C</button></div></div><div class="lead-trapezoid">${leadLayer('询盘',m.gradeA,m.gradeB,m.gradeC,100)}${leadLayer('建联',connectedA,connectedB,connectedC,82)}${leadLayer('立项',projectA,projectB,projectC,64)}${leadLayer('成交',m.aDeals,m.bDeals,m.cDeals,46)}<div class="lead-x-axis" data-lead-axis data-all="${m.valid}" data-a="${m.gradeA}" data-b="${m.gradeB}" data-c="${m.gradeC}"><span></span><i class="lead-axis-scale"><span>0</span><span data-axis-half>${fmt.format(Math.round(m.valid/2))}</span><span data-axis-max>${fmt.format(m.valid)}</span></i><span></span></div></div></article>
-        <article class="funnel-card"><div class="funnel-card-head"><strong>质量影响</strong></div><div class="quality-grid"><div class="quality-stat"><span>有户型图</span><strong>${fmt.format(m.floorplan)}</strong><small>占比 ${pctText(pct(m.floorplan,m.valid))} · 立项率 ${pctText(floorProjectRate)}</small></div><div class="quality-stat"><span>无户型图</span><strong>${fmt.format(noFloorplan)}</strong><small>占比 ${pctText(pct(noFloorplan,m.valid))} · 立项率 ${pctText(noFloorProjectRate)}</small></div><div class="quality-stat warn"><span>撞客客户</span><strong>${fmt.format(m.duplicate)}</strong><small>撞客率 ${pctText(duplicateLoss)}</small></div><div class="quality-stat"><span>A级成交</span><strong>${fmt.format(m.aDeals)}</strong><small>成交率 ${pctText(pct(m.aDeals,m.gradeA))}</small></div><div class="quality-stat"><span>B级成交</span><strong>${fmt.format(m.bDeals)}</strong><small>成交率 ${pctText(pct(m.bDeals,m.gradeB))}</small></div><div class="quality-stat"><span>C级成交</span><strong>${fmt.format(m.cDeals)}</strong><small>成交率 ${pctText(pct(m.cDeals,m.gradeC))}</small></div></div></article>
-        <article class="funnel-card" data-contribution-card data-is-total="${isTotal}" data-global-order="${globalOrderShare}" data-global-amount="${globalAmountShare}" data-initial-order="${initialOrderShare}"><div class="funnel-card-head"><strong>成交贡献占比</strong></div><div class="contribution-summary"><div><strong data-order-share>${Math.round(initialOrderShare)}%</strong><span>累计订单占比</span><em data-order-pp class="pp-up">较全盘 +0.0pp</em></div><i>↔</i><div><strong data-amount-share>${initialAmountShare.toFixed(1)}%</strong><span>累计成交金额占比</span><em data-amount-pp class="pp-up">较全盘 +0.0pp</em></div></div><div class="contribution-slider-panel"><label class="contribution-slider-row"><span>订单占比</span><span class="contribution-range"><input type="range" min="10" max="30" step="1" value="${Math.round(initialOrderShare)}" data-order-slider aria-label="调整订单占比" style="--value:50%"></span><output data-order-output>${Math.round(initialOrderShare)}%</output></label><label class="contribution-slider-row"><span>订单贡献</span><span class="contribution-range"><input class="amount" type="range" min="63" max="80" step="0.1" value="${initialAmountShare.toFixed(1)}" data-amount-slider aria-label="调整订单贡献" style="--value:50%"></span><output data-amount-output>${initialAmountShare.toFixed(1)}%</output></label></div><div class="contribution-hint">两个滑块均可独立调整，并实时联动换算订单占比与成交贡献</div></article>
+        <article class="funnel-card"><div class="funnel-card-head"><strong>阶段漏斗</strong></div><div class="stage-loss-table"><div class="stage-loss-row head"><span>阶段</span><span>流失量</span><span>转化率</span><span>较全盘</span></div>${stageLossRow('进线 → 询盘',m.total,m.valid,pp[0])}${stageLossRow('询盘 → 建联',m.valid,m.connected,pp[1])}${stageLossRow('建联 → 立项',m.connected,m.projects,pp[2])}${stageLossRow('立项 → 成交',m.projects,m.deals,pp[3])}</div></article>
+        <article class="funnel-card lead-card" data-lead-card data-grade-filter="all"><div class="funnel-card-head"><strong>线索转化</strong><div class="grade-filter-tabs" role="tablist" aria-label="线索等级筛选"><button class="active" type="button" data-grade-filter="all">全部</button><button type="button" data-grade-filter="a">A</button><button type="button" data-grade-filter="b">B</button><button type="button" data-grade-filter="c">C</button></div></div><div class="lead-trapezoid">${leadLayer('询盘',m.gradeA,m.gradeB,m.gradeC,100,m.valid,m.gradeA,m.gradeB,m.gradeC)}${leadLayer('建联',connectedA,connectedB,connectedC,82,m.valid,m.gradeA,m.gradeB,m.gradeC)}${leadLayer('立项',projectA,projectB,projectC,64,m.valid,m.gradeA,m.gradeB,m.gradeC)}${leadLayer('成交',m.aDeals,m.bDeals,m.cDeals,46,m.valid,m.gradeA,m.gradeB,m.gradeC)}</div></article>
+        <article class="funnel-card"><div class="funnel-card-head"><strong>立项/成交</strong></div><div class="quality-sections"><section><span class="quality-section-title">立项结构</span><div class="quality-row"><div class="quality-stat"><span>有图纸</span><div class="quality-primary"><strong>${fmt.format(m.floorplan)}</strong><em>${pctText(pct(m.floorplan,m.valid))}</em></div><small>立项率 ${pctText(floorProjectRate)}</small></div><div class="quality-stat"><span>无图纸</span><div class="quality-primary"><strong>${fmt.format(noFloorplan)}</strong><em>${pctText(pct(noFloorplan,m.valid))}</em></div><small>立项率 ${pctText(noFloorProjectRate)}</small></div><div class="quality-stat warn"><span>撞客客户</span><div class="quality-primary"><strong>${fmt.format(m.duplicate)}</strong><em>${pctText(duplicateLoss)}</em></div></div></div></section><section><span class="quality-section-title">成交结构</span><div class="quality-row"><div class="quality-stat"><span>A级成交</span><div class="quality-primary"><strong>${fmt.format(m.aDeals)}</strong><em>${pctText(pct(m.aDeals,m.deals))}</em></div><small>成交率 ${pctText(pct(m.aDeals,m.gradeA))}</small></div><div class="quality-stat"><span>B级成交</span><div class="quality-primary"><strong>${fmt.format(m.bDeals)}</strong><em>${pctText(pct(m.bDeals,m.deals))}</em></div><small>成交率 ${pctText(pct(m.bDeals,m.gradeB))}</small></div><div class="quality-stat"><span>C级成交</span><div class="quality-primary"><strong>${fmt.format(m.cDeals)}</strong><em>${pctText(pct(m.cDeals,m.deals))}</em></div><small>成交率 ${pctText(pct(m.cDeals,m.gradeC))}</small></div></div></section></div></article>
+        <article class="funnel-card" data-contribution-card data-is-total="${isTotal}" data-global-order="${globalOrderShare}" data-global-amount="${globalAmountShare}" data-initial-order="${initialOrderShare}"><div class="funnel-card-head"><strong>成交贡献</strong></div><div class="contribution-summary"><div><strong data-order-share>${Math.round(initialOrderShare)}%</strong><span>累计订单占比</span><em data-order-pp class="pp-up">较全盘 +0.0pp</em></div><i>↔</i><div><strong data-amount-share>${initialAmountShare.toFixed(1)}%</strong><span>累计成交金额占比</span><em data-amount-pp class="pp-up">较全盘 +0.0pp</em></div></div><div class="contribution-slider-panel"><label class="contribution-slider-row"><span>订单占比</span><span class="contribution-range"><input type="range" min="0" max="100" step="1" value="${Math.round(initialOrderShare)}" data-order-slider aria-label="调整订单占比" style="--value:${initialOrderShare}%"></span><output data-order-output>${Math.round(initialOrderShare)}%</output></label><label class="contribution-slider-row"><span>订单贡献</span><span class="contribution-range"><input class="amount" type="range" min="0" max="100" step="0.1" value="${initialAmountShare.toFixed(1)}" data-amount-slider aria-label="调整订单贡献" style="--value:${initialAmountShare}%"></span><output data-amount-output>${initialAmountShare.toFixed(1)}%</output></label></div></article>
       </div>`;
     }
     function amountContribution(orderShare){
-      const xs=[10,15,20,25,30],ys=[63,67.2,71.6,75.8,80];
+      const xs=[0,5,10,20,35,50,70,85,100],ys=[0,30,55,80,87,92,96,98.5,100];
       for(let i=1;i<xs.length;i++){if(orderShare<=xs[i]){const ratio=(orderShare-xs[i-1])/(xs[i]-xs[i-1]);return ys[i-1]+(ys[i]-ys[i-1])*ratio}}return ys[ys.length-1];
     }
     function orderShareFromContribution(amountShare){
-      const xs=[10,15,20,25,30],ys=[63,67.2,71.6,75.8,80];
+      const xs=[0,5,10,20,35,50,70,85,100],ys=[0,30,55,80,87,92,96,98.5,100];
       for(let i=1;i<ys.length;i++){if(amountShare<=ys[i]){const ratio=(amountShare-ys[i-1])/(ys[i]-ys[i-1]);return xs[i-1]+(xs[i]-xs[i-1])*ratio}}return xs[xs.length-1];
     }
     function syncContribution(card,orderShare,amountShare){
-      const orderMin=10,orderMax=30,amountMin=63,amountMax=80,order=Math.max(orderMin,Math.min(orderMax,orderShare)),amount=Math.max(amountMin,Math.min(amountMax,amountShare)),orderSlider=card.querySelector('[data-order-slider]'),amountSlider=card.querySelector('[data-amount-slider]');
+      const orderMin=0,orderMax=100,amountMin=0,amountMax=100,order=Math.max(orderMin,Math.min(orderMax,orderShare)),amount=Math.max(amountMin,Math.min(amountMax,amountShare)),orderSlider=card.querySelector('[data-order-slider]'),amountSlider=card.querySelector('[data-amount-slider]');
       const orderProgress=(order-orderMin)/(orderMax-orderMin)*100,amountProgress=(amount-amountMin)/(amountMax-amountMin)*100;
       orderSlider.value=Math.round(order);amountSlider.value=amount.toFixed(1);orderSlider.style.setProperty('--value',`${orderProgress}%`);amountSlider.style.setProperty('--value',`${amountProgress}%`);
       card.querySelector('[data-order-share]').textContent=`${Math.round(order)}%`;card.querySelector('[data-amount-share]').textContent=`${amount.toFixed(1)}%`;card.querySelector('[data-order-output]').textContent=`${Math.round(order)}%`;card.querySelector('[data-amount-output]').textContent=`${amount.toFixed(1)}%`;
@@ -539,17 +566,28 @@
       [[orderPp,orderDelta],[amountPp,amountDelta]].forEach(([node,delta])=>{node.textContent=`较全盘 ${delta>=0?'+':''}${delta.toFixed(1)}pp`;node.classList.toggle('pp-up',delta>=0);node.classList.toggle('pp-down',delta<0)});
     }
     function bindContributionInteractions(){document.querySelectorAll('[data-contribution-card]').forEach(card=>{const orderSlider=card.querySelector('[data-order-slider]'),amountSlider=card.querySelector('[data-amount-slider]'),initialOrder=Number(card.dataset.initialOrder);syncContribution(card,initialOrder,amountContribution(initialOrder));orderSlider.addEventListener('input',()=>{const order=Number(orderSlider.value);syncContribution(card,order,amountContribution(order))});amountSlider.addEventListener('input',()=>{const amount=Number(amountSlider.value);syncContribution(card,orderShareFromContribution(amount),amount)})})}
-    function bindLeadGradeTabs(){document.querySelectorAll('[data-lead-card]').forEach(card=>{card.querySelector('.grade-filter-tabs').addEventListener('click',event=>{const button=event.target.closest('[data-grade-filter]');if(!button)return;event.stopPropagation();const filter=button.dataset.gradeFilter;card.dataset.gradeFilter=filter;card.querySelectorAll('[data-grade-filter]').forEach(item=>item.classList.toggle('active',item===button));card.querySelectorAll('.lead-axis-value').forEach(item=>item.textContent=fmt.format(Number(item.dataset[filter])));const axis=card.querySelector('[data-lead-axis]'),max=Number(axis.dataset[filter]);axis.querySelector('[data-axis-half]').textContent=fmt.format(Math.round(max/2));axis.querySelector('[data-axis-max]').textContent=fmt.format(max)})})}
+    function bindLeadGradeTabs(){document.querySelectorAll('[data-lead-card]').forEach(card=>{card.querySelector('.grade-filter-tabs').addEventListener('click',event=>{const button=event.target.closest('[data-grade-filter]');if(!button)return;event.stopPropagation();const filter=button.dataset.gradeFilter;card.dataset.gradeFilter=filter;card.querySelectorAll('[data-grade-filter]').forEach(item=>item.classList.toggle('active',item===button));card.querySelectorAll('.lead-axis-value').forEach(item=>item.textContent=fmt.format(Number(item.dataset[filter])));card.querySelectorAll('.lead-axis-share').forEach(item=>item.textContent=pctText(Number(item.dataset[filter])));card.querySelectorAll('.lead-layer').forEach(item=>item.style.setProperty('--width',`${Number(item.dataset[`${filter}Width`])}%`))})})}
+    function paginationItems(current,totalPages){
+      if(totalPages<=7)return Array.from({length:totalPages},(_,index)=>index+1);
+      const pages=[1];if(current>3)pages.push('left-ellipsis');for(let page=Math.max(2,current-1);page<=Math.min(totalPages-1,current+1);page+=1)pages.push(page);if(current<totalPages-2)pages.push('right-ellipsis');pages.push(totalPages);return pages;
+    }
+    function renderPagination(id,total,type){
+      const el=document.querySelector(`#${id}`),pageKey=`${type}Page`,pageSizeKey=`${type}PageSize`,pageSize=state[pageSizeKey],totalPages=Math.max(1,Math.ceil(total/pageSize));state[pageKey]=Math.min(Math.max(1,state[pageKey]),totalPages);const current=state[pageKey];
+      el.hidden=total===0;if(total===0){el.innerHTML='';return}
+      const pageButtons=paginationItems(current,totalPages).map(item=>typeof item==='number'?`<button class="page-button ${item===current?'active':''}" type="button" data-page-target="${item}" aria-label="第 ${item} 页" ${item===current?'aria-current="page"':''}>${item}</button>`:'<span class="page-ellipsis">•••</span>').join('');
+      const sizeOptions=[10,15,20,50,100].map(size=>`<option value="${size}" ${size===pageSize?'selected':''}>${size}</option>`).join('');
+      el.innerHTML=`<div class="table-pagination-controls"><span class="table-pagination-total">共 ${fmt.format(total)} 条数据</span><label class="page-size-control">每页 <select data-page-size="${type}" aria-label="每页展示条数">${sizeOptions}</select> 条</label><button class="page-button" type="button" data-page-target="${current-1}" aria-label="上一页" ${current===1?'disabled':''}>‹</button><span class="page-number-list">${pageButtons}</span><button class="page-button" type="button" data-page-target="${current+1}" aria-label="下一页" ${current===totalPages?'disabled':''}>›</button><form class="page-jump" data-page-jump="${type}"><span>前往</span><input type="number" min="1" max="${totalPages}" inputmode="numeric" aria-label="输入页码" placeholder="页码"><span>页</span><button type="submit">跳转</button></form></div>`;
+    }
     function renderTable(){
       renderDimensionHeads();renderSortHeaders();
-      const direction=state.sortDir==='desc'?-1:1,grouped=groupedTableRows(),total=grouped.find(x=>x.__total),details=grouped.filter(x=>!x.__total).sort((a,b)=>(a[state.sortKey]-b[state.sortKey])*direction),r=total?[total,...details]:details,f=rangeFactor(),body=document.querySelector('#planBody');document.querySelector('#emptyState').hidden=r.length>0;
+      const pageSize=state.adsPageSize,direction=state.sortDir==='desc'?-1:1,grouped=groupedTableRows(),total=grouped.find(x=>x.__total),details=grouped.filter(x=>!x.__total).sort((a,b)=>(a[state.sortKey]-b[state.sortKey])*direction),totalPages=Math.max(1,Math.ceil(details.length/pageSize));state.adsPage=Math.min(Math.max(1,state.adsPage),totalPages);const detailOffset=(state.adsPage-1)*pageSize,pageDetails=details.slice(detailOffset,detailOffset+pageSize),r=total?[total,...pageDetails]:pageDetails,f=rangeFactor(),body=document.querySelector('#planBody');document.querySelector('#emptyState').hidden=grouped.length>0;
       if(!state.expandedInitialized&&r.length){state.expandedRowKeys.add(encodeURIComponent(`${state.dimension}:${r[0][state.dimension]}`));state.expandedInitialized=true}
-      body.innerHTML=r.map((x,i)=>{const exposure=scaled(x.exposure),metrics=deriveFunnelMetrics(x,i),rowKey=encodeURIComponent(`${state.dimension}:${x[state.dimension]}`),expanded=state.expandedRowKeys.has(rowKey),isTotal=x.__total;const dimensionNote=isTotal?`${x.sourceCount} 条广告汇总`:state.dimension==='ad'?dimensionDefinitions[state.dimension]:`${dimensionDefinitions[state.dimension]} · ${x.sourceCount}条广告`;const dimensionCell=`<td class="dimension-cell"><span class="dimension-value">${x[state.dimension]}<small>${dimensionNote}</small></span><span class="row-expand-tag" title="${expanded?'收起详情':'展开详情'}" aria-hidden="true"><i></i></span></td>`;const conditionCell=isTotal?`<td aria-label="总计"><span class="rank top total">0</span></td>`:`<td><span class="rank ${i<=3?'top':''}">${i}</span></td>`;const summary=`<tr class="funnel-summary-row ${expanded?'expanded':''} ${isTotal?'total-row':''}" data-row-key="${rowKey}" aria-expanded="${expanded}" role="button" tabindex="0">${conditionCell}${dimensionCell}<td class="num"><span class="table-number">${x.spend?money(x.spend*f):'不适用'}</span></td><td><span class="table-number">${fmt.format(exposure)}</span></td><td><div class="cell-stack"><strong>${fmt.format(metrics.total)}</strong><small>100.00%</small></div></td><td><div class="cell-stack"><strong>${fmt.format(metrics.valid)}</strong><small>${pctText(pct(metrics.valid,metrics.total))}</small></div></td><td>${gradeCell(metrics)}</td><td><div class="cell-stack"><strong>${fmt.format(metrics.floorplan)}</strong><small class="good">${pctText(pct(metrics.floorplan,metrics.valid))}</small></div></td><td><div class="cell-stack"><strong>${fmt.format(metrics.duplicate)}</strong><small class="warn">${pctText(pct(metrics.duplicate,metrics.valid))}</small></div></td><td><div class="cell-stack"><strong>${fmt.format(metrics.connected)}</strong><small>${pctText(pct(metrics.connected,metrics.valid))}</small></div></td><td><div class="cell-stack"><strong>${fmt.format(metrics.projects)}</strong><small>${pctText(pct(metrics.projects,metrics.valid))}</small></div></td><td><div class="cell-stack"><strong>${fmt.format(metrics.deals)}</strong><small>${pctText(pct(metrics.deals,metrics.valid))}</small></div></td><td class="num amount"><span class="table-number">${money(metrics.amount)}</span></td></tr>`;return summary+(expanded?`<tr class="analysis-detail-row" data-detail-for="${rowKey}"><td colspan="13">${funnelDetail(metrics,isTotal)}</td></tr>`:'')}).join('');bindContributionInteractions();bindLeadGradeTabs()
+      body.innerHTML=r.map((x,i)=>{const isTotal=x.__total,rankNumber=isTotal?0:detailOffset+i+(total?0:1),exposure=scaled(x.exposure),metrics=deriveFunnelMetrics(x,rankNumber),rowKey=encodeURIComponent(`${state.dimension}:${x[state.dimension]}`),expanded=state.expandedRowKeys.has(rowKey);const dimensionNote=isTotal?'':state.dimension==='ad'?dimensionDefinitions[state.dimension]:`${dimensionDefinitions[state.dimension]} · ${x.sourceCount}条广告`;const dimensionNoteHtml=dimensionNote?`<small>${dimensionNote}</small>`:'';const dimensionCell=`<td class="dimension-cell"><span class="dimension-value">${x[state.dimension]}${dimensionNoteHtml}</span><span class="row-expand-tag" title="${expanded?'收起详情':'展开详情'}" aria-hidden="true"><i></i></span></td>`;const conditionCell=isTotal?`<td aria-label="总计"><span class="rank top total">0</span></td>`:`<td><span class="rank ${rankNumber<=3?'top':''}">${rankNumber}</span></td>`;const summary=`<tr class="funnel-summary-row ${expanded?'expanded':''} ${isTotal?'total-row':''}" data-row-key="${rowKey}" aria-expanded="${expanded}" role="button" tabindex="0">${conditionCell}${dimensionCell}<td class="num"><span class="table-number">${x.spend?narrowMoney(x.spend*f):'不适用'}</span></td><td><span class="table-number">${narrowNumber(exposure)}</span></td><td><div class="cell-stack"><strong>${fmt.format(metrics.total)}</strong><small>100.00%</small></div></td><td><div class="cell-stack"><strong>${fmt.format(metrics.valid)}</strong><small>${pctText(pct(metrics.valid,metrics.total))}</small></div></td><td>${gradeCell(metrics)}</td><td><div class="cell-stack"><strong>${fmt.format(metrics.floorplan)}</strong><small class="good">${pctText(pct(metrics.floorplan,metrics.valid))}</small></div></td><td><div class="cell-stack"><strong>${fmt.format(metrics.duplicate)}</strong><small class="warn">${pctText(pct(metrics.duplicate,metrics.valid))}</small></div></td><td><div class="cell-stack"><strong>${fmt.format(metrics.connected)}</strong><small>${pctText(pct(metrics.connected,metrics.valid))}</small></div></td><td><div class="cell-stack"><strong>${fmt.format(metrics.arrivals)}</strong><small>到店率 ${pctText(pct(metrics.arrivals,metrics.connected))}</small></div></td><td><div class="cell-stack"><strong>${fmt.format(metrics.projects)}</strong><small>${pctText(pct(metrics.projects,metrics.valid))}</small></div></td><td><div class="cell-stack"><strong>${fmt.format(metrics.deals)}</strong><small>${pctText(pct(metrics.deals,metrics.valid))}</small></div></td><td class="num amount"><span class="table-number">${narrowMoney(metrics.amount)}</span></td></tr>`;return summary+(expanded?`<tr class="analysis-detail-row" data-detail-for="${rowKey}"><td colspan="14">${funnelDetail(metrics,isTotal)}</td></tr>`:'')}).join('');renderPagination('adsPagination',details.length,'ads');bindContributionInteractions();bindLeadGradeTabs()
     }
     const traceProfiles={
       'OS-202608-001':{country:'SG',region:'新加坡',role:'业主 · 商业空间',tags:['商业项目','高决策圈','对价格敏感'],fields:['项目类型','商业空间','客户身份','业主','需求产品','工位 + 接待区','图纸资料','已发平面图','项目阶段','方案设计','国家','新加坡'],video:'Master Bath Upgrade · From Quote to Install in 6 Weeks',quote:'通过真实项目过程说明设计、报价与落地服务。'},
       'OS-202608-002':{country:'AE',region:'阿联酋',role:'业主 · 高端别墅',tags:['别墅整装','重视品质','决策周期长'],fields:['项目类型','高端别墅','客户身份','业主','需求产品','全屋整装','图纸资料','待补充尺寸','项目阶段','报价沟通','国家','阿联酋'],video:'Dubai Villa · One-to-one Design Consultation',quote:'用一对一方案沟通展示别墅整装的专业服务。'},
-      'OS-202608-003':{country:'IT',region:'意大利',role:'业主 · 公寓改善',tags:['公寓改造','空间利用','关注交期'],fields:['项目类型','城市公寓','客户身份','业主','需求产品','厨房 + 收纳','图纸资料','已有户型图','项目阶段','方案确认','国家','意大利'],video:'Compact Apartment · Full-space Renovation',quote:'以完工实拍呈现小空间的功能与收纳改善。'},
+      'OS-202608-003':{country:'IT',region:'意大利',role:'业主 · 公寓改善',tags:['公寓改造','空间利用','关注交期'],fields:['项目类型','城市公寓','客户身份','业主','需求产品','厨房 + 收纳','图纸资料','已有图纸','项目阶段','方案确认','国家','意大利'],video:'Compact Apartment · Full-space Renovation',quote:'以完工实拍呈现小空间的功能与收纳改善。'},
       'OS-202608-004':{country:'AE',region:'阿联酋',role:'业主 · 厨房改造',tags:['局部改造','快速决策','关注预算'],fields:['项目类型','厨房改造','客户身份','业主','需求产品','橱柜 + 台面','图纸资料','已完成测量','项目阶段','合同确认','国家','阿联酋'],video:'Kitchen Makeover · Before and After',quote:'通过改造前后对比呈现空间变化与施工效果。'},
       'OS-202608-005':{country:'MY',region:'马来西亚',role:'业主 · 到店咨询',tags:['自然流量','到店体验','首次装修'],fields:['项目类型','住宅整装','客户身份','业主','需求产品','客餐厅 + 厨房','图纸资料','待上门测量','项目阶段','需求确认','国家','马来西亚'],video:'Customer Visit VLOG · From Online to Store',quote:'记录客户从内容咨询到线下到店的真实过程。'},
       'OS-202608-006':{country:'AE',region:'阿联酋',role:'业主 · 别墅改造',tags:['高意向','多人决策','关注材料'],fields:['项目类型','别墅改造','客户身份','业主','需求产品','主卧 + 卫浴','图纸资料','已有建筑图','项目阶段','深化设计','国家','阿联酋'],video:'Villa Suite Upgrade · Material and Detail',quote:'从材料选择与空间细节切入，呈现高端别墅改造过程。'},
@@ -625,26 +663,27 @@
     }
     function renderPmBoard(){
       const keyword=state.pmSearch.trim().toLocaleLowerCase(),visible=pmRows.filter(row=>!keyword||row.name.toLocaleLowerCase().includes(keyword)),direction=state.pmSortDir==='desc'?-1:1;
-      const sorted=[...visible].sort((a,b)=>(pmSortValue(a,state.pmSortKey)-pmSortValue(b,state.pmSortKey))*direction),body=document.querySelector('#pmTableBody'),empty=document.querySelector('#pmEmpty');
+      const pageSize=state.pmPageSize,sorted=[...visible].sort((a,b)=>(pmSortValue(a,state.pmSortKey)-pmSortValue(b,state.pmSortKey))*direction),totalPages=Math.max(1,Math.ceil(sorted.length/pageSize));state.pmPage=Math.min(Math.max(1,state.pmPage),totalPages);const offset=(state.pmPage-1)*pageSize,pageRows=sorted.slice(offset,offset+pageSize),body=document.querySelector('#pmTableBody'),empty=document.querySelector('#pmEmpty');
       document.querySelector('#pmTableHead').innerHTML=pmColumnDefinitions.map(pmHeaderCell).join('');
       document.querySelectorAll('#pmGradeTabs button').forEach(button=>button.classList.toggle('active',button.dataset.pmGrade===state.pmGrade));
-      empty.hidden=visible.length>0;body.innerHTML=visible.length?[pmRowTemplate(aggregatePmRows(visible)),...sorted.map(pmRowTemplate)].join(''):'';
+      empty.hidden=visible.length>0;body.innerHTML=visible.length?[pmRowTemplate(aggregatePmRows(visible)),...pageRows.map(pmRowTemplate)].join(''):'';renderPagination('pmPagination',visible.length,'pm');
     }
     function renderAll(){renderMetrics();renderTrend();renderTable();renderOrders();renderPmBoard()}
-    function formatDate(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}function setRange(type){const end=new Date(),start=new Date();if(type==='yesterday'){start.setDate(end.getDate()-1);end.setDate(end.getDate()-1)}else if(type==='7'){start.setDate(end.getDate()-6)}else if(type==='30'){start.setDate(end.getDate()-29)}state.range=type;state.start=formatDate(start);state.end=formatDate(end);document.querySelector('#startDate').value=state.start;document.querySelector('#endDate').value=state.end;document.querySelectorAll('#rangePreset button').forEach(b=>b.classList.toggle('active',b.dataset.range===type));renderAll()}
+    function formatDate(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}function setRange(type){const end=new Date(),start=new Date();if(type==='yesterday'){start.setDate(end.getDate()-1);end.setDate(end.getDate()-1)}else if(type==='7'){start.setDate(end.getDate()-6)}else if(type==='30'){start.setDate(end.getDate()-29)}state.range=type;state.start=formatDate(start);state.end=formatDate(end);state.adsPage=1;state.pmPage=1;document.querySelector('#startDate').value=state.start;document.querySelector('#endDate').value=state.end;document.querySelectorAll('#rangePreset button').forEach(b=>b.classList.toggle('active',b.dataset.range===type));renderAll()}
     function toast(t){const el=document.querySelector('#toast');el.textContent=t;el.classList.add('show');clearTimeout(window.__tt);window.__tt=setTimeout(()=>el.classList.remove('show'),1600)}
     document.querySelector('#rangePreset').addEventListener('click',e=>{const b=e.target.closest('[data-range]');if(b)setRange(b.dataset.range)});
-    ['startDate','endDate'].forEach(id=>document.querySelector('#'+id).addEventListener('change',()=>{const s=document.querySelector('#startDate').value,e=document.querySelector('#endDate').value;if(!s||!e)return;if(s>e){toast('开始日期不能晚于结束日期');return}state.range='custom';state.start=s;state.end=e;document.querySelectorAll('#rangePreset button').forEach(b=>b.classList.remove('active'));renderAll()}));
-    const filterMap={accountFilter:'account',campaignFilter:'campaign',groupFilter:'group',adFilter:'ad'};Object.entries(filterMap).forEach(([id,key])=>document.querySelector('#'+id).addEventListener('change',e=>{state[key]=e.target.value;renderAll()}));
+    ['startDate','endDate'].forEach(id=>document.querySelector('#'+id).addEventListener('change',()=>{const s=document.querySelector('#startDate').value,e=document.querySelector('#endDate').value;if(!s||!e)return;if(s>e){toast('开始日期不能晚于结束日期');return}state.range='custom';state.start=s;state.end=e;state.adsPage=1;state.pmPage=1;document.querySelectorAll('#rangePreset button').forEach(b=>b.classList.remove('active'));renderAll()}));
+    const filterMap={accountFilter:'account',campaignFilter:'campaign',groupFilter:'group',adFilter:'ad'};Object.entries(filterMap).forEach(([id,key])=>document.querySelector('#'+id).addEventListener('change',e=>{state[key]=e.target.value;state.adsPage=1;state.pmPage=1;renderAll()}));
     document.querySelector('#metricsStrip').addEventListener('click',e=>{const b=e.target.closest('[data-trend-key]');if(!b)return;state.trend=b.dataset.trendKey;state.lockedPoint=null;renderMetrics();renderTrend()});
     document.querySelector('#planHead').addEventListener('click',e=>{const button=e.target.closest('[data-sort-key]');if(!button)return;const key=button.dataset.sortKey;if(state.sortKey===key)state.sortDir=state.sortDir==='desc'?'asc':'desc';else{state.sortKey=key;state.sortDir='desc'}renderTable()});
     function toggleFunnelRow(row){const key=row?.dataset.rowKey;if(!key)return;state.expandedRowKeys.has(key)?state.expandedRowKeys.delete(key):state.expandedRowKeys.add(key);renderTable()}
     document.querySelector('#planBody').addEventListener('click',e=>{const row=e.target.closest('.funnel-summary-row');if(row)toggleFunnelRow(row)});
     document.querySelector('#planBody').addEventListener('keydown',e=>{if(!['Enter',' '].includes(e.key))return;const row=e.target.closest('.funnel-summary-row');if(!row)return;e.preventDefault();toggleFunnelRow(row)});
     document.querySelector('#orderAnalysisTabs').addEventListener('click',e=>{const button=e.target.closest('[data-order-dimension]');if(!button)return;state.orderAnalysisDimension=button.dataset.orderDimension;renderOrders()});
-    document.querySelector('#pmGradeTabs').addEventListener('click',e=>{const button=e.target.closest('[data-pm-grade]');if(!button)return;state.pmGrade=button.dataset.pmGrade;renderPmBoard()});
-    document.querySelector('#pmSearch').addEventListener('input',e=>{state.pmSearch=e.target.value;renderPmBoard()});
+    document.querySelector('#pmGradeTabs').addEventListener('click',e=>{const button=e.target.closest('[data-pm-grade]');if(!button)return;state.pmGrade=button.dataset.pmGrade;state.pmPage=1;renderPmBoard()});
+    document.querySelector('#pmSearch').addEventListener('input',e=>{state.pmSearch=e.target.value;state.pmPage=1;renderPmBoard()});
     document.querySelector('#pmTableHead').addEventListener('click',e=>{const button=e.target.closest('[data-pm-sort]');if(!button)return;const key=button.dataset.pmSort;if(state.pmSortKey===key)state.pmSortDir=state.pmSortDir==='desc'?'asc':'desc';else{state.pmSortKey=key;state.pmSortDir='desc'}renderPmBoard()});
+    ['ads','pm'].forEach(type=>{const el=document.querySelector(`#${type}Pagination`),pageKey=`${type}Page`,pageSizeKey=`${type}PageSize`,render=type==='ads'?renderTable:renderPmBoard;el.addEventListener('click',e=>{const button=e.target.closest('[data-page-target]');if(!button||button.disabled)return;state[pageKey]=Number(button.dataset.pageTarget);render()});el.addEventListener('submit',e=>{const form=e.target.closest('[data-page-jump]');if(!form)return;e.preventDefault();const input=form.querySelector('input'),value=Number(input.value),max=Number(input.max);if(!Number.isInteger(value)||value<1||value>max){toast(`请输入 1-${max} 之间的页码`);input.focus();return}state[pageKey]=value;render()});el.addEventListener('change',e=>{const select=e.target.closest('[data-page-size]');if(!select)return;state[pageSizeKey]=Number(select.value);state[pageKey]=1;render()})});
     document.querySelector('#boardSwitch').addEventListener('click',e=>{const b=e.target.closest('[data-board]');if(!b)return;state.board=b.dataset.board;document.querySelectorAll('#boardSwitch button').forEach(x=>x.classList.toggle('active',x===b));document.querySelector('#adsBoard').hidden=state.board!=='ads';document.querySelector('#ordersBoard').hidden=state.board!=='orders';document.querySelector('#orderAnalysisBoard').hidden=state.board!=='orders';document.querySelector('#pmBoard').hidden=state.board!=='pm'});
     setRange('30');
   </script>
