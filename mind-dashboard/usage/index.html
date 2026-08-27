@@ -318,41 +318,54 @@
 
     .filter-panel {
       position: sticky;
-      top: calc(0px - var(--dashboard-padding-top));
+      top: calc(-1 * var(--dashboard-padding-top));
       z-index: 30;
       display: flex;
-      align-items: flex-end;
-      gap: 16px;
-      flex-wrap: wrap;
-      padding: 16px 18px;
-      margin-bottom: 20px;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: nowrap;
+      min-height: 60px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
     }
 
+    .filter-panel .filter-block { display: flex; flex-direction: column; gap: 0; }
+    .filter-panel .filter-block.period-block { flex: 1; min-width: 340px; }
+    .filter-panel .filter-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
     .filter-block { display: flex; flex-direction: column; gap: 7px; }
-    .filter-block.period-block { flex: 1; min-width: 410px; }
     .filter-label { color: #667085; font-size: 12px; line-height: 18px; }
 
     .segment {
       display: inline-flex;
       height: 34px;
       padding: 3px;
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      background: #f8fafc;
+      border: 0;
+      border-radius: 9px;
+      background: #f2f5f9;
     }
 
     .segment button {
-      min-width: 62px;
-      padding: 0 12px;
+      min-width: 58px;
+      padding: 0 11px;
       border: 0;
-      border-radius: 5px;
+      border-radius: 7px;
       color: #667085;
       background: transparent;
-      font-size: 13px;
+      font-size: 12px;
     }
 
     .segment button:hover { color: var(--primary); }
-    .segment button.active { color: var(--primary); background: #fff; box-shadow: 0 1px 4px rgba(31,50,77,.12); font-weight: 500; }
+    .segment button.active { color: var(--primary); background: #e9f3ff; box-shadow: none; font-weight: 650; }
 
     .select-control,
     .date-control,
@@ -783,7 +796,9 @@
     .line-chart {
       position: relative;
       width: 100%;
-      height: 270px;
+      max-width: 1480px;
+      height: clamp(224px, 15vw, 252px);
+      margin: 0 auto;
       overflow: hidden;
     }
 
@@ -1300,7 +1315,14 @@
       .source-breakdown { gap: 6px; }
       .source-row { padding-right: 7px; padding-left: 7px; }
     }
+
+    @media (max-width: 1120px) {
+      .filter-panel { flex-wrap: wrap; }
+      .filter-panel .filter-block.period-block { flex: 1 1 100%; min-width: 0; }
+    }
   </style>
+  <link rel="stylesheet" href="../dashboard-select.css">
+  <script src="../dashboard-select.js" defer></script>
 </head>
 <body>
   <svg class="svg-sprite" aria-hidden="true">
@@ -1946,35 +1968,49 @@
         document.getElementById("endDate").value = dateText(end);
       }
 
+      function hourlyPeriodLabels() {
+        return Array.from({ length: 12 }, (_, index) => `${pad(index * 2)}:00`);
+      }
+
+      function dailyPeriodLabels(start, end, stepDays = 1) {
+        const labels = [];
+        const cursor = new Date(start);
+        while (cursor <= end) {
+          labels.push(`${pad(cursor.getMonth() + 1)}-${pad(cursor.getDate())}`);
+          cursor.setDate(cursor.getDate() + stepDays);
+        }
+        const endLabel = `${pad(end.getMonth() + 1)}-${pad(end.getDate())}`;
+        if (labels.at(-1) !== endLabel) labels.push(endLabel);
+        return labels;
+      }
+
       function getPeriodLabels() {
         const now = new Date();
-        if (state.period === "today" || state.period === "yesterday") {
-          return ["00:00", "02:00", "04:00", "06:00", "08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00"];
-        }
+        now.setHours(0, 0, 0, 0);
+        if (state.period === "today" || state.period === "yesterday") return hourlyPeriodLabels();
+
         if (state.period === "last30") {
-          return Array.from({ length: 10 }, (_, i) => {
-            const d = new Date(now);
-            d.setDate(d.getDate() - (27 - i * 3));
-            return `${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-          });
+          const start = new Date(now);
+          start.setDate(start.getDate() - 29);
+          return dailyPeriodLabels(start, now);
         }
+
         if (state.period === "custom") {
           const startVal = document.getElementById("startDate").value;
           const endVal = document.getElementById("endDate").value;
-          const start = startVal ? new Date(startVal + "T00:00:00") : new Date(now.getTime() - 6 * 86400000);
+          const fallbackStart = new Date(now);
+          fallbackStart.setDate(fallbackStart.getDate() - 6);
+          const start = startVal ? new Date(startVal + "T00:00:00") : fallbackStart;
           const end = endVal ? new Date(endVal + "T00:00:00") : now;
-          const days = Math.max(2, Math.round((end - start) / 86400000) + 1);
-          const count = Math.min(10, days);
-          return Array.from({ length: count }, (_, i) => {
-            const d = new Date(start.getTime() + ((end - start) * i / Math.max(1, count - 1)));
-            return `${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-          });
+          if (end <= start) return hourlyPeriodLabels();
+          const days = Math.round((end - start) / 86400000) + 1;
+          const stepDays = days <= 31 ? 1 : days <= 120 ? 7 : 30;
+          return dailyPeriodLabels(start, end, stepDays);
         }
-        return Array.from({ length: 7 }, (_, i) => {
-          const d = new Date(now);
-          d.setDate(d.getDate() - (6 - i));
-          return `${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-        });
+
+        const start = new Date(now);
+        start.setDate(start.getDate() - 6);
+        return dailyPeriodLabels(start, now);
       }
 
       function seededNoise(index, seed) {
@@ -2027,9 +2063,9 @@
         const labels = series[0].labels;
         const isDual = series.length > 1;
         const colors = ["#2e7bd6", "#00a3b4"];
-        const width = 920;
-        const height = 265;
-        const padLeft = 62;
+        const width = Math.max(560, Math.round(container.clientWidth || 920));
+        const height = Math.max(224, Math.round(container.clientHeight || 252));
+        const padLeft = width < 760 ? 56 : 72;
         const padRight = isDual ? 66 : 22;
         const padTop = isDual ? 36 : 18;
         const padBottom = 37;
@@ -2064,7 +2100,8 @@
             grid += `<text x="${width - padRight + 10}" y="${gy + 4}" fill="#00a3b4" font-size="10" text-anchor="start">${axisValue(rightValue, series[1].cfg)}</text>`;
           }
         }
-        const labelStep = Math.max(1, Math.ceil(labels.length / 7));
+        const maxVisibleLabels = Math.max(5, Math.floor(innerW / 112));
+        const labelStep = Math.max(1, Math.ceil(labels.length / maxVisibleLabels));
         const xLabels = labels.map((label, i) => (i % labelStep === 0 || i === labels.length - 1)
           ? `<text x="${x(i)}" y="${height - 10}" fill="#98a2b3" font-size="10" text-anchor="middle">${label}</text>`
           : "").join("");
@@ -2077,7 +2114,7 @@
         const legend = isDual ? `<g aria-label="图例"><line x1="${padLeft}" y1="14" x2="${padLeft + 18}" y2="14" stroke="${colors[0]}" stroke-width="3" stroke-linecap="round"/><text x="${padLeft + 25}" y="18" fill="#667085" font-size="10">${series[0].cfg.name}</text><line x1="${padLeft + 128}" y1="14" x2="${padLeft + 146}" y2="14" stroke="${colors[1]}" stroke-width="3" stroke-linecap="round"/><text x="${padLeft + 153}" y="18" fill="#667085" font-size="10">${series[1].cfg.name}</text></g>` : "";
         const ariaLabel = `${series.map(item => item.cfg.name).join("与")}趋势图`;
         container.innerHTML = `
-          <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-label="${ariaLabel}">
+          <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet" aria-label="${ariaLabel}">
             <defs><linearGradient id="${gradientId}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2e7bd6" stop-opacity=".25"/><stop offset="100%" stop-color="#2e7bd6" stop-opacity=".015"/></linearGradient></defs>
             ${legend}${grid}${xLabels}
             <path d="${areaPath}" fill="url(#${gradientId})" />
@@ -2703,6 +2740,15 @@
         document.querySelectorAll("#periodSegment button").forEach(item => item.classList.toggle("active", item === button));
         state.period = button.dataset.period;
         document.getElementById("customRange").classList.toggle("show", state.period === "custom");
+        state.factor = calculateFactor();
+        updateMetrics();
+        renderAllCharts();
+        renderRanking();
+      });
+
+      document.getElementById("customRange").addEventListener("change", event => {
+        if (!event.target.matches('input[type="date"]') || state.period !== "custom") return;
+        renderAllCharts();
       });
 
       document.getElementById("accountTrigger").addEventListener("click", event => {

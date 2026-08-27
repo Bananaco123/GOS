@@ -1,0 +1,191 @@
+.gos-dashboard-select {
+  --gos-select-width: 148px;
+  --gos-select-height: 36px;
+  position: relative;
+  display: inline-flex;
+  width: var(--gos-select-width);
+  min-width: 0;
+  height: var(--gos-select-height);
+  vertical-align: middle;
+}
+
+.gos-dashboard-select__native {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.gos-dashboard-select__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+  padding: 0 12px 0 14px;
+  color: #172b4d;
+  background: #fff;
+  border: 1px solid #d6e2f0;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(20, 53, 89, 0.03);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+}
+
+.gos-dashboard-select__trigger:hover {
+  background: #fbfdff;
+  border-color: #9bc2f5;
+}
+
+.gos-dashboard-select__trigger:focus-visible,
+.gos-dashboard-select__trigger.is-open {
+  border-color: #1677ff;
+  box-shadow: 0 0 0 3px rgba(22, 119, 255, 0.12);
+}
+
+.gos-dashboard-select__value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gos-dashboard-select__chevron {
+  position: relative;
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  color: #526f8e;
+  transition: transform 0.16s ease, color 0.16s ease;
+}
+
+.gos-dashboard-select__chevron::before,
+.gos-dashboard-select__chevron::after {
+  content: "";
+  position: absolute;
+  top: 7px;
+  width: 7px;
+  height: 1.5px;
+  background: currentColor;
+  border-radius: 2px;
+}
+
+.gos-dashboard-select__chevron::before {
+  left: 1px;
+  transform: rotate(42deg);
+}
+
+.gos-dashboard-select__chevron::after {
+  right: 1px;
+  transform: rotate(-42deg);
+}
+
+.gos-dashboard-select__trigger.is-open .gos-dashboard-select__chevron {
+  color: #1677ff;
+  transform: rotate(180deg);
+}
+
+.gos-dashboard-select--compact .gos-dashboard-select__trigger {
+  padding-inline: 10px;
+  border-radius: 8px;
+  font-size: 10px;
+}
+
+.gos-dashboard-select-menu {
+  position: fixed;
+  z-index: 100000;
+  max-height: min(320px, calc(100vh - 24px));
+  padding: 6px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  color: #172b4d;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid #e1e9f3;
+  border-radius: 12px;
+  box-shadow: 0 14px 36px rgba(26, 61, 103, 0.16), 0 3px 10px rgba(26, 61, 103, 0.08);
+  backdrop-filter: blur(12px);
+  transform-origin: top center;
+  animation: gos-select-enter 0.14s ease-out;
+}
+
+.gos-dashboard-select-menu.is-above {
+  transform-origin: bottom center;
+}
+
+.gos-dashboard-select-menu__option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 36px;
+  padding: 8px 34px 8px 11px;
+  color: #334760;
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.35;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+  transition: color 0.12s ease, background 0.12s ease;
+}
+
+.gos-dashboard-select-menu__option:hover,
+.gos-dashboard-select-menu__option:focus-visible {
+  color: #185fab;
+  background: #f2f7fd;
+}
+
+.gos-dashboard-select-menu__option.is-selected {
+  color: #0f62bd;
+  background: #eaf3ff;
+  font-weight: 700;
+}
+
+.gos-dashboard-select-menu__option.is-selected::after {
+  content: "";
+  position: absolute;
+  right: 13px;
+  top: 50%;
+  width: 9px;
+  height: 5px;
+  border-left: 2px solid #1677ff;
+  border-bottom: 2px solid #1677ff;
+  transform: translateY(-65%) rotate(-45deg);
+}
+
+.gos-dashboard-select-menu__option:disabled {
+  color: #a8b4c3;
+  background: transparent;
+  cursor: not-allowed;
+}
+
+.gos-dashboard-select-menu--compact .gos-dashboard-select-menu__option {
+  min-height: 32px;
+  padding-block: 6px;
+  font-size: 10px;
+}
+
+@keyframes gos-select-enter {
+  from { opacity: 0; transform: translateY(-4px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gos-dashboard-select-menu { animation: none; }
+  .gos-dashboard-select__trigger,
+  .gos-dashboard-select__chevron { transition: none; }
+}
+
