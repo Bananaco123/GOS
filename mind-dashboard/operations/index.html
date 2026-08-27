@@ -44,7 +44,11 @@
     .range-preset button.active{color:var(--blue);background:#e9f3ff;font-weight:650}.exact-range{display:flex;align-items:center;gap:6px}
     .date-input{width:112px;height:34px;padding:0 9px;color:var(--text);background:#fff;border:1px solid var(--line);border-radius:8px;font-size:11px;outline:none}.date-input:focus{border-color:#79aff2;box-shadow:0 0 0 2px #e8f3ff}
     .filter-spacer{display:block;flex:1;min-width:8px}.select{width:118px;min-width:118px;height:34px;padding:0 28px 0 10px;color:var(--text);background:#fff;border:1px solid var(--line);border-radius:8px;font-size:11px;outline:none}
-    .toolbox{height:34px;display:inline-flex;align-items:center;gap:6px;padding:0 13px;color:var(--brand);background:#fff;border:1px solid #cfddef;border-radius:8px;font-size:11px;font-weight:650;white-space:nowrap}.toolbox-icon{font-size:14px;color:var(--blue)}
+    .toolbox-shell{position:relative;z-index:30;display:inline-flex;align-items:center;justify-content:flex-end}.toolbox-shell:after{content:"";position:absolute;top:100%;right:0;width:100%;height:12px}.toolbox{height:34px;display:inline-flex;align-items:center;gap:6px;padding:0 13px;color:var(--brand);background:#fff;border:1px solid #cfddef;border-radius:8px;font-size:11px;font-weight:650;white-space:nowrap;cursor:default;transition:transform .24s cubic-bezier(.2,.8,.2,1),border-color .24s ease,box-shadow .24s ease}.toolbox-icon{font-size:14px;color:var(--blue);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+    .toolbox-shell:hover .toolbox,.toolbox-shell:focus-within .toolbox{border-color:#a9c9f4;box-shadow:0 6px 18px rgba(30,108,211,.13);transform:translateY(-1px)}.toolbox-shell:hover .toolbox-icon,.toolbox-shell:focus-within .toolbox-icon{transform:rotate(12deg) scale(1.12)}
+    .toolbox-bubbles{position:absolute;top:calc(100% + 10px);right:0;display:flex;flex-direction:column;align-items:flex-end;gap:8px;visibility:hidden;opacity:0;pointer-events:none;transform:translateY(-5px);transition:opacity .2s ease,transform .28s cubic-bezier(.2,.85,.2,1),visibility 0s linear .28s}.toolbox-shell:hover .toolbox-bubbles,.toolbox-shell:focus-within .toolbox-bubbles{visibility:visible;opacity:1;pointer-events:auto;transform:translateY(0);transition-delay:0s}
+    .toolbox-bubble{--bubble-accent:#247ce5;--bubble-soft:#eef6ff;position:relative;display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px 0 8px;overflow:hidden;color:#27405f;background:rgba(255,255,255,.96);border:1px solid rgba(194,211,234,.9);border-radius:999px;box-shadow:0 8px 22px rgba(34,73,119,.12);font-size:11px;font-weight:650;white-space:nowrap;cursor:default;opacity:0;transform:translateY(-5px) scale(.94);transition:opacity .22s ease,transform .32s cubic-bezier(.2,.9,.25,1.25),border-color .22s ease,box-shadow .22s ease,color .22s ease}.toolbox-shell:hover .toolbox-bubble,.toolbox-shell:focus-within .toolbox-bubble{opacity:1;transform:translateY(0) scale(1)}.toolbox-shell:hover .toolbox-bubble:nth-child(2),.toolbox-shell:focus-within .toolbox-bubble:nth-child(2){transition-delay:.04s}.toolbox-shell:hover .toolbox-bubble:nth-child(3),.toolbox-shell:focus-within .toolbox-bubble:nth-child(3){transition-delay:.08s}
+    .toolbox-bubble-mark{position:relative;z-index:1;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;color:var(--bubble-accent);background:var(--bubble-soft);border-radius:50%;font-size:10px;font-weight:750;transition:transform .3s cubic-bezier(.2,.9,.25,1.3)}.toolbox-bubble-label{position:relative;z-index:1}.toolbox-bubble:after{content:"";position:absolute;top:-18px;left:-38px;width:26px;height:66px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.88),transparent);transform:rotate(22deg);transition:left .55s cubic-bezier(.2,.7,.2,1)}.toolbox-bubble:hover{color:#123c72;border-color:color-mix(in srgb,var(--bubble-accent) 42%,#d7e4f4);box-shadow:0 10px 26px color-mix(in srgb,var(--bubble-accent) 18%,transparent);transform:translateY(-3px) scale(1.025)}.toolbox-bubble:hover:after{left:calc(100% + 18px)}.toolbox-bubble:hover .toolbox-bubble-mark{transform:rotate(-8deg) scale(1.12)}.toolbox-bubble.commission{--bubble-accent:#0aa884;--bubble-soft:#eafaf5}.toolbox-bubble.library{--bubble-accent:#7c5ce1;--bubble-soft:#f2efff}
 
     .summary{overflow:hidden;margin-bottom:14px;color:#fff;background:linear-gradient(116deg,#1c66d3 0%,#167ee4 56%,#0797b0 100%);border-radius:14px;box-shadow:0 8px 22px rgba(23,102,197,.18)}
     .summary-main{display:grid;grid-template-columns:250px 1fr;min-height:132px}.operator{display:flex;align-items:center;gap:14px;padding:20px 22px;border-right:1px solid rgba(255,255,255,.18)}
@@ -120,7 +124,7 @@
     }
     @container (max-width:610px){#pmBoard tbody tr{grid-template-columns:repeat(2,minmax(0,1fr))}#pmBoard td:nth-child(3n){border-right:1px solid #e5ebf2}#pmBoard td:nth-child(2n){border-right:0}.pm-grade-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid #dbe4ef;border-radius:8px}.pm-grade-tabs button.active:after{left:18px;right:18px}}
 
-    @media(max-width:1320px){.toolbar{min-height:112px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:44px 40px;align-content:center;gap:6px 14px;padding:10px 14px}.filter-spacer{display:none}.range-preset{grid-column:1;grid-row:1;justify-self:start}.exact-range{grid-column:2 / 4;grid-row:1}.toolbox{grid-column:4;grid-row:1;justify-self:end}#accountFilter{grid-column:1;grid-row:2}#campaignFilter{grid-column:2;grid-row:2}#groupFilter{grid-column:3;grid-row:2}#adFilter{grid-column:4;grid-row:2}.select{width:100%;min-width:0}.summary-main{grid-template-columns:220px 1fr}.operator{padding:18px}.metric{padding:18px 7px}.metric-stat{padding:0 3px}}
+    @media(max-width:1320px){.toolbar{min-height:112px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:44px 40px;align-content:center;gap:6px 14px;padding:10px 14px}.filter-spacer{display:none}.range-preset{grid-column:1;grid-row:1;justify-self:start}.exact-range{grid-column:2 / 4;grid-row:1}.toolbox-shell{grid-column:4;grid-row:1;justify-self:end}#accountFilter{grid-column:1;grid-row:2}#campaignFilter{grid-column:2;grid-row:2}#groupFilter{grid-column:3;grid-row:2}#adFilter{grid-column:4;grid-row:2}.select{width:100%;min-width:0}.summary-main{grid-template-columns:220px 1fr}.operator{padding:18px}.metric{padding:18px 7px}.metric-stat{padding:0 3px}}
     @media(max-width:900px){:root{--sidebar:64px}.brand{justify-content:center;padding:0}.brand>div,.nav-title,.sidebar-foot{display:none}.nav{padding:14px 8px}.nav-item{justify-content:center;padding:10px 8px;font-size:0}.nav-icon{width:auto;font-size:14px}.topbar{padding:0 14px}main{padding:78px 14px 34px}.toolbar{top:64px}.dashboard-heading h1{font-size:22px}.range-preset button{padding:7px 8px;font-size:11px}.date-input{width:100px}.summary-main{grid-template-columns:1fr}.operator{border-right:0;border-bottom:1px solid rgba(255,255,255,.16)}.metrics-strip{overflow-x:auto;grid-template-columns:repeat(6,minmax(130px,1fr))}.trend-tabs{grid-template-columns:repeat(6,minmax(120px,1fr));overflow-x:auto}.chart-wrap{min-height:210px}.board-switch{width:230px}}
     @media(max-width:1320px){.analysis-trend{grid-template-columns:220px minmax(0,1fr)}.ai-insight-panel{padding:16px 14px}}
     @media(max-width:900px){.analysis-trend{grid-template-columns:1fr}.analysis-trend .trend-panel{border-left:0;border-top:1px solid var(--line)}.ai-insight-panel{min-height:230px}.metric-selector.active:before{display:none}}
@@ -170,20 +174,20 @@
     #adsBoard .funnel-summary-row.expanded .row-expand-tag i{transform:translateY(2px) rotate(225deg)}
     #adsBoard .analysis-detail-row td{padding:0 14px 16px;background:#f5f8fc}
     #adsBoard .funnel-detail{grid-template-columns:1.02fr 1.08fr 1fr 1.08fr!important;gap:14px;padding:16px;border-color:#cfdceb;border-radius:0 0 12px 12px}
-    #adsBoard .funnel-card{min-height:238px!important;padding:16px;border-color:#d5e0ed;border-radius:9px;box-shadow:0 2px 8px rgba(35,65,100,.03)}
+    #adsBoard .funnel-card{min-height:224px!important;padding:16px;border-color:#d5e0ed;border-radius:9px;box-shadow:0 2px 8px rgba(35,65,100,.03)}
     #adsBoard .funnel-card-head{margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #e3eaf3}
     #adsBoard .funnel-card-head strong{font-size:13px}
     #adsBoard .funnel-card-head span{display:none}
     #adsBoard .stage-loss-table{overflow:hidden;border:1px solid #e0e8f1;border-radius:8px}
-    #adsBoard .stage-loss-row{display:grid;grid-template-columns:minmax(86px,1.25fr) repeat(3,minmax(48px,.72fr));align-items:center;min-height:34px;border-bottom:1px solid #e7edf4}
+    #adsBoard .stage-loss-row{display:grid;grid-template-columns:minmax(86px,1.25fr) repeat(3,minmax(48px,.72fr));align-items:center;min-height:31px;border-bottom:1px solid #e7edf4}
     #adsBoard .stage-loss-row:last-child{border-bottom:0}
-    #adsBoard .stage-loss-row.head{min-height:28px;color:#7e8fa4;background:#f7f9fc;font-size:8px;font-weight:650}
+    #adsBoard .stage-loss-row.head{min-height:28px;color:#7e8fa4;background:#f7f9fc;font-size:9px;font-weight:650}
     #adsBoard .stage-loss-row>span,#adsBoard .stage-loss-row>b{padding:7px 6px;border-right:1px solid #e7edf4;text-align:center;font-size:9px;font-variant-numeric:tabular-nums}
     #adsBoard .stage-loss-row>*:last-child{border-right:0}
     #adsBoard .stage-loss-row>span:first-child{text-align:left}
     #adsBoard .stage-loss-row b{color:#31445c;font-size:10px}
     #adsBoard .stage-loss-row b.loss{color:#d96c37}#adsBoard .stage-loss-row b.pp-up{color:#16885f}#adsBoard .stage-loss-row b.pp-down{color:#d96c37}
-    #adsBoard .lead-trapezoid{display:flex;flex-direction:column;justify-content:center;gap:7px;min-height:166px;padding:2px 0}
+    #adsBoard .lead-trapezoid{display:flex;flex-direction:column;justify-content:center;gap:7px;min-height:152px;padding:2px 0}
     #adsBoard .lead-axis-row{display:grid;grid-template-columns:38px minmax(0,1fr) 48px 40px;align-items:center;gap:8px;min-height:31px}
     #adsBoard .lead-axis-label{color:#5d718b;font-size:9px;font-weight:700;text-align:left;white-space:nowrap}
     #adsBoard .lead-layer-track{height:29px}
@@ -196,31 +200,33 @@
     #adsBoard .lead-card[data-grade-filter="a"] .lead-segment:not(.grade-a),#adsBoard .lead-card[data-grade-filter="b"] .lead-segment:not(.grade-b),#adsBoard .lead-card[data-grade-filter="c"] .lead-segment:not(.grade-c){display:none}
     #adsBoard .lead-card[data-grade-filter="a"] .lead-segment.grade-a,#adsBoard .lead-card[data-grade-filter="b"] .lead-segment.grade-b,#adsBoard .lead-card[data-grade-filter="c"] .lead-segment.grade-c{width:100%!important}
     #adsBoard .lead-axis-value{color:#203a5a;font-size:10px;font-weight:750;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-    #adsBoard .lead-axis-share{color:#7e8fa4;font-size:8px;font-weight:650;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+    #adsBoard .lead-axis-share{color:#7e8fa4;font-size:9px;font-weight:650;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
     #adsBoard .grade-filter-tabs{display:flex;align-items:center;overflow:hidden;border:1px solid #d4dfec;border-radius:6px}
-    #adsBoard .grade-filter-tabs button{height:24px;min-width:30px;padding:0 8px;color:#60758f;background:#fff;border-right:1px solid #dbe4ef;font-size:8px;font-weight:700}
+    #adsBoard .grade-filter-tabs button{height:24px;min-width:30px;padding:0 8px;color:#60758f;background:#fff;border-right:1px solid #dbe4ef;font-size:9px;font-weight:700}
     #adsBoard .grade-filter-tabs button:last-child{border-right:0}#adsBoard .grade-filter-tabs button:hover{background:#f3f7fc}
     #adsBoard .grade-filter-tabs button.active{color:#fff;background:#1f67b8}.grade-filter-tabs button[data-grade-filter="a"].active{background:#2376df}.grade-filter-tabs button[data-grade-filter="b"].active{background:#12aeb1}.grade-filter-tabs button[data-grade-filter="c"].active{background:#f2a51a}
     #adsBoard .funnel-step-wrap:nth-child(2) .funnel-step{background:linear-gradient(90deg,#247bd8,#4d9be8)}
     #adsBoard .funnel-step-wrap:nth-child(3) .funnel-step{background:linear-gradient(90deg,#3387d8,#65a9e7)}
     #adsBoard .funnel-step-wrap:nth-child(4) .funnel-step{background:linear-gradient(90deg,#4694d5,#7db5e6)}
     #adsBoard .funnel-step-wrap:nth-child(5) .funnel-step{background:linear-gradient(90deg,#5aa0d4,#91c1e5)}
-    #adsBoard .quality-sections{display:grid;gap:10px;min-height:166px}
-    #adsBoard .quality-section-title{display:block;margin-bottom:5px;color:#6f8198;font-size:8px;font-weight:700}
+    #adsBoard .quality-sections{display:grid;gap:10px;min-height:152px}
     #adsBoard .quality-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));overflow:hidden;border:1px solid #e0e8f1;border-radius:8px}
     #adsBoard .quality-stat{min-width:0;padding:9px 10px;background:#fff;border-right:1px solid #e7edf4;border-radius:0}
     #adsBoard .quality-stat:last-child{border-right:0}
     #adsBoard .quality-stat>span{display:block;color:#73859b;font-size:9px;white-space:nowrap}
+    #adsBoard .quality-stat.quality-grade-a>span{color:#2376df;font-weight:750}
+    #adsBoard .quality-stat.quality-grade-b>span{color:#12aeb1;font-weight:750}
+    #adsBoard .quality-stat.quality-grade-c>span{color:#f2a51a;font-weight:750}
     #adsBoard .quality-primary{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:8px;margin-top:4px}
     #adsBoard .quality-primary strong{display:block;min-width:0;margin:0;color:#1f5da7;font-size:16px;line-height:1.2;font-variant-numeric:tabular-nums;white-space:nowrap}
-    #adsBoard .quality-primary em{padding:2px 5px;color:#6f8198;background:#f3f6fa;border-radius:4px;font-size:7px;line-height:1.4;font-style:normal;font-variant-numeric:tabular-nums;white-space:nowrap}
-    #adsBoard .quality-stat small{display:block;margin-top:5px;color:#8392a5;font-size:8px;line-height:1.35;white-space:nowrap}
+    #adsBoard .quality-primary em{padding:2px 5px;color:#6f8198;background:#f3f6fa;border-radius:4px;font-size:8px;line-height:1.4;font-style:normal;font-variant-numeric:tabular-nums;white-space:nowrap}
+    #adsBoard .quality-stat small{display:block;margin-top:5px;color:#8392a5;font-size:9px;line-height:1.35;white-space:nowrap}
     #adsBoard .quality-stat.warn strong{color:#d57b08}
     #adsBoard .contribution-summary{gap:8px;margin-bottom:12px}
     #adsBoard .contribution-summary div{padding:10px 8px}
     #adsBoard .contribution-summary strong{font-size:18px}
     #adsBoard .contribution-summary span{font-size:9px}
-    #adsBoard .contribution-summary em{display:block;margin-top:4px;font-size:8px;font-style:normal;font-weight:750;font-variant-numeric:tabular-nums}
+    #adsBoard .contribution-summary em{display:block;margin-top:4px;font-size:9px;font-style:normal;font-weight:750;font-variant-numeric:tabular-nums}
     #adsBoard .contribution-summary em.pp-up{color:#16885f}
     #adsBoard .contribution-summary em.pp-down{color:#d96c37}
     #adsBoard .contribution-slider-panel{display:grid;gap:16px;padding:8px 4px 4px}
@@ -267,6 +273,8 @@
     /* 收紧投放溯源与订单分析看板之间的垂直留白。 */
     .trace-wrap{padding-bottom:6px}
   </style>
+  <link rel="stylesheet" href="../dashboard-select.css">
+  <script src="../dashboard-select.js" defer></script>
 </head>
 <body class="embedded">
   <aside class="sidebar">
@@ -295,7 +303,14 @@
       <select class="select" id="campaignFilter"><option value="all">全部广告计划</option></select>
       <select class="select" id="groupFilter"><option value="all">全部广告组</option></select>
       <select class="select" id="adFilter"><option value="all">全部广告</option></select>
-      <button class="toolbox" type="button" aria-label="工具箱"><span class="toolbox-icon">✦</span>工具箱</button>
+      <div class="toolbox-shell">
+        <button class="toolbox" type="button" aria-label="工具箱"><span class="toolbox-icon">✦</span>工具箱</button>
+        <div class="toolbox-bubbles" role="group" aria-label="工具箱能力">
+          <span class="toolbox-bubble"><span class="toolbox-bubble-mark">✦</span><span class="toolbox-bubble-label">Growth GPT</span></span>
+          <span class="toolbox-bubble commission"><span class="toolbox-bubble-mark">¥</span><span class="toolbox-bubble-label">提成试算</span></span>
+          <span class="toolbox-bubble library"><span class="toolbox-bubble-mark">▦</span><span class="toolbox-bubble-label">广告资料库</span></span>
+        </div>
+      </div>
     </section>
 
     <section class="performance-workspace">
@@ -545,7 +560,7 @@
       return `<div class="funnel-detail">
         <article class="funnel-card"><div class="funnel-card-head"><strong>阶段漏斗</strong></div><div class="stage-loss-table"><div class="stage-loss-row head"><span>阶段</span><span>流失量</span><span>转化率</span><span>较全盘</span></div>${stageLossRow('进线 → 询盘',m.total,m.valid,pp[0])}${stageLossRow('询盘 → 建联',m.valid,m.connected,pp[1])}${stageLossRow('建联 → 立项',m.connected,m.projects,pp[2])}${stageLossRow('立项 → 成交',m.projects,m.deals,pp[3])}</div></article>
         <article class="funnel-card lead-card" data-lead-card data-grade-filter="all"><div class="funnel-card-head"><strong>线索转化</strong><div class="grade-filter-tabs" role="tablist" aria-label="线索等级筛选"><button class="active" type="button" data-grade-filter="all">全部</button><button type="button" data-grade-filter="a">A</button><button type="button" data-grade-filter="b">B</button><button type="button" data-grade-filter="c">C</button></div></div><div class="lead-trapezoid">${leadLayer('询盘',m.gradeA,m.gradeB,m.gradeC,100,m.valid,m.gradeA,m.gradeB,m.gradeC)}${leadLayer('建联',connectedA,connectedB,connectedC,82,m.valid,m.gradeA,m.gradeB,m.gradeC)}${leadLayer('立项',projectA,projectB,projectC,64,m.valid,m.gradeA,m.gradeB,m.gradeC)}${leadLayer('成交',m.aDeals,m.bDeals,m.cDeals,46,m.valid,m.gradeA,m.gradeB,m.gradeC)}</div></article>
-        <article class="funnel-card"><div class="funnel-card-head"><strong>立项/成交</strong></div><div class="quality-sections"><section><span class="quality-section-title">立项结构</span><div class="quality-row"><div class="quality-stat"><span>有图纸</span><div class="quality-primary"><strong>${fmt.format(m.floorplan)}</strong><em>${pctText(pct(m.floorplan,m.valid))}</em></div><small>立项率 ${pctText(floorProjectRate)}</small></div><div class="quality-stat"><span>无图纸</span><div class="quality-primary"><strong>${fmt.format(noFloorplan)}</strong><em>${pctText(pct(noFloorplan,m.valid))}</em></div><small>立项率 ${pctText(noFloorProjectRate)}</small></div><div class="quality-stat warn"><span>撞客客户</span><div class="quality-primary"><strong>${fmt.format(m.duplicate)}</strong><em>${pctText(duplicateLoss)}</em></div></div></div></section><section><span class="quality-section-title">成交结构</span><div class="quality-row"><div class="quality-stat"><span>A级成交</span><div class="quality-primary"><strong>${fmt.format(m.aDeals)}</strong><em>${pctText(pct(m.aDeals,m.deals))}</em></div><small>成交率 ${pctText(pct(m.aDeals,m.gradeA))}</small></div><div class="quality-stat"><span>B级成交</span><div class="quality-primary"><strong>${fmt.format(m.bDeals)}</strong><em>${pctText(pct(m.bDeals,m.deals))}</em></div><small>成交率 ${pctText(pct(m.bDeals,m.gradeB))}</small></div><div class="quality-stat"><span>C级成交</span><div class="quality-primary"><strong>${fmt.format(m.cDeals)}</strong><em>${pctText(pct(m.cDeals,m.deals))}</em></div><small>成交率 ${pctText(pct(m.cDeals,m.gradeC))}</small></div></div></section></div></article>
+        <article class="funnel-card"><div class="funnel-card-head"><strong>立项/成交</strong></div><div class="quality-sections"><section><div class="quality-row"><div class="quality-stat"><span>有图纸</span><div class="quality-primary"><strong>${fmt.format(m.floorplan)}</strong><em>${pctText(pct(m.floorplan,m.valid))}</em></div><small>立项率 ${pctText(floorProjectRate)}</small></div><div class="quality-stat"><span>无图纸</span><div class="quality-primary"><strong>${fmt.format(noFloorplan)}</strong><em>${pctText(pct(noFloorplan,m.valid))}</em></div><small>立项率 ${pctText(noFloorProjectRate)}</small></div><div class="quality-stat warn"><span>撞客客户</span><div class="quality-primary"><strong>${fmt.format(m.duplicate)}</strong><em>${pctText(duplicateLoss)}</em></div></div></div></section><section><div class="quality-row"><div class="quality-stat quality-grade-a"><span>A级</span><div class="quality-primary"><strong>${fmt.format(m.aDeals)}</strong><em>${pctText(pct(m.aDeals,m.deals))}</em></div><small>成交率 ${pctText(pct(m.aDeals,m.gradeA))}</small></div><div class="quality-stat quality-grade-b"><span>B级</span><div class="quality-primary"><strong>${fmt.format(m.bDeals)}</strong><em>${pctText(pct(m.bDeals,m.deals))}</em></div><small>成交率 ${pctText(pct(m.bDeals,m.gradeB))}</small></div><div class="quality-stat quality-grade-c"><span>C级</span><div class="quality-primary"><strong>${fmt.format(m.cDeals)}</strong><em>${pctText(pct(m.cDeals,m.deals))}</em></div><small>成交率 ${pctText(pct(m.cDeals,m.gradeC))}</small></div></div></section></div></article>
         <article class="funnel-card" data-contribution-card data-is-total="${isTotal}" data-global-order="${globalOrderShare}" data-global-amount="${globalAmountShare}" data-initial-order="${initialOrderShare}"><div class="funnel-card-head"><strong>成交贡献</strong></div><div class="contribution-summary"><div><strong data-order-share>${Math.round(initialOrderShare)}%</strong><span>累计订单占比</span><em data-order-pp class="pp-up">较全盘 +0.0pp</em></div><i>↔</i><div><strong data-amount-share>${initialAmountShare.toFixed(1)}%</strong><span>累计成交金额占比</span><em data-amount-pp class="pp-up">较全盘 +0.0pp</em></div></div><div class="contribution-slider-panel"><label class="contribution-slider-row"><span>订单占比</span><span class="contribution-range"><input type="range" min="0" max="100" step="1" value="${Math.round(initialOrderShare)}" data-order-slider aria-label="调整订单占比" style="--value:${initialOrderShare}%"></span><output data-order-output>${Math.round(initialOrderShare)}%</output></label><label class="contribution-slider-row"><span>订单贡献</span><span class="contribution-range"><input class="amount" type="range" min="0" max="100" step="0.1" value="${initialAmountShare.toFixed(1)}" data-amount-slider aria-label="调整订单贡献" style="--value:${initialAmountShare}%"></span><output data-amount-output>${initialAmountShare.toFixed(1)}%</output></label></div></article>
       </div>`;
     }
@@ -581,7 +596,11 @@
     function renderTable(){
       renderDimensionHeads();renderSortHeaders();
       const pageSize=state.adsPageSize,direction=state.sortDir==='desc'?-1:1,grouped=groupedTableRows(),total=grouped.find(x=>x.__total),details=grouped.filter(x=>!x.__total).sort((a,b)=>(a[state.sortKey]-b[state.sortKey])*direction),totalPages=Math.max(1,Math.ceil(details.length/pageSize));state.adsPage=Math.min(Math.max(1,state.adsPage),totalPages);const detailOffset=(state.adsPage-1)*pageSize,pageDetails=details.slice(detailOffset,detailOffset+pageSize),r=total?[total,...pageDetails]:pageDetails,f=rangeFactor(),body=document.querySelector('#planBody');document.querySelector('#emptyState').hidden=grouped.length>0;
-      if(!state.expandedInitialized&&r.length){state.expandedRowKeys.add(encodeURIComponent(`${state.dimension}:${r[0][state.dimension]}`));state.expandedInitialized=true}
+      if(!state.expandedInitialized&&r.length){
+        const defaultExpandedRow=total||r[0]
+        state.expandedRowKeys.add(encodeURIComponent(`${state.dimension}:${defaultExpandedRow[state.dimension]}`))
+        state.expandedInitialized=true
+      }
       body.innerHTML=r.map((x,i)=>{const isTotal=x.__total,rankNumber=isTotal?0:detailOffset+i+(total?0:1),exposure=scaled(x.exposure),metrics=deriveFunnelMetrics(x,rankNumber),rowKey=encodeURIComponent(`${state.dimension}:${x[state.dimension]}`),expanded=state.expandedRowKeys.has(rowKey);const dimensionNote=isTotal?'':state.dimension==='ad'?dimensionDefinitions[state.dimension]:`${dimensionDefinitions[state.dimension]} · ${x.sourceCount}条广告`;const dimensionNoteHtml=dimensionNote?`<small>${dimensionNote}</small>`:'';const dimensionCell=`<td class="dimension-cell"><span class="dimension-value">${x[state.dimension]}${dimensionNoteHtml}</span><span class="row-expand-tag" title="${expanded?'收起详情':'展开详情'}" aria-hidden="true"><i></i></span></td>`;const conditionCell=isTotal?`<td aria-label="总计"><span class="rank top total">0</span></td>`:`<td><span class="rank ${rankNumber<=3?'top':''}">${rankNumber}</span></td>`;const summary=`<tr class="funnel-summary-row ${expanded?'expanded':''} ${isTotal?'total-row':''}" data-row-key="${rowKey}" aria-expanded="${expanded}" role="button" tabindex="0">${conditionCell}${dimensionCell}<td class="num"><span class="table-number">${x.spend?narrowMoney(x.spend*f):'不适用'}</span></td><td><span class="table-number">${narrowNumber(exposure)}</span></td><td><div class="cell-stack"><strong>${fmt.format(metrics.total)}</strong><small>100.00%</small></div></td><td><div class="cell-stack"><strong>${fmt.format(metrics.valid)}</strong><small>${pctText(pct(metrics.valid,metrics.total))}</small></div></td><td>${gradeCell(metrics)}</td><td><div class="cell-stack"><strong>${fmt.format(metrics.floorplan)}</strong><small class="good">${pctText(pct(metrics.floorplan,metrics.valid))}</small></div></td><td><div class="cell-stack"><strong>${fmt.format(metrics.duplicate)}</strong><small class="warn">${pctText(pct(metrics.duplicate,metrics.valid))}</small></div></td><td><div class="cell-stack"><strong>${fmt.format(metrics.connected)}</strong><small>${pctText(pct(metrics.connected,metrics.valid))}</small></div></td><td><div class="cell-stack"><strong>${fmt.format(metrics.arrivals)}</strong><small>到店率 ${pctText(pct(metrics.arrivals,metrics.connected))}</small></div></td><td><div class="cell-stack"><strong>${fmt.format(metrics.projects)}</strong><small>${pctText(pct(metrics.projects,metrics.valid))}</small></div></td><td><div class="cell-stack"><strong>${fmt.format(metrics.deals)}</strong><small>${pctText(pct(metrics.deals,metrics.valid))}</small></div></td><td class="num amount"><span class="table-number">${narrowMoney(metrics.amount)}</span></td></tr>`;return summary+(expanded?`<tr class="analysis-detail-row" data-detail-for="${rowKey}"><td colspan="14">${funnelDetail(metrics,isTotal)}</td></tr>`:'')}).join('');renderPagination('adsPagination',details.length,'ads');bindContributionInteractions();bindLeadGradeTabs()
     }
     const traceProfiles={
