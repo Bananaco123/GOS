@@ -111,7 +111,7 @@
     .table-pagination[hidden]{display:none}.table-pagination-total{margin-right:6px;white-space:nowrap}
     .table-pagination-controls,.page-number-list,.page-jump,.page-size-control{display:flex;align-items:center;justify-content:center;gap:6px}.page-button,.page-jump button{height:28px;min-width:28px;padding:0 8px;color:#51657e;background:#fff;border:1px solid #d7e1ed;border-radius:7px;font-size:10px;transition:border-color .14s ease,color .14s ease,background .14s ease}.page-button:hover,.page-jump button:hover{color:var(--blue);border-color:#8fbcf3}.page-button.active{color:#fff;background:var(--blue);border-color:var(--blue);font-weight:700}.page-button:disabled{color:#b7c1ce;background:#f7f9fb;border-color:#e8edf3;cursor:not-allowed}.page-ellipsis{min-width:18px;color:#9aa7b8;text-align:center}.page-jump{margin-left:6px;color:#7b8ca1;white-space:nowrap}.page-jump input{width:52px;height:28px;padding:0 6px;color:var(--ink);background:#fff;border:1px solid #d7e1ed;border-radius:7px;font-size:10px;text-align:center;outline:none}.page-jump input:focus{border-color:#79aff2;box-shadow:0 0 0 2px #e8f3ff}.page-size-control{margin-left:4px;white-space:nowrap}.page-size-control select{height:28px;padding:0 24px 0 8px;color:#51657e;background:#fff;border:1px solid #d7e1ed;border-radius:7px;font-size:10px;outline:none}.page-size-control select:focus{border-color:#79aff2;box-shadow:0 0 0 2px #e8f3ff}
     #pmBoard table{width:100%;min-width:0;table-layout:fixed;border-collapse:collapse}
-    #pmBoard col.pm-col-name{width:13%}#pmBoard col.pm-col-base{width:9%}#pmBoard col.pm-col-country{width:8%}#pmBoard col.pm-col-grade{width:9%}#pmBoard col.pm-col-stage{width:10%}#pmBoard col.pm-col-amount{width:13%}
+    #pmBoard col.pm-col-name{width:13%}#pmBoard col.pm-col-base{width:8%}#pmBoard col.pm-col-country,#pmBoard col.pm-col-project-type{width:7%}#pmBoard col.pm-col-grade{width:8%}#pmBoard col.pm-col-stage{width:9%}#pmBoard col.pm-col-amount{width:14%}
     #pmBoard th,#pmBoard td{padding:13px 8px;text-align:center;border-right:1px solid #e5ebf2;border-bottom:1px solid #e5ebf2;overflow:hidden}
     #pmBoard th:last-child,#pmBoard td:last-child{border-right:0}
     #pmBoard th{height:62px;color:var(--ink);background:#f7f9fc;font-size:12px;line-height:1.4}
@@ -121,7 +121,7 @@
     .pm-sort{display:inline-flex;align-items:center;justify-content:center;gap:5px;color:var(--ink);background:transparent;font-size:12px;font-weight:700}.pm-sort:hover,.pm-sort.active{color:var(--blue)}
     .pm-sort-arrow{color:#9aabc0;font-size:9px}.pm-sort.active .pm-sort-arrow{color:var(--blue)}
     .pm-name{display:block;overflow:hidden;color:var(--ink);font-size:12px;font-weight:650;text-align:center;text-overflow:ellipsis;white-space:nowrap}.pm-total-row .pm-name{color:var(--blue);font-weight:760}
-    .pm-country{display:block;overflow:hidden;color:#415771;font-size:11px;font-weight:650;text-overflow:ellipsis;white-space:nowrap}
+    .pm-country,.pm-project-type{display:block;overflow:hidden;color:#415771;font-size:11px;font-weight:650;text-overflow:ellipsis;white-space:nowrap}
     .pm-cell{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}.pm-cell strong{max-width:100%;overflow:hidden;color:var(--ink);font-size:14px;font-variant-numeric:tabular-nums;text-overflow:ellipsis}.pm-cell small{color:#49648a;font-size:10px;font-variant-numeric:tabular-nums}
     .pm-cell.grade-a,.pm-cell.grade-b,.pm-cell.grade-c{background:transparent}.pm-cell.grade-a strong{color:#1677ff}.pm-cell.grade-b strong{color:#079da2}.pm-cell.grade-c strong{color:#e88a00}.pm-cell.stage strong{color:#1677ff}.pm-cell.amount strong{color:#0b8c4e;font-size:13px}
     .pm-grade-muted{background:transparent}.pm-grade-muted .pm-cell strong,.pm-grade-muted .pm-cell small{color:#b1bcc9}.pm-grade-muted .pm-cell{opacity:.72}
@@ -398,6 +398,19 @@
               <div class="pm-country-no-results" id="pmCountryNoResults" hidden>未找到匹配的国家与地区</div>
             </div>
           </div>
+          <div class="pm-country-filter" id="pmProjectTypeFilter">
+            <div class="pm-country-combobox">
+              <input class="pm-country-input" id="pmProjectTypeInput" type="search" placeholder="选择项目类型" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="pmProjectTypeOptions" />
+              <button class="pm-country-clear" id="pmProjectTypeClear" type="button" aria-label="清除项目类型筛选" hidden>×</button>
+              <span class="pm-country-chevron" aria-hidden="true"></span>
+            </div>
+            <div class="pm-country-options" id="pmProjectTypeOptions" role="listbox" hidden>
+              <button class="pm-country-option is-selected" type="button" role="option" aria-selected="true" data-project-type-value="all" data-project-type-keywords="不限 全部 all">不限项目类型</button>
+              <button class="pm-country-option" type="button" role="option" aria-selected="false" data-project-type-value="工装" data-project-type-keywords="工装 商业 commercial gongzhuang">工装</button>
+              <button class="pm-country-option" type="button" role="option" aria-selected="false" data-project-type-value="家装" data-project-type-keywords="家装 住宅 residential jiazhuang">家装</button>
+              <div class="pm-country-no-results" id="pmProjectTypeNoResults" hidden>未找到匹配的项目类型</div>
+            </div>
+          </div>
         </div>
         <div class="pm-grade-tabs" id="pmGradeTabs" aria-label="线索等级筛选">
           <button class="active" type="button" data-pm-grade="all">全部线索</button>
@@ -408,7 +421,7 @@
       </div>
       <div class="pm-table-wrap">
         <table aria-label="PM转化数据">
-          <colgroup><col class="pm-col-name"><col class="pm-col-base"><col class="pm-col-country"><col class="pm-col-grade"><col class="pm-col-grade"><col class="pm-col-grade"><col class="pm-col-stage"><col class="pm-col-stage"><col class="pm-col-stage"><col class="pm-col-amount"></colgroup>
+          <colgroup><col class="pm-col-name"><col class="pm-col-base"><col class="pm-col-country"><col class="pm-col-project-type"><col class="pm-col-grade"><col class="pm-col-grade"><col class="pm-col-grade"><col class="pm-col-stage"><col class="pm-col-stage"><col class="pm-col-stage"><col class="pm-col-amount"></colgroup>
           <thead><tr id="pmTableHead"></tr></thead>
           <tbody id="pmTableBody"></tbody>
         </table>
@@ -468,8 +481,20 @@
       const weights=pmCountries.map((country,countryIndex)=>2+((rowIndex*3+countryIndex*5)%11)),weightTotal=weights.reduce((total,value)=>total+value,0);
       return Object.fromEntries(pmCountries.map((country,countryIndex)=>{const factor=weights[countryIndex]/weightTotal,scaleMap=source=>Object.fromEntries(Object.entries(source).map(([key,value])=>[key,Math.round(value*factor)]));return [country,{assigned:Math.round(row.assigned*factor),grades:scaleMap(row.grades),connected:scaleMap(row.connected),projects:scaleMap(row.projects),deals:scaleMap(row.deals),amount:scaleMap(row.amount)}]}));
     }
-    pmRows.forEach((row,index)=>{row.countries=buildPmCountryBreakdown(row,index)});
-    const state={range:'today',start:'',end:'',account:'all',campaign:'all',group:'all',ad:'all',trend:'spend',metricPrimary:{delivery:'exposure',inquiries:'inquiries',crm:'crmCustomers'},metricSwap:null,board:'ads',lockedPoint:null,traceOrderId:'OS-202608-001',dimension:'ad',sortKey:'inquiries',sortDir:'desc',orderAnalysisDimension:'pm',expandedRowKeys:new Set(),expandedInitialized:false,pmGrade:'all',pmCountry:'all',pmSearch:'',pmSortKey:'assigned',pmSortDir:'desc',adsPage:1,pmPage:1,adsPageSize:15,pmPageSize:15};
+    function buildPmProjectTypeBreakdown(row,seed){
+      const commercialRatio=.38+(seed%9)*.025;
+      const splitValue=value=>{const commercial=Math.round(value*commercialRatio);return {工装:commercial,家装:value-commercial}};
+      const assigned=splitValue(row.assigned),fields=['grades','connected','projects','deals','amount'];
+      const result={工装:{assigned:assigned.工装},家装:{assigned:assigned.家装}};
+      fields.forEach(field=>{result.工装[field]={};result.家装[field]={};['a','b','c'].forEach(key=>{const split=splitValue(row[field][key]);result.工装[field][key]=split.工装;result.家装[field][key]=split.家装})});
+      return result;
+    }
+    pmRows.forEach((row,index)=>{
+      row.countries=buildPmCountryBreakdown(row,index);
+      row.projectTypes=buildPmProjectTypeBreakdown(row,index);
+      pmCountries.forEach((country,countryIndex)=>{row.countries[country].projectTypes=buildPmProjectTypeBreakdown(row.countries[country],index*pmCountries.length+countryIndex)});
+    });
+    const state={range:'today',start:'',end:'',account:'all',campaign:'all',group:'all',ad:'all',trend:'spend',metricPrimary:{delivery:'exposure',inquiries:'inquiries',crm:'crmCustomers'},metricSwap:null,board:'ads',lockedPoint:null,traceOrderId:'OS-202608-001',dimension:'ad',sortKey:'inquiries',sortDir:'desc',orderAnalysisDimension:'pm',expandedRowKeys:new Set(),expandedInitialized:false,pmGrade:'all',pmCountry:'all',pmProjectType:'all',pmSearch:'',pmSortKey:'assigned',pmSortDir:'desc',adsPage:1,pmPage:1,adsPageSize:15,pmPageSize:15};
     const dualMetricMeta={
       delivery:{exposure:{label:'曝光',top:4,delta:8.6},cpm:{label:'CPM',percentile:20,delta:-2.4,goodWhenDown:true}},
       inquiries:{inquiries:{label:'询盘',top:1,delta:-3.2},cpa:{label:'CPA',top:3,delta:-5.7,goodWhenDown:true}},
@@ -697,6 +722,7 @@
       {key:'name',label:'PM',sortable:false},
       {key:'assigned',label:'分配客户',sortable:true},
       {key:'country',label:'项目国家',sortable:false},
+      {key:'projectType',label:'项目类型',sortable:false},
       {key:'a',label:'A级',sortable:true},
       {key:'b',label:'B级',sortable:true},
       {key:'c',label:'C级',sortable:true},
@@ -708,9 +734,14 @@
     function pmFieldTotal(row,field){return pmGradeKeys.reduce((total,key)=>total+(row[field]?.[key]||0),0)}
     function pmSelectedValue(row,field){return state.pmGrade==='all'?pmFieldTotal(row,field):(row[field]?.[state.pmGrade]||0)}
     function pmSelectedBase(row){return state.pmGrade==='all'?row.assigned:(row.grades?.[state.pmGrade]||0)}
-    function pmScopedRow(row){if(state.pmCountry==='all')return {...row,country:'--'};const scoped=row.countries?.[state.pmCountry];return scoped?{...row,...scoped,country:state.pmCountry}:{...row,country:state.pmCountry}}
+    function pmScopedRow(row){
+      const country=state.pmCountry==='all'?'--':state.pmCountry,projectType=state.pmProjectType==='all'?'--':state.pmProjectType;
+      const countryScope=state.pmCountry==='all'?row:row.countries?.[state.pmCountry],base=countryScope||row;
+      const projectTypeScope=state.pmProjectType==='all'?base:base.projectTypes?.[state.pmProjectType];
+      return {...row,...base,...(projectTypeScope||{}),country,projectType};
+    }
     function aggregatePmRows(rows){
-      const total={name:'总计',country:state.pmCountry==='all'?'--':state.pmCountry,assigned:0,grades:{a:0,b:0,c:0},connected:{a:0,b:0,c:0},projects:{a:0,b:0,c:0},deals:{a:0,b:0,c:0},amount:{a:0,b:0,c:0},__total:true};
+      const total={name:'总计',country:state.pmCountry==='all'?'--':state.pmCountry,projectType:state.pmProjectType==='all'?'--':state.pmProjectType,assigned:0,grades:{a:0,b:0,c:0},connected:{a:0,b:0,c:0},projects:{a:0,b:0,c:0},deals:{a:0,b:0,c:0},amount:{a:0,b:0,c:0},__total:true};
       rows.forEach(row=>{total.assigned+=row.assigned;['grades','connected','projects','deals','amount'].forEach(field=>pmGradeKeys.forEach(key=>total[field][key]+=row[field][key]))});
       return total;
     }
@@ -729,7 +760,7 @@
       return `<td data-label="${label}"><div class="pm-cell stage"><strong>${fmt.format(value)}</strong><small>${rate.toFixed(2)}%</small></div></td>`;
     }
     function pmRowTemplate(row){
-      return `<tr class="${row.__total?'pm-total-row':''}"><td data-label="PM"><span class="pm-name" title="${row.name}">${row.name}</span></td><td data-label="分配客户"><div class="pm-cell"><strong>${fmt.format(row.assigned)}</strong></div></td><td data-label="项目国家"><span class="pm-country">${row.country||'--'}</span></td>${pmGradeKeys.map(key=>pmGradeCell(row,key)).join('')}${pmStageCell(row,'connected','建联成功')}${pmStageCell(row,'projects','立项客户')}${pmStageCell(row,'deals','成交客户')}<td data-label="成交金额"><div class="pm-cell amount"><strong>${money(pmSelectedValue(row,'amount'))}</strong></div></td></tr>`;
+      return `<tr class="${row.__total?'pm-total-row':''}"><td data-label="PM"><span class="pm-name" title="${row.name}">${row.name}</span></td><td data-label="分配客户"><div class="pm-cell"><strong>${fmt.format(row.assigned)}</strong></div></td><td data-label="项目国家"><span class="pm-country">${row.country||'--'}</span></td><td data-label="项目类型"><span class="pm-project-type">${row.projectType||'--'}</span></td>${pmGradeKeys.map(key=>pmGradeCell(row,key)).join('')}${pmStageCell(row,'connected','建联成功')}${pmStageCell(row,'projects','立项客户')}${pmStageCell(row,'deals','成交客户')}<td data-label="成交金额"><div class="pm-cell amount"><strong>${money(pmSelectedValue(row,'amount'))}</strong></div></td></tr>`;
     }
     function renderPmBoard(){
       const keyword=state.pmSearch.trim().toLocaleLowerCase(),matched=pmRows.filter(row=>!keyword||row.name.toLocaleLowerCase().includes(keyword)),visible=matched.map(pmScopedRow),direction=state.pmSortDir==='desc'?-1:1;
@@ -763,6 +794,13 @@
     function selectPmCountry(value){state.pmCountry=value;state.pmPage=1;pmCountryInput.value=value==='all'?'':value;pmCountryClear.hidden=value==='all';pmCountryButtons.forEach(button=>{const selected=button.dataset.countryValue===value;button.classList.toggle('is-selected',selected);button.setAttribute('aria-selected',String(selected))});closePmCountryOptions(false);renderPmBoard()}
     pmCountryInput.addEventListener('focus',()=>{openPmCountryOptions();if(state.pmCountry!=='all')pmCountryInput.select()});pmCountryInput.addEventListener('click',openPmCountryOptions);pmCountryInput.addEventListener('input',()=>{openPmCountryOptions();filterPmCountryOptions(pmCountryInput.value)});pmCountryInput.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();closePmCountryOptions()}if(e.key==='Enter'){const first=filterPmCountryOptions(pmCountryInput.value)[0];if(first){e.preventDefault();selectPmCountry(first.dataset.countryValue)}}if(e.key==='ArrowDown'){const first=filterPmCountryOptions(pmCountryInput.value)[0];if(first){e.preventDefault();first.focus()}}});
     pmCountryOptions.addEventListener('click',e=>{const option=e.target.closest('[data-country-value]');if(option)selectPmCountry(option.dataset.countryValue)});pmCountryOptions.addEventListener('keydown',e=>{const option=e.target.closest('[data-country-value]');if(option&&['Enter',' '].includes(e.key)){e.preventDefault();selectPmCountry(option.dataset.countryValue)}});pmCountryClear.addEventListener('click',e=>{e.stopPropagation();selectPmCountry('all');pmCountryInput.focus()});document.addEventListener('click',e=>{if(!pmCountryFilter.contains(e.target))closePmCountryOptions()});
+    const pmProjectTypeFilter=document.querySelector('#pmProjectTypeFilter'),pmProjectTypeInput=document.querySelector('#pmProjectTypeInput'),pmProjectTypeOptions=document.querySelector('#pmProjectTypeOptions'),pmProjectTypeClear=document.querySelector('#pmProjectTypeClear'),pmProjectTypeNoResults=document.querySelector('#pmProjectTypeNoResults'),pmProjectTypeButtons=[...pmProjectTypeOptions.querySelectorAll('[data-project-type-value]')];
+    function filterPmProjectTypeOptions(query=''){const keyword=query.trim().toLocaleLowerCase(),visible=pmProjectTypeButtons.filter(button=>{const match=!keyword||button.dataset.projectTypeKeywords.toLocaleLowerCase().includes(keyword);button.hidden=!match;return match});pmProjectTypeNoResults.hidden=visible.length>0;return visible}
+    function openPmProjectTypeOptions(){pmProjectTypeFilter.classList.add('is-open');pmProjectTypeOptions.hidden=false;pmProjectTypeInput.setAttribute('aria-expanded','true');filterPmProjectTypeOptions(pmProjectTypeInput.value===state.pmProjectType?'':pmProjectTypeInput.value)}
+    function closePmProjectTypeOptions(restore=true){pmProjectTypeFilter.classList.remove('is-open');pmProjectTypeOptions.hidden=true;pmProjectTypeInput.setAttribute('aria-expanded','false');if(restore)pmProjectTypeInput.value=state.pmProjectType==='all'?'':state.pmProjectType}
+    function selectPmProjectType(value){state.pmProjectType=value;state.pmPage=1;pmProjectTypeInput.value=value==='all'?'':value;pmProjectTypeClear.hidden=value==='all';pmProjectTypeButtons.forEach(button=>{const selected=button.dataset.projectTypeValue===value;button.classList.toggle('is-selected',selected);button.setAttribute('aria-selected',String(selected))});closePmProjectTypeOptions(false);renderPmBoard()}
+    pmProjectTypeInput.addEventListener('focus',()=>{openPmProjectTypeOptions();if(state.pmProjectType!=='all')pmProjectTypeInput.select()});pmProjectTypeInput.addEventListener('click',openPmProjectTypeOptions);pmProjectTypeInput.addEventListener('input',()=>{openPmProjectTypeOptions();filterPmProjectTypeOptions(pmProjectTypeInput.value)});pmProjectTypeInput.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();closePmProjectTypeOptions()}if(e.key==='Enter'){const first=filterPmProjectTypeOptions(pmProjectTypeInput.value)[0];if(first){e.preventDefault();selectPmProjectType(first.dataset.projectTypeValue)}}if(e.key==='ArrowDown'){const first=filterPmProjectTypeOptions(pmProjectTypeInput.value)[0];if(first){e.preventDefault();first.focus()}}});
+    pmProjectTypeOptions.addEventListener('click',e=>{const option=e.target.closest('[data-project-type-value]');if(option)selectPmProjectType(option.dataset.projectTypeValue)});pmProjectTypeOptions.addEventListener('keydown',e=>{const option=e.target.closest('[data-project-type-value]');if(option&&['Enter',' '].includes(e.key)){e.preventDefault();selectPmProjectType(option.dataset.projectTypeValue)}});pmProjectTypeClear.addEventListener('click',e=>{e.stopPropagation();selectPmProjectType('all');pmProjectTypeInput.focus()});document.addEventListener('click',e=>{if(!pmProjectTypeFilter.contains(e.target))closePmProjectTypeOptions()});
     document.querySelector('#pmTableHead').addEventListener('click',e=>{const button=e.target.closest('[data-pm-sort]');if(!button)return;const key=button.dataset.pmSort;if(state.pmSortKey===key)state.pmSortDir=state.pmSortDir==='desc'?'asc':'desc';else{state.pmSortKey=key;state.pmSortDir='desc'}renderPmBoard()});
     ['ads','pm'].forEach(type=>{const el=document.querySelector(`#${type}Pagination`),pageKey=`${type}Page`,pageSizeKey=`${type}PageSize`,render=type==='ads'?renderTable:renderPmBoard;el.addEventListener('click',e=>{const button=e.target.closest('[data-page-target]');if(!button||button.disabled)return;state[pageKey]=Number(button.dataset.pageTarget);render()});el.addEventListener('submit',e=>{const form=e.target.closest('[data-page-jump]');if(!form)return;e.preventDefault();const input=form.querySelector('input'),value=Number(input.value),max=Number(input.max);if(!Number.isInteger(value)||value<1||value>max){toast(`请输入 1-${max} 之间的页码`);input.focus();return}state[pageKey]=value;render()});el.addEventListener('change',e=>{const select=e.target.closest('[data-page-size]');if(!select)return;state[pageSizeKey]=Number(select.value);state[pageKey]=1;render()})});
     document.querySelector('#boardSwitch').addEventListener('click',e=>{const b=e.target.closest('[data-board]');if(!b)return;state.board=b.dataset.board;document.querySelectorAll('#boardSwitch button').forEach(x=>x.classList.toggle('active',x===b));document.querySelector('#adsBoard').hidden=state.board!=='ads';document.querySelector('#ordersBoard').hidden=state.board!=='orders';document.querySelector('#orderAnalysisBoard').hidden=state.board!=='orders';document.querySelector('#pmBoard').hidden=state.board!=='pm'});

@@ -2214,8 +2214,8 @@
       function renderHourlyInboundChart() {
         const container = document.getElementById("hourlyInboundChart");
         const values = hourlyInboundBase.map(value => Math.round(value * state.factor));
-        const width = 920;
-        const height = 265;
+        const width = Math.max(760, Math.round(container.getBoundingClientRect().width) || 920);
+        const height = Math.max(265, Math.round(container.getBoundingClientRect().height) || 265);
         const padLeft = 54;
         const padRight = 18;
         const padTop = 16;
@@ -2250,7 +2250,7 @@
           return `<text x="${centerX.toFixed(2)}" y="${height - 12}" fill="#98a2b3" font-size="9" text-anchor="middle">${pad(index)}</text>`;
         }).join("");
         container.innerHTML = `
-          <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-label="24小时进线时间分布">
+          <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMinYMin meet" aria-label="24小时进线时间分布">
             <defs><linearGradient id="hourBarGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2e7bd6"/><stop offset="100%" stop-color="#77ade8"/></linearGradient></defs>
             ${grid}${bars}${xLabels}
           </svg>
@@ -2325,8 +2325,8 @@
           return { ...item, total, gradeValues };
         }).sort((a, b) => b.total - a.total);
 
-        const width = 1040;
-        const height = 312;
+        const width = Math.max(960, Math.round(container.getBoundingClientRect().width) || 1040);
+        const height = Math.max(318, Math.round(container.getBoundingClientRect().height) || 318);
         const padLeft = 60;
         const padRight = 20;
         const padTop = 32;
@@ -2372,7 +2372,7 @@
           </g>`;
         }).join("");
 
-        container.innerHTML = `<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-label="${metricMeta[metric].name}部门排行">
+        container.innerHTML = `<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMinYMin meet" aria-label="${metricMeta[metric].name}部门排行">
             <defs><linearGradient id="departmentUsageGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2e7bd6"/><stop offset="100%" stop-color="#77ade8"/></linearGradient></defs>
             ${grid}${columns}
           </svg>
@@ -2435,8 +2435,8 @@
           return;
         }
 
-        const width = 1040;
-        const height = 312;
+        const width = Math.max(960, Math.round(container.getBoundingClientRect().width) || 1040);
+        const height = Math.max(318, Math.round(container.getBoundingClientRect().height) || 318);
         const padLeft = 60;
         const padRight = 20;
         const padTop = 32;
@@ -2474,7 +2474,7 @@
           </g>`;
         }).join("");
 
-        container.innerHTML = `<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-label="${objectMeta.name}创建数量部门排行">
+        container.innerHTML = `<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMinYMin meet" aria-label="${objectMeta.name}创建数量部门排行">
             ${grid}${columns}
           </svg>
           <div class="chart-tooltip"><div class="tooltip-date"></div><div class="tooltip-series"></div></div>`;
