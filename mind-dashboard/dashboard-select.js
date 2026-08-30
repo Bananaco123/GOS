@@ -21,13 +21,37 @@
     };
   };
 
+  const renderOptionContent = (container, option) => {
+    const primaryText = option ? option.textContent.trim() : '';
+    const secondaryText = option?.dataset.secondary?.trim() || '';
+    const isTrigger = container.classList.contains('gos-dashboard-select__value');
+    const primary = document.createElement('span');
+    primary.className = isTrigger
+      ? 'gos-dashboard-select__primary'
+      : 'gos-dashboard-select-menu__option-primary';
+    primary.textContent = primaryText;
+
+    const children = [primary];
+    if (secondaryText) {
+      const secondary = document.createElement('span');
+      secondary.className = isTrigger
+        ? 'gos-dashboard-select__secondary'
+        : 'gos-dashboard-select-menu__option-secondary';
+      secondary.textContent = secondaryText;
+      children.push(secondary);
+    }
+    container.replaceChildren(...children);
+    container.classList.toggle('has-secondary', Boolean(secondaryText));
+    return { primaryText, secondaryText };
+  };
+
   const sync = (select) => {
     const state = registry.get(select);
     if (!state) return;
     const option = select.options[select.selectedIndex];
-    state.value.textContent = option ? option.textContent.trim() : '';
+    const { primaryText, secondaryText } = renderOptionContent(state.value, option);
     state.trigger.disabled = select.disabled;
-    state.trigger.setAttribute('aria-label', select.getAttribute('aria-label') || state.value.textContent || '选择');
+    state.trigger.setAttribute('aria-label', select.getAttribute('aria-label') || [primaryText, secondaryText].filter(Boolean).join('，') || '选择');
   };
 
   const close = (returnFocus = false) => {
@@ -42,14 +66,15 @@
 
   const positionMenu = () => {
     if (!active) return;
-    const { menu, state } = active;
+    const { menu, state, select } = active;
     const rect = state.trigger.getBoundingClientRect();
     const margin = 8;
     const gap = 6;
     const menuHeight = Math.min(menu.scrollHeight, 320);
     const roomBelow = window.innerHeight - rect.bottom - margin;
     const openAbove = roomBelow < Math.min(menuHeight, 180) && rect.top > roomBelow;
-    const width = Math.max(rect.width, 138);
+    const requestedWidth = Number.parseFloat(select.dataset.menuWidth || '0');
+    const width = Math.max(rect.width, Number.isFinite(requestedWidth) ? requestedWidth : 0, 138);
     const left = Math.min(Math.max(margin, rect.left), window.innerWidth - width - margin);
     const top = openAbove
       ? Math.max(margin, rect.top - menuHeight - gap)
@@ -96,7 +121,7 @@
       const item = document.createElement('button');
       item.type = 'button';
       item.className = 'gos-dashboard-select-menu__option';
-      item.textContent = option.textContent.trim();
+      renderOptionContent(item, option);
       item.disabled = option.disabled;
       item.dataset.optionIndex = String(index);
       item.setAttribute('role', 'option');
@@ -226,4 +251,3 @@
     close
   };
 })();
-

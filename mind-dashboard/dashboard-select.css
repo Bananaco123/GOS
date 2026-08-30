@@ -54,9 +54,31 @@
 }
 
 .gos-dashboard-select__value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.gos-dashboard-select__primary {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gos-dashboard-select__secondary {
+  flex: 0 0 auto;
+  padding: 3px 7px;
+  color: #45688f;
+  background: #eef5fd;
+  border: 1px solid #d8e7f8;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
   white-space: nowrap;
 }
 
@@ -126,6 +148,8 @@
   position: relative;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   width: 100%;
   min-height: 36px;
   padding: 8px 34px 8px 11px;
@@ -137,9 +161,31 @@
   font-size: 12px;
   line-height: 1.35;
   text-align: left;
+  white-space: nowrap;
   cursor: pointer;
   outline: none;
   transition: color 0.12s ease, background 0.12s ease;
+}
+
+.gos-dashboard-select-menu__option-primary {
+  min-width: 0;
+  overflow: hidden;
+  color: inherit;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gos-dashboard-select-menu__option-secondary {
+  flex: 0 0 auto;
+  padding: 4px 9px;
+  color: #607b9b;
+  background: #f2f6fb;
+  border: 1px solid #e1e9f3;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .gos-dashboard-select-menu__option:hover,
@@ -152,6 +198,12 @@
   color: #0f62bd;
   background: #eaf3ff;
   font-weight: 700;
+}
+
+.gos-dashboard-select-menu__option.is-selected .gos-dashboard-select-menu__option-secondary {
+  color: #125aa8;
+  background: #fff;
+  border-color: #c8ddf7;
 }
 
 .gos-dashboard-select-menu__option.is-selected::after {
@@ -188,4 +240,3 @@
   .gos-dashboard-select__trigger,
   .gos-dashboard-select__chevron { transition: none; }
 }
-

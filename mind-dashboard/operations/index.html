@@ -43,7 +43,7 @@
     .range-preset button{padding:7px 11px;color:var(--muted);background:transparent;border-radius:7px;font-size:12px;white-space:nowrap}
     .range-preset button.active{color:var(--blue);background:#e9f3ff;font-weight:650}.exact-range{display:flex;align-items:center;gap:6px}
     .date-input{width:112px;height:34px;padding:0 9px;color:var(--text);background:#fff;border:1px solid var(--line);border-radius:8px;font-size:11px;outline:none}.date-input:focus{border-color:#79aff2;box-shadow:0 0 0 2px #e8f3ff}
-    .filter-spacer{display:block;flex:1;min-width:8px}.select{width:118px;min-width:118px;height:34px;padding:0 28px 0 10px;color:var(--text);background:#fff;border:1px solid var(--line);border-radius:8px;font-size:11px;outline:none}
+    .filter-spacer{display:block;flex:1;min-width:8px}.select{width:118px;min-width:118px;height:34px;padding:0 28px 0 10px;color:var(--text);background:#fff;border:1px solid var(--line);border-radius:8px;font-size:11px;outline:none}#accountFilter{width:244px;min-width:244px}
     .toolbox-shell{position:relative;z-index:30;display:inline-flex;align-items:center;justify-content:flex-end}.toolbox-shell:after{content:"";position:absolute;top:100%;right:0;width:100%;height:12px}.toolbox{height:34px;display:inline-flex;align-items:center;gap:6px;padding:0 13px;color:var(--brand);background:#fff;border:1px solid #cfddef;border-radius:8px;font-size:11px;font-weight:650;white-space:nowrap;cursor:default;transition:transform .24s cubic-bezier(.2,.8,.2,1),border-color .24s ease,box-shadow .24s ease}.toolbox-icon{font-size:14px;color:var(--blue);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
     .toolbox-shell:hover .toolbox,.toolbox-shell:focus-within .toolbox{border-color:#a9c9f4;box-shadow:0 6px 18px rgba(30,108,211,.13);transform:translateY(-1px)}.toolbox-shell:hover .toolbox-icon,.toolbox-shell:focus-within .toolbox-icon{transform:rotate(12deg) scale(1.12)}
     .toolbox-bubbles{position:absolute;top:calc(100% + 10px);right:0;display:flex;flex-direction:column;align-items:flex-end;gap:8px;visibility:hidden;opacity:0;pointer-events:none;transform:translateY(-5px);transition:opacity .2s ease,transform .28s cubic-bezier(.2,.85,.2,1),visibility 0s linear .28s}.toolbox-shell:hover .toolbox-bubbles,.toolbox-shell:focus-within .toolbox-bubbles{visibility:visible;opacity:1;pointer-events:auto;transform:translateY(0);transition-delay:0s}
@@ -138,7 +138,7 @@
     }
     @container (max-width:610px){.pm-primary-filters{align-items:stretch;flex-direction:column}.pm-search,.pm-country-filter{width:100%}#pmBoard tbody tr{grid-template-columns:repeat(2,minmax(0,1fr))}#pmBoard td:nth-child(3n){border-right:1px solid #e5ebf2}#pmBoard td:nth-child(2n){border-right:0}.pm-grade-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid #dbe4ef;border-radius:8px}.pm-grade-tabs button.active:after{left:18px;right:18px}}
 
-    @media(max-width:1320px){.toolbar{min-height:112px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:44px 40px;align-content:center;gap:6px 14px;padding:10px 14px}.filter-spacer{display:none}.range-preset{grid-column:1;grid-row:1;justify-self:start}.exact-range{grid-column:2 / 4;grid-row:1}.toolbox-shell{grid-column:4;grid-row:1;justify-self:end}#accountFilter{grid-column:1;grid-row:2}#campaignFilter{grid-column:2;grid-row:2}#groupFilter{grid-column:3;grid-row:2}#adFilter{grid-column:4;grid-row:2}.select{width:100%;min-width:0}.summary-main{grid-template-columns:220px 1fr}.operator{padding:18px}.metric{padding:18px 7px}.metric-stat{padding:0 3px}}
+    @media(max-width:1320px){.toolbar{min-height:112px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:44px 40px;align-content:center;gap:6px 14px;padding:10px 14px}.filter-spacer{display:none}.range-preset{grid-column:1;grid-row:1;justify-self:start}.exact-range{grid-column:2 / 4;grid-row:1}.toolbox-shell{grid-column:4;grid-row:1;justify-self:end}#accountFilter{grid-column:1;grid-row:2;width:100%;min-width:0}#campaignFilter{grid-column:2;grid-row:2}#groupFilter{grid-column:3;grid-row:2}#adFilter{grid-column:4;grid-row:2}.select{width:100%;min-width:0}.summary-main{grid-template-columns:220px 1fr}.operator{padding:18px}.metric{padding:18px 7px}.metric-stat{padding:0 3px}}
     @media(max-width:900px){:root{--sidebar:64px}.brand{justify-content:center;padding:0}.brand>div,.nav-title,.sidebar-foot{display:none}.nav{padding:14px 8px}.nav-item{justify-content:center;padding:10px 8px;font-size:0}.nav-icon{width:auto;font-size:14px}.topbar{padding:0 14px}main{padding:78px 14px 34px}.toolbar{top:64px}.dashboard-heading h1{font-size:22px}.range-preset button{padding:7px 8px;font-size:11px}.date-input{width:100px}.summary-main{grid-template-columns:1fr}.operator{border-right:0;border-bottom:1px solid rgba(255,255,255,.16)}.metrics-strip{overflow-x:auto;grid-template-columns:repeat(7,minmax(130px,1fr))}.trend-tabs{grid-template-columns:repeat(7,minmax(120px,1fr));overflow-x:auto}.chart-wrap{min-height:210px}.board-switch{width:230px}}
     @media(max-width:900px){.analysis-trend .trend-panel{padding-right:10px;padding-left:10px}.metric-selector.active:before{display:none}}
 
@@ -313,7 +313,7 @@
       <div class="range-preset" id="rangePreset"><button data-range="yesterday">昨天</button><button class="active" data-range="today">今天</button><button data-range="7">近7天</button><button data-range="30">近30天</button></div>
       <div class="exact-range"><input class="date-input" id="startDate" type="date" aria-label="开始日期"><span style="color:#9aa8b9">至</span><input class="date-input" id="endDate" type="date" aria-label="结束日期"></div>
       <span class="filter-spacer"></span>
-      <select class="select" id="accountFilter"><option value="all">全部账户</option></select>
+      <select class="select" id="accountFilter" data-menu-width="286" aria-label="选择投放账户及所属运营"><option value="all">全部账户</option></select>
       <select class="select" id="campaignFilter"><option value="all">全部广告计划</option></select>
       <select class="select" id="groupFilter"><option value="all">全部广告组</option></select>
       <select class="select" id="adFilter"><option value="all">全部广告</option></select>
@@ -451,7 +451,7 @@
       {id:20,name:'老客转介绍活动',platform:'WhatsApp',account:'WhatsApp-拉美',group:'已成交客户相似人群',ad:'转介绍激励活动R',country:'巴西',language:'葡萄牙文',age:'45–54岁',gender:'武装直升机',device:'移动端 · Android',spend:6200,exposure:329845,inquiries:67,transfers:52,high:31,visits:14,projects:18,deals:4,amount:484000}
     );
     const accountOwners={
-      'Meta-亚洲华人':'马凯 Kevin Ma','Meta-海外增长':'陈琳 Linda Chen','TikTok-内容增长':'王莎 Sara Wang','Google-北美增长':'刘迈 Mike Liu','LinkedIn-B2B':'林杰 James Lin','Meta-大洋洲':'赵睿 Eric Zhao','Meta-欧洲市场':'陈琳 Linda Chen','TikTok-东南亚':'王莎 Sara Wang','Google-东南亚':'刘迈 Mike Liu','WhatsApp-拉美':'赵睿 Eric Zhao'
+      'Meta-亚洲华人':'马凯','Meta-海外增长':'陈琳','TikTok-内容增长':'王莎','Google-北美增长':'刘迈','LinkedIn-B2B':'林杰','Meta-大洋洲':'赵睿','Meta-欧洲市场':'陈琳','TikTok-东南亚':'王莎','Google-东南亚':'刘迈','WhatsApp-拉美':'赵睿'
     };
     const orders=[
       {id:'OS-202608-001',customer:'Joseph Chen',pm:'Kevin Ma',planId:1,touch:'Instagram · 全屋实拍竖版A',date:'2026-08-12',amount:386000,receivedAmount:386000,payment:'已收款'},
@@ -501,7 +501,8 @@
     const rows=()=>plans.filter(x=>(state.account==='all'||x.account===state.account)&&(state.campaign==='all'||x.name===state.campaign)&&(state.group==='all'||x.group===state.group)&&(state.ad==='all'||x.ad===state.ad));
     const scaled=(v)=>Math.round(v*rangeFactor()); const unique=key=>[...new Set(plans.map(x=>x[key]))];
     function fillSelect(id,key,label){const el=document.querySelector(id);el.innerHTML=`<option value="all">${label}</option>`+unique(key).map(v=>`<option value="${v}">${v}</option>`).join('')}
-    fillSelect('#accountFilter','account','全部账户');fillSelect('#campaignFilter','name','全部广告计划');fillSelect('#groupFilter','group','全部广告组');fillSelect('#adFilter','ad','全部广告');
+    function fillAccountSelect(){const el=document.querySelector('#accountFilter');el.innerHTML='<option value="all">全部账户</option>';unique('account').forEach(account=>{const option=document.createElement('option');option.value=account;option.textContent=account;option.dataset.secondary=`运营 · ${accountOwners[account]||'未分配'}`;el.appendChild(option)})}
+    fillAccountSelect();fillSelect('#campaignFilter','name','全部广告计划');fillSelect('#groupFilter','group','全部广告组');fillSelect('#adFilter','ad','全部广告');
     function renderOperator(){
       const isGlobal=state.account==='all',name=isGlobal?'全局投放总览':(accountOwners[state.account]||state.account),photo=document.querySelector('#operatorPhoto');
       document.querySelector('#operatorName').textContent=name;photo.classList.toggle('is-global',isGlobal);photo.setAttribute('aria-label',isGlobal?'全局投放总览头像':`${name} 头像`);

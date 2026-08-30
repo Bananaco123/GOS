@@ -1268,6 +1268,156 @@
     .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
     .legend-value { color: #344054; font-weight: 600; font-variant-numeric: tabular-nums; }
 
+    .sales-king-metric-card {
+      width: 100%;
+      color: inherit;
+      border: 1px solid var(--border-light);
+      text-align: left;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .sales-king-metric-card.active {
+      border-color: #8ab8eb;
+      box-shadow: 0 0 0 2px rgba(46,123,214,.10), var(--shadow);
+    }
+
+    .sales-king-metric-card:focus-visible {
+      outline: 2px solid rgba(46,123,214,.28);
+      outline-offset: 2px;
+    }
+
+    .sales-king-primary-grid,
+    .sales-king-secondary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .sales-king-secondary-grid { margin-top: 12px; }
+
+    .sales-king-primary-grid > .module-card,
+    .sales-king-secondary-grid > .module-card {
+      min-width: 0;
+      min-height: 360px;
+      padding: 16px 18px;
+    }
+
+    .sales-king-trend-context {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 9px;
+      color: var(--primary-2);
+      background: #edf5ff;
+      border-radius: 12px;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .sales-king-feedback-card .card-heading { align-items: center; }
+
+    .feedback-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 7px;
+    }
+
+    .feedback-toolbar select {
+      width: 112px;
+      height: 28px;
+      padding: 0 24px 0 8px;
+      color: #475467;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      outline: 0;
+      background: #fff;
+      font-size: 11px;
+    }
+
+    .feedback-toolbar select:focus { border-color: #7fb3ef; box-shadow: 0 0 0 2px rgba(46,123,214,.10); }
+
+    .feedback-download {
+      height: 28px;
+      padding: 0 10px;
+      color: var(--primary-2);
+      border: 1px solid #b8d4f2;
+      border-radius: 6px;
+      background: #f5f9fe;
+      font-size: 11px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .feedback-download:hover { color: #fff; border-color: var(--primary-2); background: var(--primary-2); }
+
+    .feedback-list {
+      height: 278px;
+      display: grid;
+      align-content: start;
+      gap: 8px;
+      padding-right: 4px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #c9d3e1 transparent;
+    }
+
+    .feedback-item {
+      display: grid;
+      grid-template-columns: minmax(88px, .7fr) minmax(180px, 2fr) minmax(98px, .8fr);
+      align-items: center;
+      gap: 12px;
+      min-height: 62px;
+      padding: 10px 12px;
+      border: 1px solid #e8edf3;
+      border-left: 3px solid #7a6ff0;
+      border-radius: 7px;
+      background: #fbfcfe;
+    }
+
+    .feedback-item.is-warning { border-left-color: var(--warning); }
+    .feedback-item.is-error { border-left-color: var(--down); }
+    .feedback-item.is-info { border-left-color: var(--primary-2); }
+    .feedback-item strong,
+    .feedback-item span,
+    .feedback-item small { min-width: 0; }
+    .feedback-type { color: #344054; font-size: 12px; font-weight: 600; }
+    .feedback-detail { overflow: hidden; color: #667085; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+    .feedback-meta { display: grid; justify-items: end; gap: 3px; color: #667085; font-size: 11px; }
+    .feedback-meta small { color: #98a2b3; font-size: 10px; }
+    .feedback-empty { height: 100%; display: grid; place-items: center; color: #98a2b3; font-size: 12px; }
+
+    .sales-king-association-donut { background: conic-gradient(#2e7bd6 0 27%, #00a3b4 27% 64%, #7a6ff0 64% 88%, #e59b26 88% 100%); }
+
+    .knowledge-usage-list {
+      height: 282px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .knowledge-usage-row {
+      display: grid;
+      grid-template-columns: minmax(118px, 1.1fr) minmax(150px, 2fr) 62px 58px;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .knowledge-usage-name {
+      overflow: hidden;
+      color: #475467;
+      font-size: 11px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .knowledge-usage-track { height: 9px; overflow: hidden; border-radius: 9px; background: #edf1f6; }
+    .knowledge-usage-fill { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #1a4d8f, #5d9ee5); }
+    .knowledge-usage-count { color: #344054; text-align: right; font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .knowledge-hit-rate { color: var(--accent); text-align: right; font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; }
+
     .toast {
       position: fixed;
       top: 72px;
@@ -1314,6 +1464,10 @@
       .business-object-card { padding-right: 13px; padding-left: 13px; }
       .source-breakdown { gap: 6px; }
       .source-row { padding-right: 7px; padding-left: 7px; }
+      .sales-king-metric-card .metric-value { font-size: 21px; }
+      .sales-king-primary-grid .card-heading { display: block; }
+      .sales-king-primary-grid .card-heading > :first-child { margin-bottom: 8px; }
+      .feedback-toolbar { justify-content: flex-start; }
     }
 
     @media (max-width: 1120px) {
@@ -1389,7 +1543,7 @@
           <div class="page-heading">
             <div>
               <h1>业务看板</h1>
-              <p>统一查看系统用户、翻译服务、AI 业务员与客户业务对象创建情况</p>
+              <p>统一查看系统用户、翻译服务、AI 业务员、AI 销冠与客户业务对象创建情况</p>
             </div>
             <div class="update-state"><span class="state-dot"></span><span id="updateText">数据已更新 · 10:30</span></div>
           </div>
@@ -1655,6 +1809,85 @@
             </article>
           </section>
 
+          <section class="module-section" id="salesKingService">
+            <div class="section-heading">
+              <h2 class="section-title">AI 销冠</h2>
+              <span class="section-note">分析使用、会话关联与知识调用概览</span>
+            </div>
+            <div class="metric-grid five" id="salesKingMetrics" aria-label="AI 销冠趋势指标切换">
+              <button class="module-card metric-card sales-king-metric-card active" type="button" data-sales-king-metric="salesKingWindows" aria-pressed="true">
+                <div class="metric-head"><span class="metric-name">会话窗口</span><span class="metric-icon"><svg class="icon"><use href="#i-chat" /></svg></span></div>
+                <div class="metric-body"><div class="metric-value" data-metric="salesKingWindows">1,864</div><span class="delta up">↑ 12.6%</span></div>
+                <div class="metric-caption">独立分析窗口数</div>
+              </button>
+              <button class="module-card metric-card sales-king-metric-card" type="button" data-sales-king-metric="salesKingParticipants" aria-pressed="false">
+                <div class="metric-head"><span class="metric-name">会话人次</span><span class="metric-icon teal"><svg class="icon"><use href="#i-users" /></svg></span></div>
+                <div class="metric-body"><div class="metric-value" data-metric="salesKingParticipants">8,726</div><span class="delta up">↑ 9.8%</span></div>
+                <div class="metric-caption">提问与分析交互人次</div>
+              </button>
+              <button class="module-card metric-card sales-king-metric-card" type="button" data-sales-king-metric="salesKingAverage" aria-pressed="false">
+                <div class="metric-head"><span class="metric-name">平均人次</span><span class="metric-icon purple"><svg class="icon"><use href="#i-chart" /></svg></span></div>
+                <div class="metric-body"><div class="metric-value" data-metric="salesKingAverage">4.7<span class="metric-unit">次</span></div><span class="delta up">↑ 3.4%</span></div>
+                <div class="metric-caption">单个窗口平均交互</div>
+              </button>
+              <button class="module-card metric-card sales-king-metric-card" type="button" data-sales-king-metric="salesKingUsagePeople" aria-pressed="false">
+                <div class="metric-head"><span class="metric-name">使用人次</span><span class="metric-icon amber"><svg class="icon"><use href="#i-user" /></svg></span></div>
+                <div class="metric-body"><div class="metric-value" data-metric="salesKingUsagePeople">1,268</div><span class="delta up">↑ 7.1%</span></div>
+                <div class="metric-caption">当前周期累计使用</div>
+              </button>
+              <button class="module-card metric-card sales-king-metric-card" type="button" data-sales-king-metric="salesKingTokens" aria-pressed="false">
+                <div class="metric-head"><span class="metric-name">Token 消耗</span><span class="metric-icon purple"><svg class="icon"><use href="#i-coins" /></svg></span></div>
+                <div class="metric-body"><div class="metric-value" data-metric="salesKingTokens">6.42<span class="metric-unit">M</span></div><span class="delta down">↓ 2.3%</span></div>
+                <div class="metric-caption">输入与输出 Token 合计</div>
+              </button>
+            </div>
+
+            <div class="sales-king-primary-grid">
+              <article class="module-card chart-card">
+                <div class="card-heading">
+                  <div><h3 class="card-title">AI 销冠使用趋势</h3><div class="card-subtitle">点击上方指标卡切换时间轴统计口径</div></div>
+                  <span class="sales-king-trend-context" id="salesKingTrendMetric">会话窗口</span>
+                </div>
+                <div class="line-chart" id="salesKingChart" aria-label="AI 销冠使用趋势图"></div>
+              </article>
+
+              <article class="module-card sales-king-feedback-card">
+                <div class="card-heading">
+                  <div><h3 class="card-title">异常反馈</h3><div class="card-subtitle" id="salesKingFeedbackCount">共 0 条反馈</div></div>
+                  <div class="feedback-toolbar">
+                    <select id="feedbackTypeFilter" aria-label="按反馈类型筛选"><option value="all">全部类型</option></select>
+                    <select id="feedbackSubmitterFilter" aria-label="按提交人筛选"><option value="all">全部提交人</option></select>
+                    <button class="feedback-download" type="button" id="feedbackDownloadBtn">Excel 下载</button>
+                  </div>
+                </div>
+                <div class="feedback-list" id="salesKingFeedbackList"></div>
+              </article>
+            </div>
+
+            <div class="sales-king-secondary-grid">
+              <article class="module-card donut-card">
+                <div class="card-heading">
+                  <div><h3 class="card-title">关联会话数占比</h3><div class="card-subtitle">按 AI 销冠分析窗口统计</div></div>
+                </div>
+                <div class="donut-layout">
+                  <div class="donut-wrap">
+                    <div class="donut sales-king-association-donut" id="salesKingAssociationDonut" title="AI 销冠关联会话数占比"></div>
+                    <div class="donut-center"><strong class="donut-total" id="salesKingAssociationTotal">1,864</strong><span class="donut-label">分析窗口</span></div>
+                  </div>
+                  <div class="legend-list" id="salesKingAssociationLegend"></div>
+                </div>
+              </article>
+
+              <article class="module-card chart-card">
+                <div class="card-heading">
+                  <div><h3 class="card-title">知识库引用 / 调用情况</h3><div class="card-subtitle">引用次数与知识命中率综合排行</div></div>
+                  <span class="section-note">命中率</span>
+                </div>
+                <div class="knowledge-usage-list" id="salesKingKnowledgeUsage" aria-label="AI 销冠知识库引用情况排行"></div>
+              </article>
+            </div>
+          </section>
+
           <section class="module-section" id="businessCreation">
             <div class="section-heading">
               <h2 class="section-title">业务创建统计</h2>
@@ -1752,7 +1985,12 @@
         completed: 4976,
         completionRate: 85.2,
         leads: 842,
-        leadPushRate: 14.4
+        leadPushRate: 14.4,
+        salesKingWindows: 1864,
+        salesKingParticipants: 8726,
+        salesKingAverage: 4.7,
+        salesKingUsagePeople: 1268,
+        salesKingTokens: 6.42
       };
 
       const businessBase = {
@@ -1790,7 +2028,12 @@
         completed: { name: "完成接待数", base: 4976, variance: 0.14, unit: "次", decimals: 0 },
         completionRate: { name: "完成接待率", base: 85.2, variance: 0.025, unit: "%", decimals: 1 },
         leads: { name: "线索推送数", base: 842, variance: 0.20, unit: "条", decimals: 0 },
-        leadPushRate: { name: "线索推送率", base: 14.4, variance: 0.06, unit: "%", decimals: 1 }
+        leadPushRate: { name: "线索推送率", base: 14.4, variance: 0.06, unit: "%", decimals: 1 },
+        salesKingWindows: { name: "会话窗口", base: 1864, variance: 0.16, unit: "个", decimals: 0 },
+        salesKingParticipants: { name: "会话人次", base: 8726, variance: 0.18, unit: "人次", decimals: 0 },
+        salesKingAverage: { name: "平均人次", base: 4.7, variance: 0.08, unit: "次", decimals: 1 },
+        salesKingUsagePeople: { name: "使用人次", base: 1268, variance: 0.14, unit: "人次", decimals: 0 },
+        salesKingTokens: { name: "Token 消耗", base: 6.42, variance: 0.19, unit: "M", decimals: 2 }
       };
 
       const state = {
@@ -1803,10 +2046,13 @@
         departmentUsageMetric: "sessions",
         leadGrades: ["a", "b", "c", "d"],
         businessObject: "customer",
+        salesKingFeedbackType: "all",
+        salesKingFeedbackSubmitter: "all",
         activeMetrics: {
           systemChart: "totalUsers",
           translationChart: "translationCount",
-          robotChart: "robotTotal"
+          robotChart: "robotTotal",
+          salesKingChart: "salesKingWindows"
         }
       };
 
@@ -1816,6 +2062,31 @@
         { name: "OpenAI", value: 3610, share: 53 },
         { name: "Azure AI", value: 1948, share: 28 },
         { name: "DeepSeek", value: 956, share: 14 }
+      ];
+
+      const salesKingFeedbackData = [
+        { id: "FB-20260830-01", type: "结果不准确", detail: "报价金额引用了已失效的旧版本附件", submitter: "梁雪千", time: "08-30 10:26", tone: "error" },
+        { id: "FB-20260830-02", type: "引用异常", detail: "知识引用定位到过期的运输条款", submitter: "陈冰怡", time: "08-30 09:48", tone: "warning" },
+        { id: "FB-20260829-03", type: "信息缺失", detail: "项目协同群最近两轮交付确认未被带入", submitter: "翁雅雯", time: "08-29 17:32", tone: "info" },
+        { id: "FB-20260829-04", type: "响应超时", detail: "多会话综合分析耗时超过 30 秒", submitter: "潘绮芸", time: "08-29 15:18", tone: "warning" },
+        { id: "FB-20260829-05", type: "结果不准确", detail: "客户预算币种识别为美元，实际为加元", submitter: "梁雪千", time: "08-29 11:06", tone: "error" },
+        { id: "FB-20260828-06", type: "知识未命中", detail: "未命中南美区域报关资料的最新版本", submitter: "陈冰怡", time: "08-28 16:45", tone: "info" },
+        { id: "FB-20260828-07", type: "引用异常", detail: "证据定位跳转到同会话的相邻消息", submitter: "翁雅雯", time: "08-28 10:14", tone: "warning" }
+      ];
+
+      const salesKingConversationShareBase = [
+        { name: "未关联会话", value: 512, color: "#2e7bd6" },
+        { name: "关联 1 个会话", value: 692, color: "#00a3b4" },
+        { name: "关联 1–2 个会话", value: 438, color: "#7a6ff0" },
+        { name: "关联 3 个及以上会话", value: 222, color: "#e59b26" }
+      ];
+
+      const salesKingKnowledgeUsageBase = [
+        { name: "产品报价知识库", citations: 1280, hitRate: 94.2 },
+        { name: "项目交付 SOP", citations: 1034, hitRate: 91.8 },
+        { name: "区域政策与报关", citations: 782, hitRate: 88.6 },
+        { name: "客户异议处理", citations: 654, hitRate: 86.4 },
+        { name: "设计标准与规范", citations: 516, hitRate: 82.9 }
       ];
 
       const departmentCatalog = [
@@ -2030,6 +2301,7 @@
           if (metricKey === "activeRate") value = Math.min(60, Math.max(10, cfg.base + (direction + wave + noise) * 15));
           if (metricKey === "completionRate") value = Math.min(99, Math.max(60, cfg.base + (direction + wave + noise) * 12));
           if (metricKey === "leadPushRate") value = Math.min(45, Math.max(3, cfg.base + (direction + wave + noise) * 12));
+          if (metricKey === "salesKingAverage") value = cfg.base * (1 + (state.factor - 1) * .08) * (1 + direction + wave + noise);
           return Number(value.toFixed(cfg.decimals));
         });
         return { labels, values, cfg };
@@ -2509,12 +2781,87 @@
         });
       }
 
+      function filteredSalesKingFeedbacks() {
+        return salesKingFeedbackData.filter(item => (
+          (state.salesKingFeedbackType === "all" || item.type === state.salesKingFeedbackType)
+          && (state.salesKingFeedbackSubmitter === "all" || item.submitter === state.salesKingFeedbackSubmitter)
+        ));
+      }
+
+      function renderSalesKingFeedbackList() {
+        const items = filteredSalesKingFeedbacks();
+        const container = document.getElementById("salesKingFeedbackList");
+        document.getElementById("salesKingFeedbackCount").textContent = `共 ${items.length} 条反馈`;
+        if (!items.length) {
+          container.innerHTML = `<div class="feedback-empty">当前筛选条件下暂无异常反馈</div>`;
+          return;
+        }
+        container.innerHTML = items.map(item => `<article class="feedback-item is-${item.tone}" title="${item.detail}">
+          <strong class="feedback-type">${item.type}</strong>
+          <span class="feedback-detail">${item.detail}</span>
+          <span class="feedback-meta"><span>${item.submitter}</span><small>${item.time}</small></span>
+        </article>`).join("");
+      }
+
+      function renderSalesKingAssociationChart() {
+        const items = salesKingConversationShareBase.map(item => ({ ...item, value: Math.max(1, Math.round(item.value * state.factor)) }));
+        const total = items.reduce((sum, item) => sum + item.value, 0);
+        let cursor = 0;
+        const segments = items.map(item => {
+          const start = cursor;
+          cursor += item.value / total * 100;
+          return `${item.color} ${start.toFixed(2)}% ${cursor.toFixed(2)}%`;
+        });
+        document.getElementById("salesKingAssociationDonut").style.background = `conic-gradient(${segments.join(",")})`;
+        document.getElementById("salesKingAssociationTotal").textContent = total.toLocaleString("zh-CN");
+        document.getElementById("salesKingAssociationLegend").innerHTML = items.map(item => {
+          const share = total ? item.value / total * 100 : 0;
+          return `<div class="legend-item"><span class="legend-dot" style="background:${item.color}"></span><span>${item.name}</span><span class="legend-value">${share.toFixed(1)}%</span></div>`;
+        }).join("");
+      }
+
+      function renderSalesKingKnowledgeUsage() {
+        const items = salesKingKnowledgeUsageBase.map(item => ({ ...item, citations: Math.max(1, Math.round(item.citations * state.factor)) }));
+        const maxValue = Math.max(...items.map(item => item.citations), 1);
+        document.getElementById("salesKingKnowledgeUsage").innerHTML = items.map(item => `<div class="knowledge-usage-row" title="${item.name}：引用 ${item.citations.toLocaleString("zh-CN")} 次，命中率 ${item.hitRate.toFixed(1)}%">
+          <span class="knowledge-usage-name">${item.name}</span>
+          <span class="knowledge-usage-track"><span class="knowledge-usage-fill" style="width:${(item.citations / maxValue * 100).toFixed(1)}%"></span></span>
+          <strong class="knowledge-usage-count">${item.citations.toLocaleString("zh-CN")}</strong>
+          <strong class="knowledge-hit-rate">${item.hitRate.toFixed(1)}%</strong>
+        </div>`).join("");
+      }
+
+      function downloadSalesKingFeedbacks() {
+        const items = filteredSalesKingFeedbacks();
+        if (!items.length) {
+          showToast("当前筛选条件下暂无可下载反馈");
+          return;
+        }
+        const rows = [
+          ["反馈编号", "反馈类型", "填写明细", "提交人", "提交时间"],
+          ...items.map(item => [item.id, item.type, item.detail, item.submitter, item.time])
+        ];
+        const csv = rows.map(row => row.map(value => `"${String(value).replaceAll('"', '""')}"`).join(",")).join("\n");
+        const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `AI销冠异常反馈_${dateText(new Date())}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+        showToast(`已下载 ${items.length} 条异常反馈`);
+      }
+
       function renderAllCharts() {
         Object.entries(state.activeMetrics).forEach(([chartId, metricKey]) => renderLineChart(chartId, metricKey));
         renderCountryLeadChart();
         renderHourlyInboundChart();
         renderDepartmentUsageChart();
         renderBusinessDepartmentChart();
+        renderSalesKingAssociationChart();
+        renderSalesKingKnowledgeUsage();
       }
 
       function metricMarkup(metricKey, value) {
@@ -2523,6 +2870,8 @@
           case "completionRate": return `${value.toFixed(1)}%`;
           case "leadPushRate": return `${value.toFixed(1)}%`;
           case "tokens": return `${value.toFixed(2)}<span class="metric-unit">M</span>`;
+          case "salesKingTokens": return `${value.toFixed(2)}<span class="metric-unit">M</span>`;
+          case "salesKingAverage": return `${value.toFixed(1)}<span class="metric-unit">次</span>`;
           case "tokenCost": return `¥${value.toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
           case "avgCost": return `¥${value.toFixed(3)}`;
           default: return Math.round(value).toLocaleString("zh-CN");
@@ -2537,6 +2886,7 @@
           if (key === "completionRate") value = metricBase.completed / metricBase.sessions * 100;
           if (key === "leadPushRate") value = metricBase.leads / metricBase.sessions * 100;
           if (key === "avgCost") value = metricBase[key] * (1 + (state.factor - 1) * .16);
+          if (key === "salesKingAverage") value = metricBase[key] * (1 + (state.factor - 1) * .08);
           node.innerHTML = metricMarkup(key, value);
         });
         document.getElementById("donutTotal").textContent = Math.round(metricBase.sessions * state.factor).toLocaleString("zh-CN");
@@ -2717,6 +3067,39 @@
       const globalDepartmentFilter = document.getElementById("departmentSelect");
       globalDepartmentFilter.innerHTML = `<option value="all">全部部门</option>${departmentCatalog.map(item => `<option value="${item.id}">${item.name}</option>`).join("")}`;
 
+      const feedbackTypeFilter = document.getElementById("feedbackTypeFilter");
+      const feedbackSubmitterFilter = document.getElementById("feedbackSubmitterFilter");
+      const feedbackTypes = [...new Set(salesKingFeedbackData.map(item => item.type))];
+      const feedbackSubmitters = [...new Set(salesKingFeedbackData.map(item => item.submitter))];
+      feedbackTypeFilter.innerHTML = `<option value="all">全部类型</option>${feedbackTypes.map(item => `<option value="${item}">${item}</option>`).join("")}`;
+      feedbackSubmitterFilter.innerHTML = `<option value="all">全部提交人</option>${feedbackSubmitters.map(item => `<option value="${item}">${item}</option>`).join("")}`;
+
+      document.getElementById("salesKingMetrics").addEventListener("click", event => {
+        const button = event.target.closest("button[data-sales-king-metric]");
+        if (!button) return;
+        const metricKey = button.dataset.salesKingMetric;
+        state.activeMetrics.salesKingChart = metricKey;
+        document.querySelectorAll("#salesKingMetrics button[data-sales-king-metric]").forEach(item => {
+          const active = item === button;
+          item.classList.toggle("active", active);
+          item.setAttribute("aria-pressed", String(active));
+        });
+        document.getElementById("salesKingTrendMetric").textContent = metricConfig[metricKey].name;
+        renderLineChart("salesKingChart", metricKey);
+      });
+
+      feedbackTypeFilter.addEventListener("change", event => {
+        state.salesKingFeedbackType = event.target.value;
+        renderSalesKingFeedbackList();
+      });
+
+      feedbackSubmitterFilter.addEventListener("change", event => {
+        state.salesKingFeedbackSubmitter = event.target.value;
+        renderSalesKingFeedbackList();
+      });
+
+      document.getElementById("feedbackDownloadBtn").addEventListener("click", downloadSalesKingFeedbacks);
+
       document.getElementById("businessObjectTabs").addEventListener("click", event => {
         const button = event.target.closest("button[data-business-object]");
         if (!button) return;
@@ -2831,14 +3214,25 @@
         state.departmentUsageMetric = "sessions";
         state.leadGrades = ["a", "b", "c", "d"];
         state.businessObject = "customer";
+        state.salesKingFeedbackType = "all";
+        state.salesKingFeedbackSubmitter = "all";
+        state.activeMetrics.salesKingChart = "salesKingWindows";
         document.querySelectorAll("#periodSegment button").forEach(item => item.classList.toggle("active", item.dataset.period === "last7"));
         document.querySelectorAll("#countryModeTabs button").forEach(item => item.classList.toggle("active", item.dataset.countryMode === "inbound"));
         document.querySelectorAll("#departmentMetricTabs button").forEach(item => item.classList.toggle("active", item.dataset.departmentMetric === "sessions"));
         document.querySelectorAll('#leadGradeFilters input[type="checkbox"]').forEach(item => { item.checked = true; });
         document.querySelectorAll("#businessObjectTabs button").forEach(item => item.classList.toggle("active", item.dataset.businessObject === "customer"));
+        document.querySelectorAll("#salesKingMetrics button[data-sales-king-metric]").forEach(item => {
+          const active = item.dataset.salesKingMetric === "salesKingWindows";
+          item.classList.toggle("active", active);
+          item.setAttribute("aria-pressed", String(active));
+        });
         document.getElementById("leadGradeFilters").classList.remove("show");
         document.getElementById("customRange").classList.remove("show");
         document.getElementById("departmentSelect").value = "all";
+        document.getElementById("feedbackTypeFilter").value = "all";
+        document.getElementById("feedbackSubmitterFilter").value = "all";
+        document.getElementById("salesKingTrendMetric").textContent = "会话窗口";
         document.getElementById("peopleUsageScroll").scrollTop = 0;
         document.querySelectorAll("#accountMenu input").forEach(input => { input.checked = true; });
         updateAccountLabel();
@@ -2846,6 +3240,7 @@
         updateMetrics();
         renderAllCharts();
         renderRanking();
+        renderSalesKingFeedbackList();
         showToast("筛选条件已重置");
       });
 
@@ -2869,6 +3264,7 @@
       updateMetrics();
       renderAllCharts();
       renderRanking();
+      renderSalesKingFeedbackList();
     })();
   </script>
 </body>
