@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="280" viewBox="0 0 1100 280">
+  <rect width="1100" height="280" rx="24" fill="#f3f6fa"/>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#27496d" flood-opacity=".08"/>
+    </filter>
+    <style>
+      .tile{fill:#fff;stroke:#dbe4ee;stroke-width:1.5;filter:url(#shadow)}
+      .icon{fill:none;stroke:#667a92;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+      .accent{fill:none;stroke:#2e7bd6;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+      .white{fill:#fff}
+      .num{font:700 20px Arial,sans-serif;fill:#2e7bd6;text-anchor:middle}
+    </style>
+  </defs>
+
+  <g transform="translate(25 20)">
+    <rect class="tile" width="190" height="240" rx="20"/>
+    <g transform="translate(54 52)">
+      <path class="icon" d="M8 43h16l7 9h20l7-9h16v29H8z"/>
+      <path class="accent" d="M41 4v36M28 27l13 13 13-13"/>
+      <circle class="white" cx="41" cy="4" r="4" stroke="#2e7bd6" stroke-width="3"/>
+    </g>
+    <circle cx="95" cy="205" r="20" fill="#edf5ff"/>
+    <text class="num" x="95" y="212">1</text>
+  </g>
+
+  <g transform="translate(240 20)">
+    <rect class="tile" width="190" height="240" rx="20"/>
+    <g transform="translate(57 50)">
+      <path class="icon" d="M18 72V8h42v64M18 72h42M48 13v54"/>
+      <circle class="icon white" cx="41" cy="40" r="2"/>
+      <path class="accent" d="M2 40h30M22 30l10 10-10 10"/>
+    </g>
+    <circle cx="95" cy="205" r="20" fill="#edf5ff"/>
+    <text class="num" x="95" y="212">2</text>
+  </g>
+
+  <g transform="translate(455 20)">
+    <rect class="tile" width="190" height="240" rx="20"/>
+    <g transform="translate(55 52)">
+      <path class="icon" d="M12 9v35c0 18 12 28 28 28s28-10 28-28V9H53v34c0 8-5 13-13 13s-13-5-13-13V9z"/>
+      <circle class="accent white" cx="5" cy="22" r="4"/>
+      <circle class="accent white" cx="75" cy="30" r="4"/>
+      <path class="accent" d="M9 23l9 5M71 31l-10 5"/>
+    </g>
+    <circle cx="95" cy="205" r="20" fill="#edf5ff"/>
+    <text class="num" x="95" y="212">3</text>
+  </g>
+
+  <g transform="translate(670 20)">
+    <rect class="tile" width="190" height="240" rx="20"/>
+    <g transform="translate(55 54)">
+      <path class="icon" d="M14 49l26-26 19 19-26 26z"/>
+      <path class="icon" d="M40 23C50 13 62 8 75 9M46 31c8-8 17-12 27-12"/>
+      <path class="accent" d="M8 17c9 0 16-7 16-16M8 17c0-9-7-16-16-16"/>
+      <circle class="accent white" cx="8" cy="17" r="5"/>
+    </g>
+    <circle cx="95" cy="205" r="20" fill="#edf5ff"/>
+    <text class="num" x="95" y="212">4</text>
+  </g>
+
+  <g transform="translate(885 20)">
+    <rect class="tile" width="190" height="240" rx="20"/>
+    <g transform="translate(55 51)">
+      <path class="icon" d="M8 12h64v48H8zM8 25h64"/>
+      <circle class="icon white" cx="15" cy="19" r="1"/>
+      <circle class="icon white" cx="22" cy="19" r="1"/>
+      <path class="accent" d="M28 34l15 36 5-16 16-5z"/>
+      <path class="accent" d="M56 8V1M68 12l5-5M68 25h8"/>
+    </g>
+    <circle cx="95" cy="205" r="20" fill="#edf5ff"/>
+    <text class="num" x="95" y="212">5</text>
+  </g>
+</svg>

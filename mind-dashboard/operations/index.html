@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>四维看板 · 运营看板</title>
+  <title>三维看板 · 运营看板</title>
   <style>
     :root {
       --navy:#153d70; --brand:#1a4d8f; --blue:#1677ff; --cyan:#00a3b4;
@@ -52,8 +52,8 @@
 
     .summary{overflow:hidden;margin-bottom:14px;color:#fff;background:linear-gradient(116deg,#1c66d3 0%,#167ee4 56%,#0797b0 100%);border-radius:14px;box-shadow:0 8px 22px rgba(23,102,197,.18)}
     .summary-main{display:grid;grid-template-columns:250px 1fr;min-height:132px}.operator{display:flex;align-items:center;gap:14px;padding:20px 22px;border-right:1px solid rgba(255,255,255,.18)}
-    .operator-photo{width:70px;height:70px;flex:0 0 70px;overflow:hidden;background:#d7e8ff;border:3px solid rgba(255,255,255,.42);border-radius:50%;box-shadow:0 4px 14px rgba(5,47,110,.22)}.operator-photo svg{display:block;width:100%;height:100%}
-    .operator strong{display:block;font-size:16px}.operator-title{display:block;margin-top:6px;color:#d9ecff;font-size:11px}
+    .operator-photo{width:70px;height:70px;flex:0 0 70px;display:grid;place-items:center;overflow:hidden;background:#d7e8ff;border:3px solid rgba(255,255,255,.42);border-radius:50%;box-shadow:0 4px 14px rgba(5,47,110,.22)}.operator-photo svg{display:block;width:100%;height:100%}
+    .operator strong{display:block;font-size:16px}
     .metrics-strip{display:grid;grid-template-columns:repeat(7,minmax(102px,1fr));align-items:stretch}.metric{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 8px;text-align:center}
     .metric:not(:last-child):after{content:"";position:absolute;top:32px;right:0;width:1px;height:68px;background:rgba(255,255,255,.17)}
     .metric-stats{display:grid;align-items:stretch;justify-content:center;margin-top:1px;font-variant-numeric:tabular-nums}.metric-stats.cols-1{grid-template-columns:1fr}.metric-stats.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.metric-stats.cols-3{grid-template-columns:1.45fr 1fr 1fr}.metric-stat{min-width:0;padding:0 5px}.metric-stats.cols-3 .metric-stat{padding:0 2px}.metric-stat+.metric-stat{border-left:1px solid rgba(255,255,255,.16)}.metric-stat-label{display:block;color:#dcecff;font-size:9px;white-space:nowrap}.metric-stat strong{display:block;margin-top:7px;overflow:hidden;color:#fff;font-size:14px;line-height:1;font-weight:720;text-overflow:ellipsis;white-space:nowrap}.metric-stat.primary strong{font-size:19px;font-weight:770}.metric-stats.cols-3 .metric-stat strong{font-size:11px}.metric-stats.cols-3 .metric-stat.primary strong{font-size:14px}.metric-stats.cols-1 .metric-stat strong{font-size:24px}.metric-meta{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:5px;min-height:38px;margin-top:9px}.metric-field{display:block;max-width:100%;font-size:9px;font-weight:700;line-height:1.35;white-space:nowrap}.metric-field.rank{display:block;width:auto;height:auto;color:#ffe68a;background:transparent;border-radius:0}.metric-field.period{color:#7ff0b7}.metric-field.period.negative{color:#ffadb6}
@@ -63,10 +63,10 @@
     .trend-tab{position:relative;min-width:120px;padding:13px 10px;color:var(--muted);background:transparent;font-size:11px;white-space:nowrap}
     .trend-tab.active{color:var(--blue);font-weight:700}.trend-tab.active:after{content:"";position:absolute;left:18px;right:18px;bottom:-1px;height:2px;background:var(--blue);border-radius:2px 2px 0 0}
     .chart-heading{display:flex;align-items:flex-start;padding:15px 4px 2px}.chart-heading[hidden]{display:none}.chart-heading h2{margin:0;font-size:16px}.chart-heading p{margin:5px 0 0;color:var(--muted);font-size:10px}.chart-legend{display:flex;align-items:center;gap:14px;margin-top:8px;color:var(--muted);font-size:10px}.legend-item{display:inline-flex;align-items:center;gap:6px}.legend-dot{width:8px;height:8px;border-radius:50%}
-    .chart-wrap{position:relative;width:100%;aspect-ratio:1100/320;max-height:320px;min-height:230px;margin-top:2px}.chart{width:100%;height:100%;display:block}.chart-grid{stroke:#e9eef4;stroke-width:1;stroke-dasharray:4 5}.chart-line{fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}.chart-line.primary{stroke:var(--blue);stroke-width:3.1}.chart-line.secondary{stroke:var(--cyan);stroke-width:2.35}.chart-line.tertiary{stroke:#8b5cf6}.chart-line.quaternary{stroke:#f2a51a}.chart-line.lead-total{stroke-width:3.4}.chart-line.transfer-rate{stroke-width:2.1;stroke-dasharray:6 5;opacity:.92}.chart-area{fill:url(#areaGradient)}
+    .chart-wrap{position:relative;width:100%;aspect-ratio:1280/320;max-height:320px;min-height:230px;margin-top:2px}.chart{width:100%;height:100%;display:block}.chart-grid{stroke:#e9eef4;stroke-width:1;stroke-dasharray:4 5}.chart-line{fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}.chart-line.primary{stroke:var(--blue);stroke-width:3.1}.chart-line.secondary{stroke:var(--cyan);stroke-width:2.35}.chart-line.tertiary{stroke:#8b5cf6}.chart-line.quaternary{stroke:#f2a51a}.chart-line.lead-total{stroke-width:3.4}.chart-line.transfer-rate{stroke-width:2.1;stroke-dasharray:6 5;opacity:.92}.chart-area{fill:url(#areaGradient)}
     .chart-point{fill:#fff;stroke-width:1.8;pointer-events:none;transition:r .12s}.chart-point.primary{stroke:var(--blue)}.chart-point.secondary{stroke:var(--cyan)}.chart-point.tertiary{stroke:#8b5cf6}.chart-point.quaternary{stroke:#f2a51a}.chart-point.lead-total{stroke-width:2.1}.chart-point.transfer-rate{stroke-width:1.9}.chart-point.located{fill:#fff;r:4}.chart-axis{fill:#8c9aae;font-size:10px}.chart-crosshair{display:none;stroke:#8aa7c8;stroke-width:1;stroke-dasharray:3 3}.chart-hit{fill:transparent;cursor:crosshair}.chart-tooltip{position:absolute;display:none;z-index:3;min-width:150px;padding:9px 11px;color:#fff;background:#24364d;border-radius:7px;box-shadow:0 6px 18px rgba(0,0,0,.16);font-size:10px;line-height:1.7;pointer-events:none}.tooltip-date{color:#a9bed8}.tooltip-value{display:flex;align-items:center;justify-content:space-between;gap:14px}.tooltip-value b{font-size:11px}
 
-    .performance-workspace{margin-bottom:16px;overflow:hidden;background:#fff;border-radius:14px;box-shadow:0 7px 22px rgba(31,65,105,.08)}.performance-workspace .summary{margin-bottom:0;border-radius:14px 14px 0 0;box-shadow:none}.analysis-trend{display:grid;grid-template-columns:250px minmax(0,1fr);background:#fff;border:1px solid var(--line);border-top:0;border-radius:0 0 14px 14px}.analysis-trend .trend-panel{min-width:0;margin:0;padding:0 12px 14px;border:0;border-left:1px solid var(--line);border-radius:0;box-shadow:none}.analysis-trend .trend-panel:not(.multi-series){padding-top:12px}.analysis-trend .chart-wrap{width:100%;aspect-ratio:1100/320;min-height:0;max-height:none;margin-top:0}.metric-selector{color:#fff;background:transparent;outline:none;cursor:pointer;transition:background .16s ease,box-shadow .16s ease}.metric-selector:hover{background:rgba(255,255,255,.045)}.metric-selector.active{background:rgba(255,255,255,.065);box-shadow:none}.metric-selector.active:before{content:"";position:absolute;top:14px;right:14px;width:6px;height:6px;background:#fff;border-radius:50%;box-shadow:0 0 0 4px rgba(255,255,255,.15)}.metric-selector.active .metric-stat-label{color:#fff;font-weight:700}.metric-selector.active .metric-stat.primary strong{text-shadow:0 2px 10px rgba(0,52,121,.18)}.metric-selector:focus-visible{box-shadow:inset 0 0 0 2px rgba(255,255,255,.7)}.selected-metric-tag{display:inline-flex;margin-bottom:7px;padding:4px 8px;color:var(--blue);background:#edf6ff;border-radius:99px;font-size:9px;font-weight:680}.ai-insight-panel{display:flex;flex-direction:column;min-width:0;padding:18px 16px;background:linear-gradient(160deg,#f8fbff 0%,#f5f2ff 100%)}.ai-insight-head{display:flex;align-items:center;gap:9px;padding-bottom:14px;border-bottom:1px solid #dfe8f5}.ai-insight-icon{width:28px;height:28px;display:grid;place-items:center;color:#fff;background:linear-gradient(145deg,#2e7bd6,#7158d8);border-radius:9px;font-size:12px;box-shadow:0 5px 12px rgba(80,81,190,.2)}.ai-insight-head strong{display:block;color:var(--ink);font-size:13px}.ai-insight-head span:last-child{display:block;margin-top:3px;color:var(--muted);font-size:9px}.ai-insight-key{margin-top:15px;color:#24364d;font-size:12px;font-weight:700;line-height:1.65}.ai-insight-list{display:grid;gap:8px;margin-top:13px}.ai-insight-item{position:relative;padding-left:13px;color:#596b82;font-size:9px;line-height:1.55}.ai-insight-item:before{content:"";position:absolute;left:0;top:5px;width:6px;height:6px;background:#5f7ed8;border-radius:50%}.ai-insight-item b{color:#34465d}.ai-insight-boundary{margin-top:auto;padding-top:15px;color:#8a98aa;font-size:8px;line-height:1.5}
+    .performance-workspace{margin-bottom:16px;overflow:hidden;background:#fff;border-radius:14px;box-shadow:0 7px 22px rgba(31,65,105,.08)}.performance-workspace .summary{margin-bottom:0;border-radius:14px 14px 0 0;box-shadow:none}.analysis-trend{display:block;background:#fff;border:1px solid var(--line);border-top:0;border-radius:0 0 14px 14px}.analysis-trend .trend-panel{min-width:0;margin:0;padding:0 22px 14px;border:0;border-radius:0;box-shadow:none}.analysis-trend .trend-panel:not(.multi-series){padding-top:12px}.analysis-trend .chart-wrap{width:100%;aspect-ratio:1280/320;min-height:0;max-height:none;margin-top:0}.metric-selector{color:#fff;background:transparent;outline:none;cursor:pointer;transition:background .16s ease,box-shadow .16s ease}.metric-selector:hover{background:rgba(255,255,255,.045)}.metric-selector.active{background:rgba(255,255,255,.065);box-shadow:none}.metric-selector.active:before{content:"";position:absolute;top:14px;right:14px;width:6px;height:6px;background:#fff;border-radius:50%;box-shadow:0 0 0 4px rgba(255,255,255,.15)}.metric-selector.active .metric-stat-label{color:#fff;font-weight:700}.metric-selector.active .metric-stat.primary strong{text-shadow:0 2px 10px rgba(0,52,121,.18)}.metric-selector:focus-visible{box-shadow:inset 0 0 0 2px rgba(255,255,255,.7)}.selected-metric-tag{display:inline-flex;margin-bottom:7px;padding:4px 8px;color:var(--blue);background:#edf6ff;border-radius:99px;font-size:9px;font-weight:680}
 
     .board-nav{display:flex;align-items:center;margin:0 0 14px;padding:0 4px}.board-switch{display:flex;width:min(100%,410px);padding:4px;background:#fff;border:1px solid #d6e1ee;border-radius:18px}.board-switch button{flex:1;height:36px;padding:0 12px;color:var(--text);background:transparent;border-radius:14px;font-size:12px;outline:none;white-space:nowrap}.board-switch button.active{color:#fff;background:var(--blue);box-shadow:0 3px 9px rgba(22,119,255,.24)}.board-switch button:focus-visible{box-shadow:0 0 0 2px #bedcff}
     .drill-panel{overflow:hidden}.drill-head{display:flex;align-items:flex-start;justify-content:space-between;padding:16px}.drill-head h2{margin:0;font-size:17px}.drill-head p{margin:5px 0 0;color:var(--muted);font-size:10px}.drill-meta{color:var(--muted);font-size:10px}.ads-drill-head{align-items:center}.board-view[hidden]{display:none}
@@ -140,8 +140,7 @@
 
     @media(max-width:1320px){.toolbar{min-height:112px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:44px 40px;align-content:center;gap:6px 14px;padding:10px 14px}.filter-spacer{display:none}.range-preset{grid-column:1;grid-row:1;justify-self:start}.exact-range{grid-column:2 / 4;grid-row:1}.toolbox-shell{grid-column:4;grid-row:1;justify-self:end}#accountFilter{grid-column:1;grid-row:2}#campaignFilter{grid-column:2;grid-row:2}#groupFilter{grid-column:3;grid-row:2}#adFilter{grid-column:4;grid-row:2}.select{width:100%;min-width:0}.summary-main{grid-template-columns:220px 1fr}.operator{padding:18px}.metric{padding:18px 7px}.metric-stat{padding:0 3px}}
     @media(max-width:900px){:root{--sidebar:64px}.brand{justify-content:center;padding:0}.brand>div,.nav-title,.sidebar-foot{display:none}.nav{padding:14px 8px}.nav-item{justify-content:center;padding:10px 8px;font-size:0}.nav-icon{width:auto;font-size:14px}.topbar{padding:0 14px}main{padding:78px 14px 34px}.toolbar{top:64px}.dashboard-heading h1{font-size:22px}.range-preset button{padding:7px 8px;font-size:11px}.date-input{width:100px}.summary-main{grid-template-columns:1fr}.operator{border-right:0;border-bottom:1px solid rgba(255,255,255,.16)}.metrics-strip{overflow-x:auto;grid-template-columns:repeat(7,minmax(130px,1fr))}.trend-tabs{grid-template-columns:repeat(7,minmax(120px,1fr));overflow-x:auto}.chart-wrap{min-height:210px}.board-switch{width:230px}}
-    @media(max-width:1320px){.analysis-trend{grid-template-columns:220px minmax(0,1fr)}.ai-insight-panel{padding:16px 14px}}
-    @media(max-width:900px){.analysis-trend{grid-template-columns:1fr}.analysis-trend .trend-panel{border-left:0;border-top:1px solid var(--line)}.ai-insight-panel{min-height:230px}.metric-selector.active:before{display:none}}
+    @media(max-width:900px){.analysis-trend .trend-panel{padding-right:10px;padding-left:10px}.metric-selector.active:before{display:none}}
 
     /* 投放转化看板：表格跟随可用宽度缩放，展开分析在窄屏自动重排。 */
     #adsBoard .table-wrap{overflow-x:hidden}
@@ -296,14 +295,14 @@
     <div class="brand"><span class="brand-mark">G</span><div>G-Builder OS<small>营销与销售智能工作台</small></div></div>
     <nav class="nav">
       <div class="nav-group"><div class="nav-title">销售工作台</div><a class="nav-item" href="/jingchengjituan/scrm"><span class="nav-icon">▦</span>SCRM</a></div>
-      <div class="nav-group"><div class="nav-title">四维看板</div><a class="nav-item active" href="#"><span class="nav-icon">⌁</span>运营看板</a></div>
+      <div class="nav-group"><div class="nav-title">三维看板</div><a class="nav-item active" href="#"><span class="nav-icon">⌁</span>运营看板</a></div>
       <div class="nav-group"><div class="nav-title">会话管理</div><a class="nav-item" href="/jingchengjituan/conversation/lead-assignment"><span class="nav-icon">◎</span>线索分配</a><a class="nav-item" href="/jingchengjituan/conversation/handover"><span class="nav-icon">↗</span>转人工</a></div>
       <div class="nav-group"><div class="nav-title">AGENT</div><a class="nav-item" href="/jingchengjituan/agent/sales-rep"><span class="nav-icon">◇</span>AI 业务员</a><a class="nav-item" href="/jingchengjituan/agent/sales-king"><span class="nav-icon">✦</span>AI 销冠</a></div>
       <div class="nav-group"><div class="nav-title">数字资产</div><a class="nav-item" href="/jingchengjituan/knowledge"><span class="nav-icon">▤</span>知识库</a></div>
     </nav>
     <div class="sidebar-foot">演示环境 · Demo V1.3<br />运营看板数据为本地 Mock</div>
   </aside>
-  <header class="topbar"><div class="crumb"><span>四维看板</span><span>/</span><strong>运营看板</strong></div><div class="user"><span class="avatar">KM</span><span>Kevin Ma<br><small style="color:#94a3b8">运营</small></span></div></header>
+  <header class="topbar"><div class="crumb"><span>三维看板</span><span>/</span><strong>运营看板</strong></div><div class="user"><span class="avatar">KM</span><span>Kevin Ma<br><small style="color:#94a3b8">运营</small></span></div></header>
 
   <main>
     <section class="dashboard-heading" aria-label="运营看板标题">
@@ -332,21 +331,16 @@
       <section class="summary">
         <div class="summary-main">
           <div class="operator">
-            <span class="operator-photo" aria-label="Kevin Ma 头像"><svg viewBox="0 0 80 80" role="img" aria-hidden="true"><defs><linearGradient id="portraitBg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d8ebff"/><stop offset="1" stop-color="#8ec5f8"/></linearGradient></defs><rect width="80" height="80" fill="url(#portraitBg)"/><circle cx="40" cy="30" r="15" fill="#f0c9ad"/><path d="M25 29c1-13 8-19 16-19 10 0 16 8 15 20-5-2-10-7-13-12-4 7-9 10-18 11z" fill="#173d70"/><path d="M15 80c2-18 12-28 25-28s23 10 25 28z" fill="#1a4d8f"/><path d="M33 49h14l-2 10H35z" fill="#e8bea3"/><path d="M31 55l9 9 9-9 6 5-6 20H31l-6-20z" fill="#fff"/></svg></span>
-            <div><strong>Kevin Ma</strong><span class="operator-title">S级 · 高级投手</span></div>
+            <span class="operator-photo is-global" id="operatorPhoto" aria-label="全局投放总览头像"><svg viewBox="0 0 80 80" role="img" aria-hidden="true"><defs><linearGradient id="portraitBg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d8ebff"/><stop offset="1" stop-color="#8ec5f8"/></linearGradient></defs><rect width="80" height="80" fill="url(#portraitBg)"/><circle cx="40" cy="30" r="15" fill="#f0c9ad"/><path d="M25 29c1-13 8-19 16-19 10 0 16 8 15 20-5-2-10-7-13-12-4 7-9 10-18 11z" fill="#173d70"/><path d="M15 80c2-18 12-28 25-28s23 10 25 28z" fill="#1a4d8f"/><path d="M33 49h14l-2 10H35z" fill="#e8bea3"/><path d="M31 55l9 9 9-9 6 5-6 20H31l-6-20z" fill="#fff"/></svg></span>
+            <div><strong id="operatorName">全局投放总览</strong></div>
           </div>
           <div class="metrics-strip" id="metricsStrip" aria-label="趋势指标选择"></div>
         </div>
       </section>
       <div class="analysis-trend">
-        <aside class="ai-insight-panel" aria-label="AI 趋势分析">
-          <div class="ai-insight-head"><span class="ai-insight-icon">✦</span><div><strong>AI 趋势分析</strong><span id="insightPeriod">当前统计周期</span></div></div>
-          <div class="ai-insight-key" id="insightKey">正在分析当前数据特征…</div>
-          <div class="ai-insight-list" id="insightList"></div>
-        </aside>
         <section class="trend-panel">
           <div class="chart-heading" id="chartHeading" hidden><div><span class="selected-metric-tag" id="selectedMetricTag">当前指标</span><h2 id="chartTitle">趋势对比</h2><p id="chartSubtitle">悬停节点定位对应时点，点击可固定定位</p><div class="chart-legend" id="chartLegend"></div></div></div>
-          <div class="chart-wrap"><svg class="chart" id="trendChart" viewBox="0 0 1100 320" preserveAspectRatio="xMidYMid meet"></svg><div class="chart-tooltip" id="chartTooltip"></div></div>
+          <div class="chart-wrap"><svg class="chart" id="trendChart" viewBox="0 0 1280 320" preserveAspectRatio="xMidYMid meet"></svg><div class="chart-tooltip" id="chartTooltip"></div></div>
         </section>
       </div>
     </section>
@@ -381,21 +375,20 @@
           <label class="pm-search"><input id="pmSearch" type="search" placeholder="搜索PM姓名" autocomplete="off" /></label>
           <div class="pm-country-filter" id="pmCountryFilter">
             <div class="pm-country-combobox">
-              <input class="pm-country-input" id="pmCountryInput" type="search" placeholder="选择国家与地区" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="pmCountryOptions" />
-              <button class="pm-country-clear" id="pmCountryClear" type="button" aria-label="清除国家与地区筛选" hidden>×</button>
+              <input class="pm-country-input" id="pmCountryInput" type="search" placeholder="选择地区" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="pmCountryOptions" />
+              <button class="pm-country-clear" id="pmCountryClear" type="button" aria-label="清除地区筛选" hidden>×</button>
               <span class="pm-country-chevron" aria-hidden="true"></span>
             </div>
             <div class="pm-country-options" id="pmCountryOptions" role="listbox" hidden>
-              <button class="pm-country-option is-selected" type="button" role="option" aria-selected="true" data-country-value="all" data-country-keywords="不限 全部 all">不限国家与地区</button>
-              <button class="pm-country-option" type="button" role="option" aria-selected="false" data-country-value="美国" data-country-keywords="美国 United States USA US meiguo">美国</button>
-              <button class="pm-country-option" type="button" role="option" aria-selected="false" data-country-value="加拿大" data-country-keywords="加拿大 Canada CA jianada">加拿大</button>
-              <button class="pm-country-option" type="button" role="option" aria-selected="false" data-country-value="新加坡" data-country-keywords="新加坡 Singapore SG xinjiapo">新加坡</button>
-              <button class="pm-country-option" type="button" role="option" aria-selected="false" data-country-value="阿联酋" data-country-keywords="阿联酋 United Arab Emirates UAE AE alianqiu">阿联酋</button>
-              <button class="pm-country-option" type="button" role="option" aria-selected="false" data-country-value="澳大利亚" data-country-keywords="澳大利亚 Australia AU aodaliya">澳大利亚</button>
-              <button class="pm-country-option" type="button" role="option" aria-selected="false" data-country-value="英国" data-country-keywords="英国 United Kingdom UK GB yingguo">英国</button>
-              <button class="pm-country-option" type="button" role="option" aria-selected="false" data-country-value="西班牙" data-country-keywords="西班牙 Spain ES xibanya">西班牙</button>
-              <button class="pm-country-option" type="button" role="option" aria-selected="false" data-country-value="马来西亚" data-country-keywords="马来西亚 Malaysia MY malaixiya">马来西亚</button>
-              <div class="pm-country-no-results" id="pmCountryNoResults" hidden>未找到匹配的国家与地区</div>
+              <button class="pm-country-option is-selected" type="button" role="option" aria-selected="true" data-country-value="all" data-country-keywords="不限 全部 all">不限地区</button>
+              <button class="pm-country-option" type="button" role="option" aria-selected="false" data-country-value="非洲" data-country-keywords="非洲 Africa feizhou">非洲</button>
+              <button class="pm-country-option" type="button" role="option" aria-selected="false" data-country-value="东南亚" data-country-keywords="东南亚 Southeast Asia dongnanya">东南亚</button>
+              <button class="pm-country-option" type="button" role="option" aria-selected="false" data-country-value="欧洲" data-country-keywords="欧洲 Europe ouzhou">欧洲</button>
+              <button class="pm-country-option" type="button" role="option" aria-selected="false" data-country-value="北美" data-country-keywords="北美 North America beimei">北美</button>
+              <button class="pm-country-option" type="button" role="option" aria-selected="false" data-country-value="南美" data-country-keywords="南美 South America nanmei">南美</button>
+              <button class="pm-country-option" type="button" role="option" aria-selected="false" data-country-value="中东" data-country-keywords="中东 Middle East zhongdong">中东</button>
+              <button class="pm-country-option" type="button" role="option" aria-selected="false" data-country-value="澳洲" data-country-keywords="澳洲 Oceania Australia aozhou">澳洲</button>
+              <div class="pm-country-no-results" id="pmCountryNoResults" hidden>未找到匹配的地区</div>
             </div>
           </div>
           <div class="pm-country-filter" id="pmProjectTypeFilter">
@@ -457,6 +450,9 @@
       {id:19,name:'设计师联营计划',platform:'LinkedIn',account:'LinkedIn-B2B',group:'室内设计师合作人群',ad:'设计师联营权益Q',country:'英国',language:'英文',age:'35–44岁',gender:'生理女认知男',device:'桌面端 · macOS',spend:13400,exposure:365219,inquiries:58,transfers:46,high:29,visits:12,projects:16,deals:4,amount:792000},
       {id:20,name:'老客转介绍活动',platform:'WhatsApp',account:'WhatsApp-拉美',group:'已成交客户相似人群',ad:'转介绍激励活动R',country:'巴西',language:'葡萄牙文',age:'45–54岁',gender:'武装直升机',device:'移动端 · Android',spend:6200,exposure:329845,inquiries:67,transfers:52,high:31,visits:14,projects:18,deals:4,amount:484000}
     );
+    const accountOwners={
+      'Meta-亚洲华人':'马凯 Kevin Ma','Meta-海外增长':'陈琳 Linda Chen','TikTok-内容增长':'王莎 Sara Wang','Google-北美增长':'刘迈 Mike Liu','LinkedIn-B2B':'林杰 James Lin','Meta-大洋洲':'赵睿 Eric Zhao','Meta-欧洲市场':'陈琳 Linda Chen','TikTok-东南亚':'王莎 Sara Wang','Google-东南亚':'刘迈 Mike Liu','WhatsApp-拉美':'赵睿 Eric Zhao'
+    };
     const orders=[
       {id:'OS-202608-001',customer:'Joseph Chen',pm:'Kevin Ma',planId:1,touch:'Instagram · 全屋实拍竖版A',date:'2026-08-12',amount:386000,receivedAmount:386000,payment:'已收款'},
       {id:'OS-202608-002',customer:'Emma Wilson',pm:'Lisa Wang',planId:2,touch:'Messenger · 一对一方案咨询B',date:'2026-08-11',amount:428000,receivedAmount:214000,payment:'部分收款'},
@@ -476,10 +472,10 @@
     ];
     const pmDemoNames=['周悦 Joy Zhou','黄琳 Helen Huang','吴晨 Leo Wu','赵敏 Nina Zhao','孙涛 Tony Sun','钱菲 Faye Qian','郑凯 Kai Zheng','冯雪 Snow Feng','韩梅 May Han','杨帆 Frank Yang','何静 Jane He','郭明 Mark Guo','罗莎 Rosa Luo','谢宁 Nina Xie'];
     pmDemoNames.forEach((name,index)=>{const base=pmRows[index%pmRows.length],factor=.72+(index%7)*.035,scaleMap=source=>Object.fromEntries(Object.entries(source).map(([key,value])=>[key,Math.round(value*factor)]));pmRows.push({name,assigned:Math.round(base.assigned*factor),grades:scaleMap(base.grades),connected:scaleMap(base.connected),projects:scaleMap(base.projects),deals:scaleMap(base.deals),amount:scaleMap(base.amount)})});
-    const pmCountries=['美国','加拿大','新加坡','阿联酋','澳大利亚','英国','西班牙','马来西亚'];
-    function buildPmCountryBreakdown(row,rowIndex){
-      const weights=pmCountries.map((country,countryIndex)=>2+((rowIndex*3+countryIndex*5)%11)),weightTotal=weights.reduce((total,value)=>total+value,0);
-      return Object.fromEntries(pmCountries.map((country,countryIndex)=>{const factor=weights[countryIndex]/weightTotal,scaleMap=source=>Object.fromEntries(Object.entries(source).map(([key,value])=>[key,Math.round(value*factor)]));return [country,{assigned:Math.round(row.assigned*factor),grades:scaleMap(row.grades),connected:scaleMap(row.connected),projects:scaleMap(row.projects),deals:scaleMap(row.deals),amount:scaleMap(row.amount)}]}));
+    const pmRegions=['非洲','东南亚','欧洲','北美','南美','中东','澳洲'];
+    function buildPmRegionBreakdown(row,rowIndex){
+      const weights=pmRegions.map((region,regionIndex)=>2+((rowIndex*3+regionIndex*5)%11)),weightTotal=weights.reduce((total,value)=>total+value,0);
+      return Object.fromEntries(pmRegions.map((region,regionIndex)=>{const factor=weights[regionIndex]/weightTotal,scaleMap=source=>Object.fromEntries(Object.entries(source).map(([key,value])=>[key,Math.round(value*factor)]));return [region,{assigned:Math.round(row.assigned*factor),grades:scaleMap(row.grades),connected:scaleMap(row.connected),projects:scaleMap(row.projects),deals:scaleMap(row.deals),amount:scaleMap(row.amount)}]}));
     }
     function buildPmProjectTypeBreakdown(row,seed){
       const commercialRatio=.38+(seed%9)*.025;
@@ -490,9 +486,9 @@
       return result;
     }
     pmRows.forEach((row,index)=>{
-      row.countries=buildPmCountryBreakdown(row,index);
+      row.regions=buildPmRegionBreakdown(row,index);
       row.projectTypes=buildPmProjectTypeBreakdown(row,index);
-      pmCountries.forEach((country,countryIndex)=>{row.countries[country].projectTypes=buildPmProjectTypeBreakdown(row.countries[country],index*pmCountries.length+countryIndex)});
+      pmRegions.forEach((region,regionIndex)=>{row.regions[region].projectTypes=buildPmProjectTypeBreakdown(row.regions[region],index*pmRegions.length+regionIndex)});
     });
     const state={range:'today',start:'',end:'',account:'all',campaign:'all',group:'all',ad:'all',trend:'spend',metricPrimary:{delivery:'exposure',inquiries:'inquiries',crm:'crmCustomers'},metricSwap:null,board:'ads',lockedPoint:null,traceOrderId:'OS-202608-001',dimension:'ad',sortKey:'inquiries',sortDir:'desc',orderAnalysisDimension:'pm',expandedRowKeys:new Set(),expandedInitialized:false,pmGrade:'all',pmCountry:'all',pmProjectType:'all',pmSearch:'',pmSortKey:'assigned',pmSortDir:'desc',adsPage:1,pmPage:1,adsPageSize:15,pmPageSize:15};
     const dualMetricMeta={
@@ -506,6 +502,10 @@
     const scaled=(v)=>Math.round(v*rangeFactor()); const unique=key=>[...new Set(plans.map(x=>x[key]))];
     function fillSelect(id,key,label){const el=document.querySelector(id);el.innerHTML=`<option value="all">${label}</option>`+unique(key).map(v=>`<option value="${v}">${v}</option>`).join('')}
     fillSelect('#accountFilter','account','全部账户');fillSelect('#campaignFilter','name','全部广告计划');fillSelect('#groupFilter','group','全部广告组');fillSelect('#adFilter','ad','全部广告');
+    function renderOperator(){
+      const isGlobal=state.account==='all',name=isGlobal?'全局投放总览':(accountOwners[state.account]||state.account),photo=document.querySelector('#operatorPhoto');
+      document.querySelector('#operatorName').textContent=name;photo.classList.toggle('is-global',isGlobal);photo.setAttribute('aria-label',isGlobal?'全局投放总览头像':`${name} 头像`);
+    }
 
     function renderMetrics(){
       const r=rows(),f=rangeFactor();
@@ -541,22 +541,10 @@
       const end=new Date(`${state.end}T12:00:00`),days=Math.max(1,Math.round((new Date(state.end)-new Date(state.start))/86400000)),step=days/(count-1);
       return Array.from({length:count},(_,i)=>{const d=new Date(end);d.setDate(d.getDate()-Math.round((count-1-i)*step));return `${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`});
     }
-    function insightPeriodLabel(labels){const rangeName=state.range==='today'?'今天':state.range==='yesterday'?'昨天':state.range==='7'?'近7天':state.range==='30'?'近30天':'自定义周期';return `${rangeName} · ${labels[0]}–${labels.at(-1)}`}
     const chartColors=['#1677ff','#00a3b4','#8b5cf6','#f2a51a'];
     const seriesClass=(index,series)=>series.className||['primary','secondary','tertiary','quaternary'][index]||'tertiary';
     const formatSeriesValue=(series,value)=>series.unit==='money'?money(value):series.unit==='decimalMoney'?`¥${Number(value).toFixed(2)}`:series.unit==='percent'?`${Number(value).toFixed(1)}%`:fmt.format(Math.round(value));
     const formatAxisValue=(series,value)=>(series.unit==='money'||series.unit==='decimalMoney')?shortMoney(value):series.unit==='percent'?`${Math.round(value)}%`:compact(value);
-    const insightValue=(series,value)=>formatSeriesValue(series,value);
-    function renderAIInsight(def,labels,seriesData){
-      document.querySelector('#insightPeriod').textContent=insightPeriodLabel(labels);
-      if(!seriesData.length||!seriesData[0].values.length){document.querySelector('#insightKey').textContent='当前筛选范围暂无可分析数据';document.querySelector('#insightList').innerHTML='<div class="ai-insight-item">请调整顶部筛选条件后重新查看。</div>';return}
-      const primary=seriesData[0],values=primary.values,max=Math.max(...values),min=Math.min(...values),maxIndex=values.indexOf(max),minIndex=values.indexOf(min),changes=values.slice(1).map((value,index)=>value-values[index]),ups=changes.filter(x=>x>0).length,downs=changes.filter(x=>x<0).length,swing=Math.round((max-min)/Math.max(max,1)*100),shape=ups>0&&downs>0?'阶段性波动':'单向变化';
-      document.querySelector('#insightKey').textContent=`${primary.name}在当前周期呈${shape}，${labels[maxIndex]}达到阶段峰值。`;
-      const items=[`峰值 <b>${insightValue(primary,max)}</b>，低点出现在 ${labels[minIndex]}（${insightValue(primary,min)}）`,`峰谷差约 <b>${swing}%</b>，期间 ${ups} 次上升、${downs} 次回落`,`较上周期 <b>${def.delta>=0?'+':''}${def.delta}%</b>，当前变化并非连续单向走势`];
-      if(def.analysisNote)items[2]=def.analysisNote;
-      else if(seriesData[1]&&seriesData[0].unit===seriesData[1].unit){const firstTotal=sum([{value:seriesData[0].values.reduce((a,b)=>a+b,0)}],'value'),secondTotal=sum([{value:seriesData[1].values.reduce((a,b)=>a+b,0)}],'value'),ratio=firstTotal?Math.round(secondTotal/firstTotal*100):0;items[2]=`${seriesData[1].name}周期量级约为${seriesData[0].name}的 <b>${ratio}%</b>`}
-      document.querySelector('#insightList').innerHTML=items.map(x=>`<div class="ai-insight-item">${x}</div>`).join('');
-    }
     function renderTrend(){
       const baseDef=trendDefinitions[state.trend],primarySeriesId=state.metricPrimary[state.trend],orderedSeries=primarySeriesId?[...baseDef.series].sort((a,b)=>a.id===primarySeriesId?-1:b.id===primarySeriesId?1:0):baseDef.series,primaryMeta=dualMetricMeta[state.trend]?.[primarySeriesId],primarySeries=orderedSeries[0],def={...baseDef,series:orderedSeries,delta:primaryMeta?.delta??baseDef.delta,title:primaryMeta?`${primarySeries.name}趋势`:baseDef.title,subtitle:primaryMeta?`${primarySeries.name}为当前主信息；${orderedSeries.slice(1).map(item=>item.name).join('、')}作为对比，悬停查看实际值`:baseDef.subtitle},activeRows=rows(),count=chartPointCount(),labels=chartLabels(count),selectionScale=activeRows.length/plans.length,timeScale=(state.range==='today'||state.range==='yesterday') ? .72 : 1;
       document.querySelector('#chartTooltip').style.display='none';
@@ -566,11 +554,10 @@
       document.querySelector('#chartSubtitle').textContent=def.subtitle||'悬停节点定位对应时点，点击可固定定位';
       document.querySelector('#selectedMetricTag').textContent=`当前指标 · ${def.series.map(x=>x.name).join(' / ')}`;
       document.querySelector('#chartLegend').innerHTML=def.series.map((s,i)=>`<span class="legend-item"><i class="legend-dot" style="background:${s.color||chartColors[i%chartColors.length]}"></i>${s.name}</span>`).join('');
-      if(!activeRows.length){document.querySelector('#trendChart').innerHTML='<text x="550" y="160" text-anchor="middle" class="chart-axis">当前筛选条件下暂无趋势数据</text>';document.querySelector('#chartTooltip').style.display='none';document.querySelector('#insightPeriod').textContent=insightPeriodLabel(labels);document.querySelector('#insightKey').textContent='当前筛选范围暂无可分析数据';document.querySelector('#insightList').innerHTML='<div class="ai-insight-item">请调整顶部筛选条件后重新查看。</div>';chartRuntime=null;return}
+      if(!activeRows.length){document.querySelector('#trendChart').innerHTML='<text x="640" y="160" text-anchor="middle" class="chart-axis">当前筛选条件下暂无趋势数据</text>';document.querySelector('#chartTooltip').style.display='none';chartRuntime=null;return}
       const seriesData=def.series.map(s=>({name:s.name,unit:s.unit,axis:s.axis||'left',color:s.color||'',className:s.className||'',values:s.values.slice(-count).map(v=>{const value=s.scaleWithSelection===false?v:v*selectionScale*timeScale;if(s.unit==='money')return Math.round(value/100)*100;if(s.unit==='decimalMoney')return Number(value.toFixed(2));if(s.unit==='percent')return Number(value.toFixed(1));return Math.max(0,Math.round(value))})}));
-      renderAIInsight(def,labels,seriesData);
       const leftSeries=seriesData.filter(s=>s.axis==='left'),rightSeries=seriesData.filter(s=>s.axis==='right');
-      const W=1100,H=320,p={l:62,r:rightSeries.length?72:24,t:22,b:44},iw=W-p.l-p.r,ih=H-p.t-p.b;
+      const W=1280,H=320,p={l:62,r:rightSeries.length?72:24,t:22,b:44},iw=W-p.l-p.r,ih=H-p.t-p.b;
       const leftMax=niceMax(Math.max(...leftSeries.flatMap(s=>s.values))*1.08),rightMax=rightSeries.length?niceMax(Math.max(...rightSeries.flatMap(s=>s.values))*1.08):leftMax;
       const scaleMax=series=>series.axis==='right'?rightMax:series.axis==='own'?niceMax(Math.max(...series.values)*1.08):leftMax;
       const points=seriesData.map(s=>s.values.map((v,i)=>({x:p.l+iw*i/(count-1),y:p.t+ih-v/scaleMax(s)*ih,v})));
@@ -721,7 +708,7 @@
     const pmColumnDefinitions=[
       {key:'name',label:'PM',sortable:false},
       {key:'assigned',label:'分配客户',sortable:true},
-      {key:'country',label:'项目国家',sortable:false},
+      {key:'region',label:'项目地区',sortable:false},
       {key:'projectType',label:'项目类型',sortable:false},
       {key:'a',label:'A级',sortable:true},
       {key:'b',label:'B级',sortable:true},
@@ -735,13 +722,13 @@
     function pmSelectedValue(row,field){return state.pmGrade==='all'?pmFieldTotal(row,field):(row[field]?.[state.pmGrade]||0)}
     function pmSelectedBase(row){return state.pmGrade==='all'?row.assigned:(row.grades?.[state.pmGrade]||0)}
     function pmScopedRow(row){
-      const country=state.pmCountry==='all'?'--':state.pmCountry,projectType=state.pmProjectType==='all'?'--':state.pmProjectType;
-      const countryScope=state.pmCountry==='all'?row:row.countries?.[state.pmCountry],base=countryScope||row;
+      const region=state.pmCountry==='all'?'--':state.pmCountry,projectType=state.pmProjectType==='all'?'--':state.pmProjectType;
+      const regionScope=state.pmCountry==='all'?row:row.regions?.[state.pmCountry],base=regionScope||row;
       const projectTypeScope=state.pmProjectType==='all'?base:base.projectTypes?.[state.pmProjectType];
-      return {...row,...base,...(projectTypeScope||{}),country,projectType};
+      return {...row,...base,...(projectTypeScope||{}),region,projectType};
     }
     function aggregatePmRows(rows){
-      const total={name:'总计',country:state.pmCountry==='all'?'--':state.pmCountry,projectType:state.pmProjectType==='all'?'--':state.pmProjectType,assigned:0,grades:{a:0,b:0,c:0},connected:{a:0,b:0,c:0},projects:{a:0,b:0,c:0},deals:{a:0,b:0,c:0},amount:{a:0,b:0,c:0},__total:true};
+      const total={name:'总计',region:state.pmCountry==='all'?'--':state.pmCountry,projectType:state.pmProjectType==='all'?'--':state.pmProjectType,assigned:0,grades:{a:0,b:0,c:0},connected:{a:0,b:0,c:0},projects:{a:0,b:0,c:0},deals:{a:0,b:0,c:0},amount:{a:0,b:0,c:0},__total:true};
       rows.forEach(row=>{total.assigned+=row.assigned;['grades','connected','projects','deals','amount'].forEach(field=>pmGradeKeys.forEach(key=>total[field][key]+=row[field][key]))});
       return total;
     }
@@ -760,7 +747,7 @@
       return `<td data-label="${label}"><div class="pm-cell stage"><strong>${fmt.format(value)}</strong><small>${rate.toFixed(2)}%</small></div></td>`;
     }
     function pmRowTemplate(row){
-      return `<tr class="${row.__total?'pm-total-row':''}"><td data-label="PM"><span class="pm-name" title="${row.name}">${row.name}</span></td><td data-label="分配客户"><div class="pm-cell"><strong>${fmt.format(row.assigned)}</strong></div></td><td data-label="项目国家"><span class="pm-country">${row.country||'--'}</span></td><td data-label="项目类型"><span class="pm-project-type">${row.projectType||'--'}</span></td>${pmGradeKeys.map(key=>pmGradeCell(row,key)).join('')}${pmStageCell(row,'connected','建联成功')}${pmStageCell(row,'projects','立项客户')}${pmStageCell(row,'deals','成交客户')}<td data-label="成交金额"><div class="pm-cell amount"><strong>${money(pmSelectedValue(row,'amount'))}</strong></div></td></tr>`;
+      return `<tr class="${row.__total?'pm-total-row':''}"><td data-label="PM"><span class="pm-name" title="${row.name}">${row.name}</span></td><td data-label="分配客户"><div class="pm-cell"><strong>${fmt.format(row.assigned)}</strong></div></td><td data-label="项目地区"><span class="pm-country">${row.region||'--'}</span></td><td data-label="项目类型"><span class="pm-project-type">${row.projectType||'--'}</span></td>${pmGradeKeys.map(key=>pmGradeCell(row,key)).join('')}${pmStageCell(row,'connected','建联成功')}${pmStageCell(row,'projects','立项客户')}${pmStageCell(row,'deals','成交客户')}<td data-label="成交金额"><div class="pm-cell amount"><strong>${money(pmSelectedValue(row,'amount'))}</strong></div></td></tr>`;
     }
     function renderPmBoard(){
       const keyword=state.pmSearch.trim().toLocaleLowerCase(),matched=pmRows.filter(row=>!keyword||row.name.toLocaleLowerCase().includes(keyword)),visible=matched.map(pmScopedRow),direction=state.pmSortDir==='desc'?-1:1;
@@ -769,7 +756,7 @@
       document.querySelectorAll('#pmGradeTabs button').forEach(button=>button.classList.toggle('active',button.dataset.pmGrade===state.pmGrade));
       empty.hidden=visible.length>0;body.innerHTML=visible.length?[pmRowTemplate(aggregatePmRows(visible)),...pageRows.map(pmRowTemplate)].join(''):'';renderPagination('pmPagination',visible.length,'pm');
     }
-    function renderAll(){renderMetrics();renderTrend();renderTable();renderOrders();renderPmBoard()}
+    function renderAll(){renderOperator();renderMetrics();renderTrend();renderTable();renderOrders();renderPmBoard()}
     function formatDate(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}function setRange(type){const end=new Date(),start=new Date();if(type==='yesterday'){start.setDate(end.getDate()-1);end.setDate(end.getDate()-1)}else if(type==='7'){start.setDate(end.getDate()-6)}else if(type==='30'){start.setDate(end.getDate()-29)}state.range=type;state.start=formatDate(start);state.end=formatDate(end);state.adsPage=1;state.pmPage=1;document.querySelector('#startDate').value=state.start;document.querySelector('#endDate').value=state.end;document.querySelectorAll('#rangePreset button').forEach(b=>b.classList.toggle('active',b.dataset.range===type));renderAll()}
     function toast(t){const el=document.querySelector('#toast');el.textContent=t;el.classList.add('show');clearTimeout(window.__tt);window.__tt=setTimeout(()=>el.classList.remove('show'),1600)}
     document.querySelector('#rangePreset').addEventListener('click',e=>{const b=e.target.closest('[data-range]');if(b)setRange(b.dataset.range)});
