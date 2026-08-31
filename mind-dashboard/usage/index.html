@@ -1714,14 +1714,14 @@
                 <div class="metric-caption">独立会话口径</div>
               </article>
               <article class="module-card metric-card">
-                <div class="metric-head"><span class="metric-name">完成接待数</span><span class="metric-icon teal"><svg class="icon"><use href="#i-check" /></svg></span></div>
-                <div class="metric-body"><div class="metric-value" data-metric="completed">4,976</div><span class="delta up">↑ 8.1%</span></div>
-                <div class="secondary-metric"><span>完成接待率</span><strong class="secondary-value" data-metric="completionRate">85.2%</strong></div>
-              </article>
-              <article class="module-card metric-card">
                 <div class="metric-head"><span class="metric-name">线索推送数</span><span class="metric-icon amber"><svg class="icon"><use href="#i-pulse" /></svg></span></div>
                 <div class="metric-body"><div class="metric-value" data-metric="leads">842</div><span class="delta up">↑ 14.2%</span></div>
                 <div class="secondary-metric"><span>线索推送率</span><strong class="secondary-value" data-metric="leadPushRate">14.4%</strong></div>
+              </article>
+              <article class="module-card metric-card">
+                <div class="metric-head"><span class="metric-name">Token 总成本</span><span class="metric-icon purple"><svg class="icon"><use href="#i-coins" /></svg></span></div>
+                <div class="metric-body"><div class="metric-value" data-metric="robotTokenCost">¥2,468.30</div><span class="delta down">↓ 3.8%</span></div>
+                <div class="metric-caption">当前周期模型调用总成本</div>
               </article>
             </div>
             <div class="analysis-grid robot-analysis-row">
@@ -1733,7 +1733,6 @@
                     <button type="button" data-metric-key="newAgents">新增Agent数</button>
                     <button type="button" data-metric-key="messages">处理消息</button>
                     <button type="button" data-metric-key="sessions">接待会话</button>
-                    <button type="button" data-metric-keys="completed,completionRate">完成接待</button>
                     <button type="button" data-metric-keys="leads,leadPushRate">线索推送</button>
                   </div>
                 </div>
@@ -1830,9 +1829,9 @@
                 <div class="metric-caption">由 AI 销冠菜单入口发起</div>
               </article>
               <article class="module-card metric-card">
-                <div class="metric-head"><span class="metric-name">Token 消耗</span><span class="metric-icon purple"><svg class="icon"><use href="#i-coins" /></svg></span></div>
-                <div class="metric-body"><div class="metric-value" data-metric="salesKingTokens">6.42<span class="metric-unit">M</span></div><span class="delta down">↓ 2.3%</span></div>
-                <div class="metric-caption">输入与输出 Token 合计</div>
+                <div class="metric-head"><span class="metric-name">Token 总成本</span><span class="metric-icon purple"><svg class="icon"><use href="#i-coins" /></svg></span></div>
+                <div class="metric-body"><div class="metric-value" data-metric="salesKingTokenCost">¥986.40</div><span class="delta down">↓ 2.3%</span></div>
+                <div class="metric-caption">当前周期模型调用总成本</div>
               </article>
             </div>
 
@@ -1979,16 +1978,15 @@
         newAgents: 24,
         sessions: 5842,
         messages: 26493,
-        completed: 4976,
-        completionRate: 85.2,
         leads: 842,
         leadPushRate: 14.4,
+        robotTokenCost: 2468.3,
         salesKingUsagePeople: 1268,
         salesKingSessions: 8726,
         salesKingImSessions: 3984,
         salesKingDashboardSessions: 2718,
         salesKingMenuSessions: 2024,
-        salesKingTokens: 6.42
+        salesKingTokenCost: 986.4
       };
 
       const businessBase = {
@@ -2023,16 +2021,15 @@
         newAgents: { name: "新增Agent数", base: 24, variance: 0.20, unit: "个", decimals: 0 },
         sessions: { name: "接待会话数", base: 5842, variance: 0.17, unit: "次", decimals: 0 },
         messages: { name: "处理消息数", base: 26493, variance: 0.18, unit: "条", decimals: 0 },
-        completed: { name: "完成接待数", base: 4976, variance: 0.14, unit: "次", decimals: 0 },
-        completionRate: { name: "完成接待率", base: 85.2, variance: 0.025, unit: "%", decimals: 1 },
         leads: { name: "线索推送数", base: 842, variance: 0.20, unit: "条", decimals: 0 },
         leadPushRate: { name: "线索推送率", base: 14.4, variance: 0.06, unit: "%", decimals: 1 },
+        robotTokenCost: { name: "Token 总成本", base: 2468.3, variance: 0.16, unit: "元", decimals: 2 },
         salesKingUsagePeople: { name: "使用人数", base: 1268, variance: 0.14, unit: "人", decimals: 0 },
         salesKingSessions: { name: "会话总数", base: 8726, variance: 0.18, unit: "次", decimals: 0 },
         salesKingImSessions: { name: "IM发起", base: 3984, variance: 0.17, unit: "次", decimals: 0 },
         salesKingDashboardSessions: { name: "看板发起", base: 2718, variance: 0.15, unit: "次", decimals: 0 },
         salesKingMenuSessions: { name: "菜单发起", base: 2024, variance: 0.13, unit: "次", decimals: 0 },
-        salesKingTokens: { name: "Token 消耗", base: 6.42, variance: 0.19, unit: "M", decimals: 2 }
+        salesKingTokenCost: { name: "Token 总成本", base: 986.4, variance: 0.14, unit: "元", decimals: 2 }
       };
 
       const state = {
@@ -2334,7 +2331,6 @@
           const noise = seededNoise(i, seed) * cfg.variance * 0.22;
           let value = cfg.base * state.factor * (1 + direction + wave + noise);
           if (metricKey === "activeRate") value = Math.min(60, Math.max(10, cfg.base + (direction + wave + noise) * 15));
-          if (metricKey === "completionRate") value = Math.min(99, Math.max(60, cfg.base + (direction + wave + noise) * 12));
           if (metricKey === "leadPushRate") value = Math.min(45, Math.max(3, cfg.base + (direction + wave + noise) * 12));
           if (metricKey === "salesKingAverage") value = cfg.base * (1 + (state.factor - 1) * .08) * (1 + direction + wave + noise);
           return Number(value.toFixed(cfg.decimals));
@@ -2916,12 +2912,12 @@
       function metricMarkup(metricKey, value) {
         switch (metricKey) {
           case "activeRate": return `${value.toFixed(1)}<span class="metric-unit">%</span>`;
-          case "completionRate": return `${value.toFixed(1)}%`;
           case "leadPushRate": return `${value.toFixed(1)}%`;
           case "tokens": return `${value.toFixed(2)}<span class="metric-unit">M</span>`;
-          case "salesKingTokens": return `${value.toFixed(2)}<span class="metric-unit">M</span>`;
           case "salesKingAverage": return `${value.toFixed(1)}<span class="metric-unit">次</span>`;
-          case "tokenCost": return `¥${value.toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+          case "tokenCost":
+          case "robotTokenCost":
+          case "salesKingTokenCost": return `¥${value.toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
           case "avgCost": return `¥${value.toFixed(3)}`;
           default: return Math.round(value).toLocaleString("zh-CN");
         }
@@ -2932,7 +2928,6 @@
           const key = node.dataset.metric;
           let value = metricBase[key] * state.factor;
           if (key === "activeRate") value = Math.max(10, Math.min(55, metricBase[key] + (state.factor - 1) * 9));
-          if (key === "completionRate") value = metricBase.completed / metricBase.sessions * 100;
           if (key === "leadPushRate") value = metricBase.leads / metricBase.sessions * 100;
           if (key === "avgCost") value = metricBase[key] * (1 + (state.factor - 1) * .16);
           node.innerHTML = metricMarkup(key, value);
