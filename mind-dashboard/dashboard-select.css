@@ -54,6 +54,7 @@
 }
 
 .gos-dashboard-select__value {
+  flex: 1 1 auto;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -61,6 +62,44 @@
   overflow: hidden;
   white-space: nowrap;
 }
+
+.gos-dashboard-select__value,
+.gos-dashboard-select__primary,
+.gos-dashboard-select__secondary,
+.gos-dashboard-select__chevron {
+  pointer-events: none;
+}
+
+.gos-dashboard-select__clear {
+  position: absolute;
+  right: 9px;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  color: #71849a;
+  background: #fff;
+  border-radius: 5px;
+  font-size: 15px;
+  line-height: 1;
+  pointer-events: none;
+  transform: translateY(-50%);
+  transition: opacity 0.14s ease, color 0.14s ease, background 0.14s ease;
+}
+
+.gos-dashboard-select__clear[hidden] { display: none; }
+.gos-dashboard-select.has-clear .gos-dashboard-select__trigger:hover .gos-dashboard-select__clear,
+.gos-dashboard-select.has-clear .gos-dashboard-select__trigger:focus-visible .gos-dashboard-select__clear,
+.gos-dashboard-select.has-clear .gos-dashboard-select__trigger.is-open .gos-dashboard-select__clear {
+  opacity: 1;
+  pointer-events: auto;
+}
+.gos-dashboard-select.has-clear .gos-dashboard-select__trigger:hover .gos-dashboard-select__chevron,
+.gos-dashboard-select.has-clear .gos-dashboard-select__trigger:focus-visible .gos-dashboard-select__chevron,
+.gos-dashboard-select.has-clear .gos-dashboard-select__trigger.is-open .gos-dashboard-select__chevron { opacity: 0; }
+.gos-dashboard-select__clear:hover { color: #d84a4f; background: #f5f8fc; }
 
 .gos-dashboard-select__primary {
   min-width: 0;
@@ -88,7 +127,7 @@
   width: 16px;
   height: 16px;
   color: #526f8e;
-  transition: transform 0.16s ease, color 0.16s ease;
+  transition: transform 0.16s ease, color 0.16s ease, opacity 0.14s ease;
 }
 
 .gos-dashboard-select__chevron::before,

@@ -50,7 +50,11 @@
     if (!state) return;
     const option = select.options[select.selectedIndex];
     const { primaryText, secondaryText } = renderOptionContent(state.value, option);
+    const placeholderIndex = [...select.options].findIndex((item) => item.dataset.placeholder === 'true');
+    const canClear = placeholderIndex >= 0 && select.selectedIndex !== placeholderIndex && !select.disabled;
     state.trigger.disabled = select.disabled;
+    state.wrapper.classList.toggle('has-clear', canClear);
+    state.clear.hidden = !canClear;
     state.trigger.setAttribute('aria-label', select.getAttribute('aria-label') || [primaryText, secondaryText].filter(Boolean).join('，') || '选择');
   };
 
@@ -101,6 +105,16 @@
     close(true);
   };
 
+  const clearSelection = (select) => {
+    const placeholderIndex = [...select.options].findIndex((option) => option.dataset.placeholder === 'true');
+    if (placeholderIndex < 0) return;
+    select.selectedIndex = placeholderIndex;
+    select.dispatchEvent(new Event('input', { bubbles: true }));
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+    sync(select);
+    close(true);
+  };
+
   const open = (select, focusSelected = false) => {
     const state = registry.get(select);
     if (!state || select.disabled) return;
@@ -118,6 +132,7 @@
     menu.setAttribute('aria-label', select.getAttribute('aria-label') || '选择');
 
     [...select.options].forEach((option, index) => {
+      if (option.dataset.placeholder === 'true') return;
       const item = document.createElement('button');
       item.type = 'button';
       item.className = 'gos-dashboard-select-menu__option';
@@ -181,17 +196,24 @@
 
     const value = document.createElement('span');
     value.className = 'gos-dashboard-select__value';
+    const clear = document.createElement('span');
+    clear.className = 'gos-dashboard-select__clear';
+    clear.setAttribute('role', 'button');
+    clear.setAttribute('aria-label', '清除所选项');
+    clear.title = '清除所选项';
+    clear.textContent = '×';
+    clear.hidden = true;
     const chevron = document.createElement('span');
     chevron.className = 'gos-dashboard-select__chevron';
     chevron.setAttribute('aria-hidden', 'true');
-    trigger.append(value, chevron);
+    trigger.append(value, clear, chevron);
 
     select.parentNode.insertBefore(wrapper, select);
     wrapper.append(select, trigger);
     select.classList.add('gos-dashboard-select__native');
     select.dataset.gosSelectReady = 'true';
     select.tabIndex = -1;
-    registry.set(select, { wrapper, trigger, value, compact });
+    registry.set(select, { wrapper, trigger, value, clear, compact });
     sync(select);
 
     trigger.addEventListener('pointerdown', () => sync(select));
@@ -202,7 +224,16 @@
         open(select, true);
       } else if (event.key === 'Escape') {
         close();
+      } else if ((event.key === 'Delete' || event.key === 'Backspace') && !clear.hidden) {
+        event.preventDefault();
+        clearSelection(select);
       }
+    });
+    clear.addEventListener('pointerdown', (event) => event.stopPropagation());
+    clear.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      clearSelection(select);
     });
     select.addEventListener('change', () => sync(select));
   };

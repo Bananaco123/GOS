@@ -37,13 +37,14 @@
     .dashboard-heading p{margin:0;color:var(--muted);font-size:13px}
     .update-state{display:flex;align-items:center;gap:7px;margin-top:6px;color:var(--muted);font-size:12px;white-space:nowrap}
     .state-dot{width:7px;height:7px;border-radius:50%;background:#00b578;box-shadow:0 0 0 3px rgba(0,181,120,.12)}
-    .toolbar{position:sticky;top:64px;z-index:20;min-height:66px;display:flex;align-items:center;gap:16px;padding:13px 14px;margin-bottom:16px;overflow:visible;box-shadow:0 8px 22px rgba(31,65,105,.08)}
+    .toolbar{position:sticky;top:64px;z-index:20;min-height:66px;display:flex;align-items:center;gap:10px;padding:13px 14px;margin-bottom:16px;overflow:visible;box-shadow:0 8px 22px rgba(31,65,105,.08)}
     .toolbar:after{content:"";position:absolute;left:-1px;right:-1px;bottom:-17px;height:17px;background:var(--soft);pointer-events:none}
     .range-preset{display:flex;gap:4px;padding:3px;background:#f2f5f9;border-radius:9px}
     .range-preset button{padding:7px 11px;color:var(--muted);background:transparent;border-radius:7px;font-size:12px;white-space:nowrap}
     .range-preset button.active{color:var(--blue);background:#e9f3ff;font-weight:650}.exact-range{display:flex;align-items:center;gap:6px}
     .date-input{width:112px;height:34px;padding:0 9px;color:var(--text);background:#fff;border:1px solid var(--line);border-radius:8px;font-size:11px;outline:none}.date-input:focus{border-color:#79aff2;box-shadow:0 0 0 2px #e8f3ff}
-    .filter-spacer{display:block;flex:1;min-width:8px}.select{width:118px;min-width:118px;height:34px;padding:0 28px 0 10px;color:var(--text);background:#fff;border:1px solid var(--line);border-radius:8px;font-size:11px;outline:none}#accountFilter{width:244px;min-width:244px}
+    .filter-spacer{display:block;flex:1;min-width:8px}.select{width:118px;min-width:118px;height:34px;padding:0 28px 0 10px;color:var(--text);background:#fff;border:1px solid var(--line);border-radius:8px;font-size:11px;outline:none}
+    .multi-filter{position:relative;z-index:32;width:190px;min-width:160px}.multi-filter.operator-filter{width:176px}.multi-filter-control{width:100%;height:34px;display:flex;align-items:center;gap:6px;padding:3px 28px 3px 11px;overflow:hidden;color:#172b4d;background:#fff;border:1px solid #d6e2f0;border-radius:10px;box-shadow:0 1px 2px rgba(20,53,89,.03);font-size:12px;font-weight:600;cursor:text;transition:border-color .16s ease,background .16s ease,box-shadow .16s ease}.multi-filter-control:hover{background:#fbfdff;border-color:#9bc2f5}.multi-filter.is-open .multi-filter-control,.multi-filter-control:focus-within{border-color:#1677ff;box-shadow:0 0 0 3px rgba(22,119,255,.12)}.multi-filter.has-multiple:not(.is-open)::after{content:attr(data-selected-summary);position:absolute;z-index:90;top:40px;left:0;width:max-content;max-width:320px;padding:7px 10px;color:#334760;background:rgba(255,255,255,.98);border:1px solid #dbe6f2;border-radius:8px;box-shadow:0 10px 26px rgba(26,61,103,.15);font-size:10px;font-weight:500;line-height:1.55;white-space:normal;opacity:0;visibility:hidden;pointer-events:none;transform:translateY(-4px);transition:opacity .16s ease,visibility .16s ease,transform .16s ease}.multi-filter.account-filter.has-multiple:not(.is-open)::after{right:0;left:auto}.multi-filter.has-multiple:not(.is-open):hover::after{opacity:1;visibility:visible;transform:translateY(0)}.multi-filter-tags{min-width:0;display:flex;align-items:center;gap:4px;overflow-x:auto;scrollbar-width:none}.multi-filter-tags::-webkit-scrollbar{display:none}.multi-filter-tag{flex:0 0 auto;max-width:138px;height:24px;display:inline-flex;align-items:center;gap:4px;padding:0 4px 0 7px;color:#245b97;background:#edf5ff;border:1px solid #d2e4fa;border-radius:6px;font-size:9px;font-weight:650;white-space:nowrap}.multi-filter-tag-label{max-width:108px;overflow:hidden;text-overflow:ellipsis}.multi-filter-tag-remove{width:16px;height:16px;display:grid;place-items:center;padding:0;color:#6685a7;background:transparent;border-radius:4px;font-size:13px;line-height:1}.multi-filter-tag-remove:hover{color:#d84a4f;background:#fff}.multi-filter-input{min-width:12px;flex:1 1 40px;height:26px;padding:0;color:#263b55;background:transparent;border:0;outline:0;font-size:12px;font-weight:600}.multi-filter-input::placeholder{color:#172b4d;opacity:1}.multi-filter-chevron{position:absolute;top:11px;right:11px;width:8px;height:8px;border-right:1.5px solid #526f8e;border-bottom:1.5px solid #526f8e;transform:rotate(45deg);pointer-events:none;transition:transform .16s ease,color .16s ease}.multi-filter.is-open .multi-filter-chevron{top:14px;border-color:#1677ff;transform:rotate(225deg)}.multi-filter-menu{position:absolute;z-index:80;top:40px;left:0;width:max(100%,236px);max-height:286px;overflow-y:auto;padding:6px;background:rgba(255,255,255,.98);border:1px solid #e1e9f3;border-radius:12px;box-shadow:0 14px 36px rgba(26,61,103,.16),0 3px 10px rgba(26,61,103,.08);backdrop-filter:blur(12px)}.multi-filter-menu[hidden]{display:none}.multi-filter-option{position:relative;width:100%;min-height:36px;display:flex;align-items:center;gap:8px;padding:8px 30px 8px 11px;color:#334760;background:transparent;border:0;border-radius:8px;font-size:12px;text-align:left}.multi-filter-option:hover,.multi-filter-option.is-selected{color:#0f62bd;background:#eaf3ff}.multi-filter-option.is-selected:after{content:'✓';position:absolute;right:11px;color:#1677ff;font-size:12px;font-weight:800}.multi-filter-empty{padding:15px 10px;color:#8a99ab;text-align:center;font-size:10px}
     .toolbox-shell{position:relative;z-index:30;display:inline-flex;align-items:center;justify-content:flex-end}.toolbox-shell:after{content:"";position:absolute;top:100%;right:0;width:100%;height:12px}.toolbox{height:34px;display:inline-flex;align-items:center;gap:6px;padding:0 13px;color:var(--brand);background:#fff;border:1px solid #cfddef;border-radius:8px;font-size:11px;font-weight:650;white-space:nowrap;cursor:default;transition:transform .24s cubic-bezier(.2,.8,.2,1),border-color .24s ease,box-shadow .24s ease}.toolbox-icon{font-size:14px;color:var(--blue);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
     .toolbox-shell:hover .toolbox,.toolbox-shell:focus-within .toolbox{border-color:#a9c9f4;box-shadow:0 6px 18px rgba(30,108,211,.13);transform:translateY(-1px)}.toolbox-shell:hover .toolbox-icon,.toolbox-shell:focus-within .toolbox-icon{transform:rotate(12deg) scale(1.12)}
     .toolbox-bubbles{position:absolute;top:calc(100% + 10px);right:0;display:flex;flex-direction:column;align-items:flex-end;gap:8px;visibility:hidden;opacity:0;pointer-events:none;transform:translateY(-5px);transition:opacity .2s ease,transform .28s cubic-bezier(.2,.85,.2,1),visibility 0s linear .28s}.toolbox-shell:hover .toolbox-bubbles,.toolbox-shell:focus-within .toolbox-bubbles{visibility:visible;opacity:1;pointer-events:auto;transform:translateY(0);transition-delay:0s}
@@ -138,7 +139,7 @@
     }
     @container (max-width:610px){.pm-primary-filters{align-items:stretch;flex-direction:column}.pm-search,.pm-country-filter{width:100%}#pmBoard tbody tr{grid-template-columns:repeat(2,minmax(0,1fr))}#pmBoard td:nth-child(3n){border-right:1px solid #e5ebf2}#pmBoard td:nth-child(2n){border-right:0}.pm-grade-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid #dbe4ef;border-radius:8px}.pm-grade-tabs button.active:after{left:18px;right:18px}}
 
-    @media(max-width:1320px){.toolbar{min-height:112px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:44px 40px;align-content:center;gap:6px 14px;padding:10px 14px}.filter-spacer{display:none}.range-preset{grid-column:1;grid-row:1;justify-self:start}.exact-range{grid-column:2 / 4;grid-row:1}.toolbox-shell{grid-column:4;grid-row:1;justify-self:end}#accountFilter{grid-column:1;grid-row:2;width:100%;min-width:0}#campaignFilter{grid-column:2;grid-row:2}#groupFilter{grid-column:3;grid-row:2}#adFilter{grid-column:4;grid-row:2}.select{width:100%;min-width:0}.summary-main{grid-template-columns:220px 1fr}.operator{padding:18px}.metric{padding:18px 7px}.metric-stat{padding:0 3px}}
+    @media(max-width:1320px){.toolbar{min-height:112px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:44px 40px;align-content:center;gap:6px 10px;padding:10px 14px}.filter-spacer{display:none}.range-preset{grid-column:1;grid-row:1;justify-self:start}.exact-range{grid-column:2 / 5;grid-row:1}.toolbox-shell{grid-column:5;grid-row:1;justify-self:end}.operator-filter{grid-column:1;grid-row:2}.account-filter{grid-column:2;grid-row:2}#campaignFilter{grid-column:3;grid-row:2}#groupFilter{grid-column:4;grid-row:2}#adFilter{grid-column:5;grid-row:2}.multi-filter,.multi-filter.operator-filter,.select{width:100%;min-width:0}.summary-main{grid-template-columns:220px 1fr}.operator{padding:18px}.metric{padding:18px 7px}.metric-stat{padding:0 3px}}
     @media(max-width:900px){:root{--sidebar:64px}.brand{justify-content:center;padding:0}.brand>div,.nav-title,.sidebar-foot{display:none}.nav{padding:14px 8px}.nav-item{justify-content:center;padding:10px 8px;font-size:0}.nav-icon{width:auto;font-size:14px}.topbar{padding:0 14px}main{padding:78px 14px 34px}.toolbar{top:64px}.dashboard-heading h1{font-size:22px}.range-preset button{padding:7px 8px;font-size:11px}.date-input{width:100px}.summary-main{grid-template-columns:1fr}.operator{border-right:0;border-bottom:1px solid rgba(255,255,255,.16)}.metrics-strip{overflow-x:auto;grid-template-columns:repeat(7,minmax(130px,1fr))}.trend-tabs{grid-template-columns:repeat(7,minmax(120px,1fr));overflow-x:auto}.chart-wrap{min-height:210px}.board-switch{width:230px}}
     @media(max-width:900px){.analysis-trend .trend-panel{padding-right:10px;padding-left:10px}.metric-selector.active:before{display:none}}
 
@@ -313,10 +314,25 @@
       <div class="range-preset" id="rangePreset"><button data-range="yesterday">昨天</button><button class="active" data-range="today">今天</button><button data-range="7">近7天</button><button data-range="30">近30天</button></div>
       <div class="exact-range"><input class="date-input" id="startDate" type="date" aria-label="开始日期"><span style="color:#9aa8b9">至</span><input class="date-input" id="endDate" type="date" aria-label="结束日期"></div>
       <span class="filter-spacer"></span>
-      <select class="select" id="accountFilter" data-menu-width="286" aria-label="选择投放账户及所属运营"><option value="all">全部账户</option></select>
-      <select class="select" id="campaignFilter"><option value="all">全部广告计划</option></select>
-      <select class="select" id="groupFilter"><option value="all">全部广告组</option></select>
-      <select class="select" id="adFilter"><option value="all">全部广告</option></select>
+      <div class="multi-filter operator-filter" id="operatorMultiFilter">
+        <div class="multi-filter-control" id="operatorMultiControl" role="combobox" aria-label="选择运营" aria-haspopup="listbox" aria-expanded="false" aria-controls="operatorMultiOptions">
+          <div class="multi-filter-tags" id="operatorMultiTags"></div>
+          <input class="multi-filter-input" id="operatorMultiSearch" type="search" placeholder="全部运营" autocomplete="off" aria-label="搜索运营姓名" />
+          <span class="multi-filter-chevron" aria-hidden="true"></span>
+        </div>
+        <div class="multi-filter-menu" id="operatorMultiOptions" role="listbox" aria-label="运营选项" aria-multiselectable="true" hidden></div>
+      </div>
+      <div class="multi-filter account-filter" id="accountMultiFilter">
+        <div class="multi-filter-control" id="accountMultiControl" role="combobox" aria-label="选择广告账户" aria-haspopup="listbox" aria-expanded="false" aria-controls="accountMultiOptions">
+          <div class="multi-filter-tags" id="accountMultiTags"></div>
+          <input class="multi-filter-input" id="accountMultiSearch" type="search" placeholder="全部广告账户" autocomplete="off" aria-label="搜索广告账户" />
+          <span class="multi-filter-chevron" aria-hidden="true"></span>
+        </div>
+        <div class="multi-filter-menu" id="accountMultiOptions" role="listbox" aria-label="广告账户选项" aria-multiselectable="true" hidden></div>
+      </div>
+      <select class="select" id="campaignFilter"><option value="all" data-placeholder="true">全部广告计划</option></select>
+      <select class="select" id="groupFilter"><option value="all" data-placeholder="true">全部广告组</option></select>
+      <select class="select" id="adFilter"><option value="all" data-placeholder="true">全部广告</option></select>
       <div class="toolbox-shell">
         <button class="toolbox" type="button" aria-label="工具箱"><span class="toolbox-icon">✦</span>工具箱</button>
         <div class="toolbox-bubbles" role="group" aria-label="工具箱能力">
@@ -451,7 +467,7 @@
       {id:20,name:'老客转介绍活动',platform:'WhatsApp',account:'WhatsApp-拉美',group:'已成交客户相似人群',ad:'转介绍激励活动R',country:'巴西',language:'葡萄牙文',age:'45–54岁',gender:'武装直升机',device:'移动端 · Android',spend:6200,exposure:329845,inquiries:67,transfers:52,high:31,visits:14,projects:18,deals:4,amount:484000}
     );
     const accountOwners={
-      'Meta-亚洲华人':'马凯','Meta-海外增长':'陈琳','TikTok-内容增长':'王莎','Google-北美增长':'刘迈','LinkedIn-B2B':'林杰','Meta-大洋洲':'赵睿','Meta-欧洲市场':'陈琳','TikTok-东南亚':'王莎','Google-东南亚':'刘迈','WhatsApp-拉美':'赵睿'
+      'Meta-亚洲华人':'马凯 Kevin Ma','Meta-海外增长':'陈琳 Linda Chen','TikTok-内容增长':'王莎 Sara Wang','Google-北美增长':'刘迈 Mike Liu','LinkedIn-B2B':'林杰 James Lin','Meta-大洋洲':'赵睿 Eric Zhao','Meta-欧洲市场':'陈琳 Linda Chen','TikTok-东南亚':'王莎 Sara Wang','Google-东南亚':'刘迈 Mike Liu','WhatsApp-拉美':'赵睿 Eric Zhao'
     };
     const orders=[
       {id:'OS-202608-001',customer:'Joseph Chen',pm:'Kevin Ma',planId:1,touch:'Instagram · 全屋实拍竖版A',date:'2026-08-12',amount:386000,receivedAmount:386000,payment:'已收款'},
@@ -490,7 +506,7 @@
       row.projectTypes=buildPmProjectTypeBreakdown(row,index);
       pmRegions.forEach((region,regionIndex)=>{row.regions[region].projectTypes=buildPmProjectTypeBreakdown(row.regions[region],index*pmRegions.length+regionIndex)});
     });
-    const state={range:'today',start:'',end:'',account:'all',campaign:'all',group:'all',ad:'all',trend:'spend',metricPrimary:{delivery:'exposure',inquiries:'inquiries',crm:'crmCustomers'},metricSwap:null,board:'ads',lockedPoint:null,traceOrderId:'OS-202608-001',dimension:'ad',sortKey:'inquiries',sortDir:'desc',orderAnalysisDimension:'pm',expandedRowKeys:new Set(),expandedInitialized:false,pmGrade:'all',pmCountry:'all',pmProjectType:'all',pmSearch:'',pmSortKey:'assigned',pmSortDir:'desc',adsPage:1,pmPage:1,adsPageSize:15,pmPageSize:15};
+    const state={range:'today',start:'',end:'',accounts:[],operators:[],campaign:'all',group:'all',ad:'all',trend:'spend',metricPrimary:{delivery:'exposure',inquiries:'inquiries',crm:'crmCustomers'},metricSwap:null,board:'ads',lockedPoint:null,traceOrderId:'OS-202608-001',dimension:'ad',sortKey:'inquiries',sortDir:'desc',orderAnalysisDimension:'pm',expandedRowKeys:new Set(),expandedInitialized:false,pmGrade:'all',pmCountry:'all',pmProjectType:'all',pmSearch:'',pmSortKey:'assigned',pmSortDir:'desc',adsPage:1,pmPage:1,adsPageSize:15,pmPageSize:15};
     const dualMetricMeta={
       delivery:{exposure:{label:'曝光',top:4,delta:8.6},cpm:{label:'CPM',percentile:20,delta:-2.4,goodWhenDown:true}},
       inquiries:{inquiries:{label:'询盘',top:1,delta:-3.2},cpa:{label:'CPA',top:3,delta:-5.7,goodWhenDown:true}},
@@ -498,13 +514,33 @@
     };
     const fmt=new Intl.NumberFormat('zh-CN'); const money=v=>`¥${fmt.format(Math.round(v))}`; const compact=v=>v>=1e6?`${(v/1e6).toFixed(2)}M`:v>=1e3?`${(v/1e3).toFixed(1)}k`:fmt.format(Math.round(v)); const cardCompact=v=>v>=1e6?`${(v/1e6).toFixed(1)}M`:v>=1e5?`${Math.round(v/1e3)}k`:v>=1e3?`${(v/1e3).toFixed(1)}k`:fmt.format(Math.round(v)); const cardMoney=v=>`¥${cardCompact(v)}`; const narrowMoney=v=>money(v/10); const narrowNumber=v=>fmt.format(Math.round(v/10));
     const sum=(rows,key)=>rows.reduce((n,x)=>n+x[key],0); const rangeFactor=()=>state.range==='yesterday'?.91:state.range==='today'?1:state.range==='7'?5.8:state.range==='30'?22.6:Math.max(1,(new Date(state.end)-new Date(state.start))/86400000+1);
-    const rows=()=>plans.filter(x=>(state.account==='all'||x.account===state.account)&&(state.campaign==='all'||x.name===state.campaign)&&(state.group==='all'||x.group===state.group)&&(state.ad==='all'||x.ad===state.ad));
+    const rows=()=>plans.filter(x=>(!state.accounts.length||state.accounts.includes(x.account))&&(!state.operators.length||state.operators.includes(accountOwners[x.account]))&&(state.campaign==='all'||x.name===state.campaign)&&(state.group==='all'||x.group===state.group)&&(state.ad==='all'||x.ad===state.ad));
     const scaled=(v)=>Math.round(v*rangeFactor()); const unique=key=>[...new Set(plans.map(x=>x[key]))];
-    function fillSelect(id,key,label){const el=document.querySelector(id);el.innerHTML=`<option value="all">${label}</option>`+unique(key).map(v=>`<option value="${v}">${v}</option>`).join('')}
-    function fillAccountSelect(){const el=document.querySelector('#accountFilter');el.innerHTML='<option value="all">全部账户</option>';unique('account').forEach(account=>{const option=document.createElement('option');option.value=account;option.textContent=account;option.dataset.secondary=`运营 · ${accountOwners[account]||'未分配'}`;el.appendChild(option)})}
-    fillAccountSelect();fillSelect('#campaignFilter','name','全部广告计划');fillSelect('#groupFilter','group','全部广告组');fillSelect('#adFilter','ad','全部广告');
+    function fillSelect(id,key,label){const el=document.querySelector(id);el.innerHTML=`<option value="all" data-placeholder="true">${label}</option>`+unique(key).map(v=>`<option value="${v}">${v}</option>`).join('')}
+    fillSelect('#campaignFilter','name','全部广告计划');fillSelect('#groupFilter','group','全部广告组');fillSelect('#adFilter','ad','全部广告');
+    function createMultiFilter({rootId,controlId,tagsId,inputId,menuId,stateKey,placeholder,options}){
+      const root=document.querySelector(rootId),control=document.querySelector(controlId),tags=document.querySelector(tagsId),input=document.querySelector(inputId),menu=document.querySelector(menuId);
+      let visibleOptions=[...options];
+      const selectedValues=()=>state[stateKey];
+      function close(){root.classList.remove('is-open');control.setAttribute('aria-expanded','false');menu.hidden=true}
+      function open(){root.classList.add('is-open');control.setAttribute('aria-expanded','true');menu.hidden=false;renderOptions();input.focus()}
+      function renderTags(){const values=selectedValues();tags.innerHTML=values.map(value=>`<span class="multi-filter-tag"><span class="multi-filter-tag-label" title="${value}">${value}</span><button class="multi-filter-tag-remove" type="button" data-remove-value="${value}" aria-label="删除 ${value}">×</button></span>`).join('');input.placeholder=values.length?'':placeholder;root.classList.toggle('has-multiple',values.length>1);root.dataset.selectedSummary=values.length>1?`已选：${values.join('、')}`:''}
+      function filterOptions(){const keyword=input.value.trim().toLocaleLowerCase();visibleOptions=options.filter(option=>!keyword||option.keywords.toLocaleLowerCase().includes(keyword));renderOptions()}
+      function renderOptions(){menu.innerHTML=visibleOptions.length?visibleOptions.map(option=>{const selected=selectedValues().includes(option.value);return `<button class="multi-filter-option ${selected?'is-selected':''}" type="button" role="option" aria-selected="${selected}" data-option-value="${option.value}">${option.label}</button>`}).join(''):'<div class="multi-filter-empty">未找到匹配结果</div>'}
+      function update(value,removeOnly=false){const values=selectedValues(),index=values.indexOf(value);if(index>=0)values.splice(index,1);else if(!removeOnly)values.push(value);state.adsPage=1;state.pmPage=1;input.value='';visibleOptions=[...options];renderTags();renderOptions();renderAll()}
+      control.addEventListener('click',event=>{if(event.target.closest('[data-remove-value]'))return;open()});
+      tags.addEventListener('click',event=>{const button=event.target.closest('[data-remove-value]');if(!button)return;event.stopPropagation();update(button.dataset.removeValue,true)});
+      menu.addEventListener('click',event=>{const option=event.target.closest('[data-option-value]');if(!option)return;update(option.dataset.optionValue);open()});
+      input.addEventListener('input',()=>{open();filterOptions()});
+      input.addEventListener('keydown',event=>{if(event.key==='Escape'){close();input.blur()}else if(event.key==='Backspace'&&!input.value&&selectedValues().length){update(selectedValues().at(-1),true)}else if(event.key==='Enter'&&visibleOptions.length){event.preventDefault();update(visibleOptions[0].value);open()}});
+      document.addEventListener('pointerdown',event=>{if(!root.contains(event.target))close()});
+      renderTags();renderOptions();
+      return {close,open};
+    }
+    const accountMultiFilter=createMultiFilter({rootId:'#accountMultiFilter',controlId:'#accountMultiControl',tagsId:'#accountMultiTags',inputId:'#accountMultiSearch',menuId:'#accountMultiOptions',stateKey:'accounts',placeholder:'全部广告账户',options:unique('account').map(account=>({value:account,label:account,keywords:account}))});
+    const operatorMultiFilter=createMultiFilter({rootId:'#operatorMultiFilter',controlId:'#operatorMultiControl',tagsId:'#operatorMultiTags',inputId:'#operatorMultiSearch',menuId:'#operatorMultiOptions',stateKey:'operators',placeholder:'全部运营',options:[...new Set(Object.values(accountOwners))].map(name=>({value:name,label:name,keywords:name}))});
     function renderOperator(){
-      const isGlobal=state.account==='all',name=isGlobal?'全局投放总览':(accountOwners[state.account]||state.account),photo=document.querySelector('#operatorPhoto');
+      const isGlobal=!state.operators.length,name=isGlobal?'全局投放总览':state.operators.length===1?state.operators[0]:`已选 ${state.operators.length} 位人员`,photo=document.querySelector('#operatorPhoto');
       document.querySelector('#operatorName').textContent=name;photo.classList.toggle('is-global',isGlobal);photo.setAttribute('aria-label',isGlobal?'全局投放总览头像':`${name} 头像`);
     }
 
@@ -762,7 +798,7 @@
     function toast(t){const el=document.querySelector('#toast');el.textContent=t;el.classList.add('show');clearTimeout(window.__tt);window.__tt=setTimeout(()=>el.classList.remove('show'),1600)}
     document.querySelector('#rangePreset').addEventListener('click',e=>{const b=e.target.closest('[data-range]');if(b)setRange(b.dataset.range)});
     ['startDate','endDate'].forEach(id=>document.querySelector('#'+id).addEventListener('change',()=>{const s=document.querySelector('#startDate').value,e=document.querySelector('#endDate').value;if(!s||!e)return;if(s>e){toast('开始日期不能晚于结束日期');return}state.range='custom';state.start=s;state.end=e;state.adsPage=1;state.pmPage=1;document.querySelectorAll('#rangePreset button').forEach(b=>b.classList.remove('active'));renderAll()}));
-    const filterMap={accountFilter:'account',campaignFilter:'campaign',groupFilter:'group',adFilter:'ad'};Object.entries(filterMap).forEach(([id,key])=>document.querySelector('#'+id).addEventListener('change',e=>{state[key]=e.target.value;state.adsPage=1;state.pmPage=1;renderAll()}));
+    const filterMap={campaignFilter:'campaign',groupFilter:'group',adFilter:'ad'};Object.entries(filterMap).forEach(([id,key])=>document.querySelector('#'+id).addEventListener('change',e=>{state[key]=e.target.value;state.adsPage=1;state.pmPage=1;renderAll()}));
     let metricSwapTimer=null;
     function selectTrendMetric(key){state.trend=key;state.lockedPoint=null;renderMetrics();renderTrend()}
     function switchMetricPrimary(key,seriesKey){const previous=state.metricPrimary[key];state.trend=key;state.lockedPoint=null;if(!previous||previous===seriesKey){renderMetrics();renderTrend();return}state.metricPrimary[key]=seriesKey;state.metricSwap={key,from:previous,to:seriesKey};renderMetrics();renderTrend();clearTimeout(metricSwapTimer);metricSwapTimer=setTimeout(()=>{document.querySelectorAll('.metric-value-part.swap-grow,.metric-value-part.swap-shrink').forEach(item=>item.classList.remove('swap-grow','swap-shrink'));state.metricSwap=null},480)}
