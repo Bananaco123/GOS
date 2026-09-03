@@ -1719,7 +1719,7 @@
                 <div class="secondary-metric"><span>线索推送率</span><strong class="secondary-value" data-metric="leadPushRate">14.4%</strong></div>
               </article>
               <article class="module-card metric-card">
-                <div class="metric-head"><span class="metric-name">Token 总成本</span><span class="metric-icon purple"><svg class="icon"><use href="#i-coins" /></svg></span></div>
+                <div class="metric-head"><span class="metric-name">Token成本</span><span class="metric-icon purple"><svg class="icon"><use href="#i-coins" /></svg></span></div>
                 <div class="metric-body"><div class="metric-value" data-metric="robotTokenCost">¥2,468.30</div><span class="delta down">↓ 3.8%</span></div>
                 <div class="metric-caption">当前周期模型调用总成本</div>
               </article>
@@ -1734,6 +1734,7 @@
                     <button type="button" data-metric-key="messages">处理消息</button>
                     <button type="button" data-metric-key="sessions">接待会话</button>
                     <button type="button" data-metric-keys="leads,leadPushRate">线索推送</button>
+                    <button type="button" data-metric-key="robotTokenCost">Token成本</button>
                   </div>
                 </div>
                 <div class="line-chart" id="robotChart"></div>
@@ -1829,7 +1830,7 @@
                 <div class="metric-caption">由 AI 销冠菜单入口发起</div>
               </article>
               <article class="module-card metric-card">
-                <div class="metric-head"><span class="metric-name">Token 总成本</span><span class="metric-icon purple"><svg class="icon"><use href="#i-coins" /></svg></span></div>
+                <div class="metric-head"><span class="metric-name">Token成本</span><span class="metric-icon purple"><svg class="icon"><use href="#i-coins" /></svg></span></div>
                 <div class="metric-body"><div class="metric-value" data-metric="salesKingTokenCost">¥986.40</div><span class="delta down">↓ 2.3%</span></div>
                 <div class="metric-caption">当前周期模型调用总成本</div>
               </article>
@@ -1838,10 +1839,11 @@
             <div class="sales-king-primary-grid">
               <article class="module-card chart-card">
                 <div class="card-heading">
-                  <div><h3 class="card-title">AI 销冠使用趋势</h3><div class="card-subtitle">切换查看去重使用人数或会话来源趋势</div></div>
+                  <div><h3 class="card-title">AI 销冠使用趋势</h3><div class="card-subtitle">切换查看使用人数、会话来源或 Token 成本趋势</div></div>
                   <div class="chart-tabs" id="salesKingTrendTabs" data-chart="salesKingChart" aria-label="AI 销冠趋势指标切换">
                     <button class="active" type="button" data-metric-key="salesKingUsagePeople">使用人数</button>
                     <button type="button" data-metric-keys="salesKingSessions,salesKingImSessions,salesKingDashboardSessions,salesKingMenuSessions">会话次数</button>
+                    <button type="button" data-metric-key="salesKingTokenCost">Token成本</button>
                   </div>
                 </div>
                 <div class="line-chart" id="salesKingChart" aria-label="AI 销冠使用趋势图"></div>
@@ -2023,13 +2025,13 @@
         messages: { name: "处理消息数", base: 26493, variance: 0.18, unit: "条", decimals: 0 },
         leads: { name: "线索推送数", base: 842, variance: 0.20, unit: "条", decimals: 0 },
         leadPushRate: { name: "线索推送率", base: 14.4, variance: 0.06, unit: "%", decimals: 1 },
-        robotTokenCost: { name: "Token 总成本", base: 2468.3, variance: 0.16, unit: "元", decimals: 2 },
+        robotTokenCost: { name: "Token成本", base: 2468.3, variance: 0.16, unit: "元", decimals: 2 },
         salesKingUsagePeople: { name: "使用人数", base: 1268, variance: 0.14, unit: "人", decimals: 0 },
         salesKingSessions: { name: "会话总数", base: 8726, variance: 0.18, unit: "次", decimals: 0 },
         salesKingImSessions: { name: "IM发起", base: 3984, variance: 0.17, unit: "次", decimals: 0 },
         salesKingDashboardSessions: { name: "看板发起", base: 2718, variance: 0.15, unit: "次", decimals: 0 },
         salesKingMenuSessions: { name: "菜单发起", base: 2024, variance: 0.13, unit: "次", decimals: 0 },
-        salesKingTokenCost: { name: "Token 总成本", base: 986.4, variance: 0.14, unit: "元", decimals: 2 }
+        salesKingTokenCost: { name: "Token成本", base: 986.4, variance: 0.14, unit: "元", decimals: 2 }
       };
 
       const state = {
