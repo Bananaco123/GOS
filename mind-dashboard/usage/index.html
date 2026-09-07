@@ -970,6 +970,31 @@
     .department-bar-point:focus { outline: none; }
     .department-bar-point:focus .department-bar { stroke: #1a4d8f; stroke-width: 1.2; }
 
+    .department-mount-legend {
+      position: absolute;
+      top: 4px;
+      right: 8px;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #667085;
+      font-size: 10px;
+    }
+
+    .department-mount-legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .department-mount-legend i { width: 8px; height: 8px; border-radius: 2px; }
+
+    .department-mount-tooltip-line {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 16px;
+      white-space: nowrap;
+    }
+
+    .department-mount-tooltip-line > span:first-child { display: inline-flex; align-items: center; gap: 6px; }
+
     .department-lead-tooltip-line {
       display: grid;
       grid-template-columns: 9px 1fr auto;
@@ -1790,7 +1815,7 @@
                     <button class="active" type="button" data-department-metric="sessions">接待会话数</button>
                     <button type="button" data-department-metric="leads">线索推送数</button>
                     <button type="button" data-department-metric="messages">处理消息数</button>
-                    <button type="button" data-department-metric="agents">挂载 Agent 数</button>
+                    <button type="button" data-department-metric="agents">挂载账号数</button>
                   </div>
                 </div>
               </div>
@@ -1977,6 +2002,7 @@
         tokenCost: 1284.6,
         avgCost: 0.069,
         robotTotal: 268,
+        mountedAccounts: 412,
         newAgents: 24,
         sessions: 5842,
         messages: 26493,
@@ -2198,6 +2224,7 @@
         sessions: allocateRankedTotal(metricBase.sessions),
         leads: allocateRankedTotal(metricBase.leads),
         messages: allocateRankedTotal(metricBase.messages),
+        accounts: allocateRankedTotal(metricBase.mountedAccounts),
         agents: allocateRankedTotal(metricBase.robotTotal)
       };
 
@@ -2206,6 +2233,7 @@
         sessions: aiDepartmentValues.sessions[index],
         leads: aiDepartmentValues.leads[index],
         messages: aiDepartmentValues.messages[index],
+        accounts: aiDepartmentValues.accounts[index],
         agents: aiDepartmentValues.agents[index]
       })).map(item => {
         const a = Math.round(item.leads * .38);
@@ -2627,7 +2655,7 @@
           sessions: { name: "接待会话数", unit: "次" },
           leads: { name: "线索推送数", unit: "条" },
           messages: { name: "处理消息数", unit: "条" },
-          agents: { name: "挂载 Agent 数", unit: "个" }
+          agents: { name: "挂载账号数", unit: "个" }
         };
         const gradeMeta = [
           { key: "a", name: "A类", color: "#2e7bd6" },
@@ -2636,12 +2664,20 @@
           { key: "d", name: "D类", color: "#f7ba1e" }
         ];
         const selectedGrades = gradeMeta.filter(item => state.leadGrades.includes(item.key));
+        const isMountMetric = metric === "agents";
         const data = aiDepartmentUsageBase.map(item => {
+          if (isMountMetric) {
+            const accountCount = Math.round(item.accounts * factor);
+            const agentCount = Math.round(item.agents * factor);
+            return { ...item, total: accountCount, accountCount, agentCount, gradeValues: {} };
+          }
           if (metric !== "leads") return { ...item, total: Math.round(item[metric] * factor), gradeValues: {} };
           const gradeValues = Object.fromEntries(gradeMeta.map(grade => [grade.key, Math.round(item.leadGrades[grade.key] * factor)]));
           const total = selectedGrades.reduce((sum, grade) => sum + gradeValues[grade.key], 0);
           return { ...item, total, gradeValues };
-        }).sort((a, b) => b.total - a.total);
+        }).sort((a, b) => isMountMetric
+          ? b.accountCount - a.accountCount || b.agentCount - a.agentCount
+          : b.total - a.total);
 
         const width = Math.max(960, Math.round(container.getBoundingClientRect().width) || 1040);
         const height = Math.max(318, Math.round(container.getBoundingClientRect().height) || 318);
@@ -2652,8 +2688,11 @@
         const innerW = width - padLeft - padRight;
         const innerH = height - padTop - padBottom;
         const slotWidth = innerW / data.length;
-        const barWidth = Math.min(44, slotWidth * .48);
-        const { step: tickStep, max: axisMax } = departmentAxisScale(Math.max(...data.map(item => item.total), 1));
+        const barWidth = isMountMetric ? Math.min(26, slotWidth * .26) : Math.min(44, slotWidth * .48);
+        const maxValue = isMountMetric
+          ? Math.max(...data.flatMap(item => [item.accountCount, item.agentCount]), 1)
+          : Math.max(...data.map(item => item.total), 1);
+        const { step: tickStep, max: axisMax } = departmentAxisScale(maxValue);
         const y = value => padTop + innerH - value / axisMax * innerH;
 
         let grid = "";
@@ -2667,8 +2706,11 @@
         const columns = data.map((item, index) => {
           const centerX = padLeft + slotWidth * index + slotWidth / 2;
           const barX = centerX - barWidth / 2;
-          const topY = y(item.total);
+          const accountTopY = isMountMetric ? y(item.accountCount) : 0;
+          const agentTopY = isMountMetric ? y(item.agentCount) : 0;
+          const topY = isMountMetric ? Math.min(accountTopY, agentTopY) : y(item.total);
           let barMarkup = "";
+          let valueMarkup = `<text x="${centerX.toFixed(2)}" y="${Math.max(13, topY - 8).toFixed(2)}" fill="#344054" font-size="10" font-weight="600" text-anchor="middle">${item.total.toLocaleString("zh-CN")}</text>`;
           if (metric === "leads") {
             let accumulated = 0;
             barMarkup = selectedGrades.map(grade => {
@@ -2678,20 +2720,46 @@
               accumulated += value;
               return `<rect class="department-bar" x="${barX.toFixed(2)}" y="${segmentTop.toFixed(2)}" width="${barWidth.toFixed(2)}" height="${Math.max(0, segmentBottom - segmentTop).toFixed(2)}" fill="${grade.color}" opacity=".90" />`;
             }).join("");
+          } else if (isMountMetric) {
+            const groupGap = Math.min(8, slotWidth * .08);
+            const accountBarX = centerX - groupGap / 2 - barWidth;
+            const agentBarX = centerX + groupGap / 2;
+            barMarkup = `<rect class="department-bar is-account" x="${accountBarX.toFixed(2)}" y="${accountTopY.toFixed(2)}" width="${barWidth.toFixed(2)}" height="${Math.max(0, padTop + innerH - accountTopY).toFixed(2)}" rx="3" fill="url(#departmentAccountGradient)" opacity=".90" />
+              <rect class="department-bar is-agent" x="${agentBarX.toFixed(2)}" y="${agentTopY.toFixed(2)}" width="${barWidth.toFixed(2)}" height="${Math.max(0, padTop + innerH - agentTopY).toFixed(2)}" rx="3" fill="url(#departmentAgentGradient)" opacity=".90" />`;
+            valueMarkup = `<text x="${(accountBarX + barWidth / 2).toFixed(2)}" y="${Math.max(13, accountTopY - 8).toFixed(2)}" fill="#1a4d8f" font-size="10" font-weight="600" text-anchor="middle">${item.accountCount.toLocaleString("zh-CN")}</text>
+              <text x="${(agentBarX + barWidth / 2).toFixed(2)}" y="${Math.max(13, agentTopY - 8).toFixed(2)}" fill="#008e9d" font-size="10" font-weight="600" text-anchor="middle">${item.agentCount.toLocaleString("zh-CN")}</text>`;
           } else {
             barMarkup = `<rect class="department-bar" x="${barX.toFixed(2)}" y="${topY.toFixed(2)}" width="${barWidth.toFixed(2)}" height="${Math.max(0, padTop + innerH - topY).toFixed(2)}" rx="3" fill="url(#departmentUsageGradient)" opacity=".90" />`;
           }
-          return `<g class="department-bar-point" data-index="${index}" tabindex="0" role="img" aria-label="${item.name}，${metricMeta[metric].name}${item.total}${metricMeta[metric].unit}">
+          const leadSessionCount = metric === "leads" ? Math.round(item.sessions * factor) : 0;
+          const leadPushRate = leadSessionCount ? item.total / leadSessionCount * 100 : 0;
+          const leadGradeAria = metric === "leads"
+            ? selectedGrades.map(grade => {
+                const gradeValue = item.gradeValues[grade.key];
+                const gradeRate = item.total ? gradeValue / item.total * 100 : 0;
+                return `${grade.name}${gradeValue}条，占比${Math.round(gradeRate)}%`;
+              }).join("，")
+            : "";
+          const ariaLabel = isMountMetric
+            ? `${item.name}，账号数${item.accountCount}个，Agent数${item.agentCount}个`
+            : metric === "leads"
+              ? `${item.name}，线索推送${item.total}条，推送率${Math.round(leadPushRate)}%，${leadGradeAria}`
+              : `${item.name}，${metricMeta[metric].name}${item.total}${metricMeta[metric].unit}`;
+          return `<g class="department-bar-point" data-index="${index}" tabindex="0" role="img" aria-label="${ariaLabel}">
             <title>${item.name}</title>
             ${barMarkup}
-            <text x="${centerX.toFixed(2)}" y="${Math.max(13, topY - 8).toFixed(2)}" fill="#344054" font-size="10" font-weight="600" text-anchor="middle">${item.total.toLocaleString("zh-CN")}</text>
+            ${valueMarkup}
             <text x="${centerX.toFixed(2)}" y="${height - 14}" fill="#667085" font-size="10" text-anchor="middle">${item.shortName}</text>
             <rect x="${(centerX - slotWidth / 2).toFixed(2)}" y="${padTop}" width="${slotWidth.toFixed(2)}" height="${height - padTop}" fill="transparent" />
           </g>`;
         }).join("");
 
-        container.innerHTML = `<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMinYMin meet" aria-label="${metricMeta[metric].name}部门排行">
-            <defs><linearGradient id="departmentUsageGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2e7bd6"/><stop offset="100%" stop-color="#77ade8"/></linearGradient></defs>
+        container.innerHTML = `${isMountMetric ? `<div class="department-mount-legend" aria-label="柱状图图例"><span><i style="background:#2e7bd6"></i>账号数</span><span><i style="background:#00a3b4"></i>Agent 数</span></div>` : ""}<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMinYMin meet" aria-label="${metricMeta[metric].name}部门排行">
+            <defs>
+              <linearGradient id="departmentUsageGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2e7bd6"/><stop offset="100%" stop-color="#77ade8"/></linearGradient>
+              <linearGradient id="departmentAccountGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a4d8f"/><stop offset="100%" stop-color="#69a4e6"/></linearGradient>
+              <linearGradient id="departmentAgentGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00a3b4"/><stop offset="100%" stop-color="#75d5dd"/></linearGradient>
+            </defs>
             ${grid}${columns}
           </svg>
           <div class="chart-tooltip"><div class="tooltip-date"></div><div class="tooltip-series"></div></div>`;
@@ -2702,8 +2770,16 @@
           const centerX = padLeft + slotWidth * index + slotWidth / 2;
           const box = container.getBoundingClientRect();
           tooltip.querySelector(".tooltip-date").textContent = item.name;
+          const leadSessionCount = metric === "leads" ? Math.round(item.sessions * factor) : 0;
+          const leadPushRate = leadSessionCount ? item.total / leadSessionCount * 100 : 0;
           tooltip.querySelector(".tooltip-series").innerHTML = metric === "leads"
-            ? `<div class="department-lead-tooltip-line total"><span>线索推送数</span><span class="tooltip-value">${item.total.toLocaleString("zh-CN")} 条</span></div>${selectedGrades.map(grade => `<div class="department-lead-tooltip-line"><i style="width:7px;height:7px;border-radius:2px;background:${grade.color}"></i><span>${grade.name}</span><span class="tooltip-value">${item.gradeValues[grade.key].toLocaleString("zh-CN")} 条</span></div>`).join("")}`
+            ? `<div class="department-lead-tooltip-line total"><span>线索推送：</span><span class="transfer-tooltip-number">${item.total.toLocaleString("zh-CN")} 条（${Math.round(leadPushRate)}%）</span></div>${selectedGrades.map(grade => {
+                const gradeValue = item.gradeValues[grade.key];
+                const gradeRate = item.total ? gradeValue / item.total * 100 : 0;
+                return `<div class="department-lead-tooltip-line"><i style="width:7px;height:7px;border-radius:2px;background:${grade.color}"></i><span>${grade.name}：</span><span class="transfer-tooltip-number">${gradeValue.toLocaleString("zh-CN")} 条（${Math.round(gradeRate)}%）</span></div>`;
+              }).join("")}`
+            : isMountMetric
+              ? `<div class="department-mount-tooltip-line"><span><i style="width:7px;height:7px;border-radius:2px;background:#2e7bd6"></i>账号数</span><span class="tooltip-value">${item.accountCount.toLocaleString("zh-CN")} 个</span></div><div class="department-mount-tooltip-line"><span><i style="width:7px;height:7px;border-radius:2px;background:#00a3b4"></i>Agent 数</span><span class="tooltip-value">${item.agentCount.toLocaleString("zh-CN")} 个</span></div>`
             : `${metricMeta[metric].name} <span class="tooltip-value">${item.total.toLocaleString("zh-CN")} ${metricMeta[metric].unit}</span>`;
           tooltip.style.left = `${centerX / width * box.width}px`;
           tooltip.style.top = `${Math.max(56, y(item.total) / height * box.height)}px`;
