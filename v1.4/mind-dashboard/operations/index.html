@@ -39,7 +39,7 @@
     .state-dot{width:7px;height:7px;border-radius:50%;background:#00b578;box-shadow:0 0 0 3px rgba(0,181,120,.12)}
     .toolbar{position:sticky;top:64px;z-index:20;min-height:66px;display:flex;align-items:center;gap:10px;padding:13px 14px;margin-bottom:16px;overflow:visible;box-shadow:0 8px 22px rgba(31,65,105,.08)}
     .toolbar:after{content:"";position:absolute;left:-1px;right:-1px;bottom:-17px;height:17px;background:var(--soft);pointer-events:none}
-    .range-preset{display:flex;gap:4px;padding:3px;background:#f2f5f9;border-radius:9px}
+    .toolbar-date-range{display:flex;align-items:center;gap:10px;flex-shrink:0}.range-preset{display:flex;gap:4px;padding:3px;background:#f2f5f9;border-radius:9px;flex-shrink:0}
     .range-preset button{padding:7px 11px;color:var(--muted);background:transparent;border-radius:7px;font-size:12px;white-space:nowrap}
     .range-preset button.active{color:var(--blue);background:#e9f3ff;font-weight:650}.exact-range{display:flex;align-items:center;gap:6px}
     .date-input{width:112px;height:34px;padding:0 9px;color:var(--text);background:#fff;border:1px solid var(--line);border-radius:8px;font-size:11px;outline:none}.date-input:focus{border-color:#79aff2;box-shadow:0 0 0 2px #e8f3ff}
@@ -60,6 +60,7 @@
     .metric-stats{display:grid;align-items:stretch;justify-content:center;margin-top:1px;font-variant-numeric:tabular-nums}.metric-stats.cols-1{grid-template-columns:1fr}.metric-stats.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.metric-stats.cols-3{grid-template-columns:1.45fr 1fr 1fr}.metric-stat{min-width:0;padding:0 5px}.metric-stats.cols-3 .metric-stat{padding:0 2px}.metric-stat+.metric-stat{border-left:1px solid rgba(255,255,255,.16)}.metric-stat-label{display:block;color:#dcecff;font-size:9px;white-space:nowrap}.metric-stat strong{display:block;margin-top:7px;overflow:hidden;color:#fff;font-size:14px;line-height:1;font-weight:720;text-overflow:ellipsis;white-space:nowrap}.metric-stat.primary strong{font-size:19px;font-weight:770}.metric-stats.cols-3 .metric-stat strong{font-size:11px}.metric-stats.cols-3 .metric-stat.primary strong{font-size:14px}.metric-stats.cols-1 .metric-stat strong{font-size:24px}.metric-meta{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:5px;min-height:38px;margin-top:9px}.metric-field{display:block;max-width:100%;font-size:9px;font-weight:700;line-height:1.35;white-space:nowrap}.metric-field.rank{display:block;width:auto;height:auto;color:#ffe68a;background:transparent;border-radius:0}.metric-field.period{color:#7ff0b7}.metric-field.period.negative{color:#ffadb6}
     .metric-label{color:#dcecff;font-size:10px;line-height:1.2;white-space:nowrap}.metric-value{display:flex;align-items:baseline;justify-content:center;gap:7px;min-height:29px;margin-top:7px;color:#fff;font-size:22px;line-height:1;font-weight:780;font-variant-numeric:tabular-nums;white-space:nowrap}.metric-value.dual{gap:4px;font-size:20px}.metric-value em{color:rgba(255,255,255,.62);font-size:14px;font-style:normal;font-weight:600}.metric-value small{color:#fff;font-size:16px;font-weight:730}.metric-value-part{min-width:0;padding:2px 3px;color:#fff;background:transparent;border:0;border-radius:6px;font-family:inherit;line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap;cursor:pointer;transform-origin:center;transition:font-size .42s cubic-bezier(.2,.82,.2,1),font-weight .42s ease,opacity .34s ease,transform .42s cubic-bezier(.2,.82,.2,1),background .18s ease,box-shadow .18s ease}.metric-value-part.primary{font-size:22px;font-weight:780;opacity:1;transform:scale(1)}.metric-value-part.secondary{font-size:16px;font-weight:730;opacity:.76;transform:scale(.94)}.metric-value-part:hover{background:rgba(255,255,255,.1)}.metric-value-part:focus-visible{outline:0;box-shadow:0 0 0 2px rgba(255,255,255,.75)}.metric-value-part.swap-grow{animation:metricValueGrow .46s cubic-bezier(.2,.82,.2,1)}.metric-value-part.swap-shrink{animation:metricValueShrink .46s cubic-bezier(.2,.82,.2,1)}@keyframes metricValueGrow{0%{font-size:16px;font-weight:730;opacity:.76;transform:scale(.94)}58%{transform:scale(1.12)}100%{font-size:22px;font-weight:780;opacity:1;transform:scale(1)}}@keyframes metricValueShrink{0%{font-size:22px;font-weight:780;opacity:1;transform:scale(1)}55%{transform:scale(.84)}100%{font-size:16px;font-weight:730;opacity:.76;transform:scale(.94)}}.metric-meta{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:5px;min-height:38px;margin-top:9px}.metric-field{display:block;max-width:100%;font-size:9px;font-weight:700;line-height:1.35;white-space:nowrap}.metric-field.rank{display:block;width:auto;height:auto;color:#ffe68a;background:transparent;border-radius:0}.metric-field.period{color:#7ff0b7}.metric-field.period.negative{color:#ffadb6}@media(prefers-reduced-motion:reduce){.metric-value-part{transition:none}.metric-value-part.swap-grow,.metric-value-part.swap-shrink{animation:none}}
 
+    .metric[data-trend-key="spend"] .metric-value,.metric[data-trend-key="performance"] .metric-value{font-size:clamp(14px,1.4vw,22px);letter-spacing:-.4px}
     .trend-panel{margin-bottom:16px;padding:0 18px 16px}.trend-tabs{display:grid;grid-template-columns:repeat(7,minmax(102px,1fr));overflow:visible;border-bottom:1px solid var(--line)}
     .trend-tab{position:relative;min-width:120px;padding:13px 10px;color:var(--muted);background:transparent;font-size:11px;white-space:nowrap}
     .trend-tab.active{color:var(--blue);font-weight:700}.trend-tab.active:after{content:"";position:absolute;left:18px;right:18px;bottom:-1px;height:2px;background:var(--blue);border-radius:2px 2px 0 0}
@@ -139,7 +140,9 @@
     }
     @container (max-width:610px){.pm-primary-filters{align-items:stretch;flex-direction:column}.pm-search,.pm-country-filter{width:100%}#pmBoard tbody tr{grid-template-columns:repeat(2,minmax(0,1fr))}#pmBoard td:nth-child(3n){border-right:1px solid #e5ebf2}#pmBoard td:nth-child(2n){border-right:0}.pm-grade-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid #dbe4ef;border-radius:8px}.pm-grade-tabs button.active:after{left:18px;right:18px}}
 
-    @media(max-width:1320px){.toolbar{min-height:112px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:44px 40px;align-content:center;gap:6px 10px;padding:10px 14px}.filter-spacer{display:none}.range-preset{grid-column:1;grid-row:1;justify-self:start}.exact-range{grid-column:2 / 5;grid-row:1}.toolbox-shell{grid-column:5;grid-row:1;justify-self:end}.operator-filter{grid-column:1;grid-row:2}.account-filter{grid-column:2;grid-row:2}#campaignFilter{grid-column:3;grid-row:2}#groupFilter{grid-column:4;grid-row:2}#adFilter{grid-column:5;grid-row:2}.multi-filter,.multi-filter.operator-filter,.select{width:100%;min-width:0}.summary-main{grid-template-columns:220px 1fr}.operator{padding:18px}.metric{padding:18px 7px}.metric-stat{padding:0 3px}}
+    .multi-filter.ad-layer-filter{width:168px;min-width:150px}.multi-filter.ad-layer-filter .multi-filter-input{cursor:pointer}.multi-filter.ad-layer-filter.has-multiple:not(.is-open)::after{left:auto;right:0}#adMultiOptions{right:0;left:auto}
+    @media(max-width:1560px){.toolbar{min-height:112px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:44px 40px;align-content:center;gap:6px 10px;padding:10px 14px}.filter-spacer{display:none}.toolbar-date-range{grid-column:1 / 5;grid-row:1}.toolbox-shell{grid-column:5;grid-row:1;justify-self:end}.operator-filter{grid-column:1;grid-row:2}.account-filter{grid-column:2;grid-row:2}#campaignMultiFilter{grid-column:3;grid-row:2}#groupMultiFilter{grid-column:4;grid-row:2}#adMultiFilter{grid-column:5;grid-row:2}.multi-filter,.multi-filter.operator-filter,.multi-filter.ad-layer-filter,.select{width:100%;min-width:0}}
+    @media(max-width:1320px){.summary-main{grid-template-columns:220px 1fr}.operator{padding:18px}.metric{padding:18px 7px}.metric-stat{padding:0 3px}}
     @media(max-width:900px){:root{--sidebar:64px}.brand{justify-content:center;padding:0}.brand>div,.nav-title,.sidebar-foot{display:none}.nav{padding:14px 8px}.nav-item{justify-content:center;padding:10px 8px;font-size:0}.nav-icon{width:auto;font-size:14px}.topbar{padding:0 14px}main{padding:78px 14px 34px}.toolbar{top:64px}.dashboard-heading h1{font-size:22px}.range-preset button{padding:7px 8px;font-size:11px}.date-input{width:100px}.summary-main{grid-template-columns:1fr}.operator{border-right:0;border-bottom:1px solid rgba(255,255,255,.16)}.metrics-strip{overflow-x:auto;grid-template-columns:repeat(7,minmax(130px,1fr))}.trend-tabs{grid-template-columns:repeat(7,minmax(120px,1fr));overflow-x:auto}.chart-wrap{min-height:210px}.board-switch{width:230px}}
     @media(max-width:900px){.analysis-trend .trend-panel{padding-right:10px;padding-left:10px}.metric-selector.active:before{display:none}}
 
@@ -311,8 +314,10 @@
       <div class="update-state"><span class="state-dot"></span><span>数据已更新 · 10:30</span></div>
     </section>
     <section class="toolbar panel" aria-label="运营看板筛选">
-      <div class="range-preset" id="rangePreset"><button data-range="yesterday">昨天</button><button class="active" data-range="today">今天</button><button data-range="7">近7天</button><button data-range="30">近30天</button></div>
-      <div class="exact-range"><input class="date-input" id="startDate" type="date" aria-label="开始日期"><span style="color:#9aa8b9">至</span><input class="date-input" id="endDate" type="date" aria-label="结束日期"></div>
+      <div class="toolbar-date-range">
+        <div class="range-preset" id="rangePreset"><button data-range="yesterday">昨天</button><button class="active" data-range="today">今天</button><button data-range="7">近7天</button><button data-range="30">近30天</button></div>
+        <div class="exact-range"><input class="date-input" id="startDate" type="date" aria-label="开始日期"><span style="color:#9aa8b9">至</span><input class="date-input" id="endDate" type="date" aria-label="结束日期"></div>
+      </div>
       <span class="filter-spacer"></span>
       <div class="multi-filter operator-filter" id="operatorMultiFilter">
         <div class="multi-filter-control" id="operatorMultiControl" role="combobox" aria-label="选择运营" aria-haspopup="listbox" aria-expanded="false" aria-controls="operatorMultiOptions">
@@ -330,9 +335,30 @@
         </div>
         <div class="multi-filter-menu" id="accountMultiOptions" role="listbox" aria-label="广告账户选项" aria-multiselectable="true" hidden></div>
       </div>
-      <select class="select" id="campaignFilter"><option value="all" data-placeholder="true">全部广告计划</option></select>
-      <select class="select" id="groupFilter"><option value="all" data-placeholder="true">全部广告组</option></select>
-      <select class="select" id="adFilter"><option value="all" data-placeholder="true">全部广告</option></select>
+      <div class="multi-filter ad-layer-filter" id="campaignMultiFilter">
+        <div class="multi-filter-control" id="campaignMultiControl" role="combobox" aria-label="选择广告计划" aria-haspopup="listbox" aria-expanded="false" aria-controls="campaignMultiOptions">
+          <div class="multi-filter-tags" id="campaignMultiTags"></div>
+          <input class="multi-filter-input" id="campaignMultiInput" type="text" placeholder="全部广告计划" readonly aria-label="广告计划多选" />
+          <span class="multi-filter-chevron" aria-hidden="true"></span>
+        </div>
+        <div class="multi-filter-menu" id="campaignMultiOptions" role="listbox" aria-label="广告计划选项" aria-multiselectable="true" hidden></div>
+      </div>
+      <div class="multi-filter ad-layer-filter" id="groupMultiFilter">
+        <div class="multi-filter-control" id="groupMultiControl" role="combobox" aria-label="选择广告组" aria-haspopup="listbox" aria-expanded="false" aria-controls="groupMultiOptions">
+          <div class="multi-filter-tags" id="groupMultiTags"></div>
+          <input class="multi-filter-input" id="groupMultiInput" type="text" placeholder="全部广告组" readonly aria-label="广告组多选" />
+          <span class="multi-filter-chevron" aria-hidden="true"></span>
+        </div>
+        <div class="multi-filter-menu" id="groupMultiOptions" role="listbox" aria-label="广告组选项" aria-multiselectable="true" hidden></div>
+      </div>
+      <div class="multi-filter ad-layer-filter" id="adMultiFilter">
+        <div class="multi-filter-control" id="adMultiControl" role="combobox" aria-label="选择广告" aria-haspopup="listbox" aria-expanded="false" aria-controls="adMultiOptions">
+          <div class="multi-filter-tags" id="adMultiTags"></div>
+          <input class="multi-filter-input" id="adMultiInput" type="text" placeholder="全部广告" readonly aria-label="广告多选" />
+          <span class="multi-filter-chevron" aria-hidden="true"></span>
+        </div>
+        <div class="multi-filter-menu" id="adMultiOptions" role="listbox" aria-label="广告选项" aria-multiselectable="true" hidden></div>
+      </div>
       <div class="toolbox-shell">
         <button class="toolbox" type="button" aria-label="工具箱"><span class="toolbox-icon">✦</span>工具箱</button>
         <div class="toolbox-bubbles" role="group" aria-label="工具箱能力">
@@ -466,6 +492,8 @@
       {id:19,name:'设计师联营计划',platform:'LinkedIn',account:'LinkedIn-B2B',group:'室内设计师合作人群',ad:'设计师联营权益Q',country:'英国',language:'英文',age:'35–44岁',gender:'生理女认知男',device:'桌面端 · macOS',spend:13400,exposure:365219,inquiries:58,transfers:46,high:29,visits:12,projects:16,deals:4,amount:792000},
       {id:20,name:'老客转介绍活动',platform:'WhatsApp',account:'WhatsApp-拉美',group:'已成交客户相似人群',ad:'转介绍激励活动R',country:'巴西',language:'葡萄牙文',age:'45–54岁',gender:'武装直升机',device:'移动端 · Android',spend:6200,exposure:329845,inquiries:67,transfers:52,high:31,visits:14,projects:18,deals:4,amount:484000}
     );
+    // 金额种子调整到万级消耗、百万级订单的演示规模；所有金额仍以元存储。
+    plans.forEach(plan=>{plan.spend=Math.round(plan.spend/100);plan.amount=Math.round(plan.amount/100)});
     const accountOwners={
       'Meta-亚洲华人':'马凯 Kevin Ma','Meta-海外增长':'陈琳 Linda Chen','TikTok-内容增长':'王莎 Sara Wang','Google-北美增长':'刘迈 Mike Liu','LinkedIn-B2B':'林杰 James Lin','Meta-大洋洲':'赵睿 Eric Zhao','Meta-欧洲市场':'陈琳 Linda Chen','TikTok-东南亚':'王莎 Sara Wang','Google-东南亚':'刘迈 Mike Liu','WhatsApp-拉美':'赵睿 Eric Zhao'
     };
@@ -478,6 +506,7 @@
       {id:'OS-202608-006',customer:'Ahmed Al-Mansouri',pm:'Lisa Wang',planId:2,touch:'Messenger · 一对一方案咨询B',date:'2026-08-04',amount:312000,receivedAmount:156000,payment:'部分收款'},
       {id:'OS-202608-007',customer:'Maria Anderson',pm:'Kevin Ma',planId:3,touch:'Facebook · 公寓完工实拍C',date:'2026-08-02',amount:236000,receivedAmount:236000,payment:'已收款'}
     ];
+    orders.forEach(order=>{order.amount=Math.round(order.amount/100);order.receivedAmount=Math.round(order.receivedAmount/100)});
     const pmRows=[
       {name:'马凯 Kevin Ma',assigned:2312,grades:{a:542,b:784,c:986},connected:{a:237,b:179,c:96},projects:{a:112,b:75,c:39},deals:{a:50,b:29,c:17},amount:{a:1628000,b:828800,c:503200}},
       {name:'陈琳 Linda Chen',assigned:2145,grades:{a:483,b:731,c:931},connected:{a:203,b:151,c:82},projects:{a:92,b:59,c:31},deals:{a:38,b:21,c:12},amount:{a:1171500,b:596400,c:362100}},
@@ -506,18 +535,33 @@
       row.projectTypes=buildPmProjectTypeBreakdown(row,index);
       pmRegions.forEach((region,regionIndex)=>{row.regions[region].projectTypes=buildPmProjectTypeBreakdown(row.regions[region],index*pmRegions.length+regionIndex)});
     });
-    const state={range:'today',start:'',end:'',accounts:[],operators:[],campaign:'all',group:'all',ad:'all',trend:'spend',metricPrimary:{delivery:'exposure',inquiries:'inquiries',crm:'crmCustomers'},metricSwap:null,board:'ads',lockedPoint:null,traceOrderId:'OS-202608-001',dimension:'ad',sortKey:'inquiries',sortDir:'desc',orderAnalysisDimension:'pm',expandedRowKeys:new Set(),expandedInitialized:false,pmGrade:'all',pmCountry:'all',pmProjectType:'all',pmSearch:'',pmSortKey:'assigned',pmSortDir:'desc',adsPage:1,pmPage:1,adsPageSize:15,pmPageSize:15};
+    const state={range:'today',start:'',end:'',accounts:[],operators:['马凯 Kevin Ma'],campaigns:[],groups:[],ads:[],trend:'spend',metricPrimary:{delivery:'exposure',inquiries:'inquiries',crm:'crmCustomers'},metricSwap:null,board:'ads',lockedPoint:null,traceOrderId:'OS-202608-001',dimension:'ad',sortKey:'inquiries',sortDir:'desc',orderAnalysisDimension:'pm',expandedRowKeys:new Set(),expandedInitialized:false,pmGrade:'all',pmCountry:'all',pmProjectType:'all',pmSearch:'',pmSortKey:'assigned',pmSortDir:'desc',adsPage:1,pmPage:1,adsPageSize:15,pmPageSize:15};
     const dualMetricMeta={
-      delivery:{exposure:{label:'曝光',top:4,delta:8.6},cpm:{label:'CPM',percentile:20,delta:-2.4,goodWhenDown:true}},
-      inquiries:{inquiries:{label:'询盘',top:1,delta:-3.2},cpa:{label:'CPA',top:3,delta:-5.7,goodWhenDown:true}},
-      crm:{crmCustomers:{label:'CRM客户',percentile:20,delta:6.8},crmProjects:{label:'CRM立项',top:5,delta:9.3}}
+      delivery:{exposure:{label:'曝光',delta:8.6},cpm:{label:'CPM',delta:-2.4,goodWhenDown:true}},
+      inquiries:{inquiries:{label:'询盘',delta:-3.2},cpa:{label:'CPA',delta:-5.7,goodWhenDown:true}},
+      crm:{crmCustomers:{label:'CRM客户',delta:6.8},crmProjects:{label:'CRM立项',delta:9.3}}
     };
-    const fmt=new Intl.NumberFormat('zh-CN'); const money=v=>`¥${fmt.format(Math.round(v))}`; const compact=v=>v>=1e6?`${(v/1e6).toFixed(2)}M`:v>=1e3?`${(v/1e3).toFixed(1)}k`:fmt.format(Math.round(v)); const cardCompact=v=>v>=1e6?`${(v/1e6).toFixed(1)}M`:v>=1e5?`${Math.round(v/1e3)}k`:v>=1e3?`${(v/1e3).toFixed(1)}k`:fmt.format(Math.round(v)); const cardMoney=v=>`¥${cardCompact(v)}`; const narrowMoney=v=>money(v/10); const narrowNumber=v=>fmt.format(Math.round(v/10));
+    const fmt=new Intl.NumberFormat('zh-CN'); const money=v=>`¥${fmt.format(Math.round(v))}`; const compact=v=>v>=1e6?`${(v/1e6).toFixed(2)}M`:v>=1e3?`${(v/1e3).toFixed(1)}k`:fmt.format(Math.round(v)); const cardCompact=v=>v>=1e6?`${(v/1e6).toFixed(1)}M`:v>=1e5?`${Math.round(v/1e3)}k`:v>=1e3?`${(v/1e3).toFixed(1)}k`:fmt.format(Math.round(v)); const cardMoney=money; const narrowMoney=money; const narrowNumber=v=>fmt.format(Math.round(v/10));
     const sum=(rows,key)=>rows.reduce((n,x)=>n+x[key],0); const rangeFactor=()=>state.range==='yesterday'?.91:state.range==='today'?1:state.range==='7'?5.8:state.range==='30'?22.6:Math.max(1,(new Date(state.end)-new Date(state.start))/86400000+1);
-    const rows=()=>plans.filter(x=>(!state.accounts.length||state.accounts.includes(x.account))&&(!state.operators.length||state.operators.includes(accountOwners[x.account]))&&(state.campaign==='all'||x.name===state.campaign)&&(state.group==='all'||x.group===state.group)&&(state.ad==='all'||x.ad===state.ad));
+    const rows=()=>plans.filter(x=>(!state.accounts.length||state.accounts.includes(x.account))&&(!state.operators.length||state.operators.includes(accountOwners[x.account]))&&(!state.campaigns.length||state.campaigns.includes(x.name))&&(!state.groups.length||state.groups.includes(x.group))&&(!state.ads.length||state.ads.includes(x.ad)));
     const scaled=(v)=>Math.round(v*rangeFactor()); const unique=key=>[...new Set(plans.map(x=>x[key]))];
-    function fillSelect(id,key,label){const el=document.querySelector(id);el.innerHTML=`<option value="all" data-placeholder="true">${label}</option>`+unique(key).map(v=>`<option value="${v}">${v}</option>`).join('')}
-    fillSelect('#campaignFilter','name','全部广告计划');fillSelect('#groupFilter','group','全部广告组');fillSelect('#adFilter','ad','全部广告');
+    function operatorRankLabel(metric){
+      if(state.operators.length!==1||['accounts','campaigns','groups','ads'].some(key=>state[key].length))return '';
+      const field={spend:'spend',exposure:'exposure',inquiries:'inquiries',leads:'transfers',crmCustomers:'transfers',crmProjects:'projects',visits:'visits',performance:'amount'}[metric.key];
+      const score=items=>{
+        if(!items.length)return null;
+        if(metric.key==='cpm'||metric.key==='cpa'){
+          const denominator=sum(items,metric.key==='cpm'?'exposure':'inquiries');
+          return denominator>0?sum(items,'spend')/denominator*(metric.key==='cpm'?1000:1):null;
+        }
+        return field?sum(items,field):null;
+      };
+      const peers=[...new Set(Object.values(accountOwners))].map(name=>({name,value:score(plans.filter(item=>accountOwners[item.account]===name))})).filter(item=>Number.isFinite(item.value));
+      const current=peers.find(item=>item.name===state.operators[0]);
+      if(!current)return '';
+      const rank=1+peers.filter(item=>metric.goodWhenDown?item.value<current.value:item.value>current.value).length,percentile=rank/peers.length*100;
+      return rank<=10?`全司 Top${rank}`:percentile<=50?`全司前${Math.ceil(percentile/10)*10}%`:'全司后50%';
+    }
     function createMultiFilter({rootId,controlId,tagsId,inputId,menuId,stateKey,placeholder,options}){
       const root=document.querySelector(rootId),control=document.querySelector(controlId),tags=document.querySelector(tagsId),input=document.querySelector(inputId),menu=document.querySelector(menuId);
       let visibleOptions=[...options];
@@ -539,6 +583,9 @@
     }
     const accountMultiFilter=createMultiFilter({rootId:'#accountMultiFilter',controlId:'#accountMultiControl',tagsId:'#accountMultiTags',inputId:'#accountMultiSearch',menuId:'#accountMultiOptions',stateKey:'accounts',placeholder:'全部广告账户',options:unique('account').map(account=>({value:account,label:account,keywords:account}))});
     const operatorMultiFilter=createMultiFilter({rootId:'#operatorMultiFilter',controlId:'#operatorMultiControl',tagsId:'#operatorMultiTags',inputId:'#operatorMultiSearch',menuId:'#operatorMultiOptions',stateKey:'operators',placeholder:'全部运营',options:[...new Set(Object.values(accountOwners))].map(name=>({value:name,label:name,keywords:name}))});
+    const campaignMultiFilter=createMultiFilter({rootId:'#campaignMultiFilter',controlId:'#campaignMultiControl',tagsId:'#campaignMultiTags',inputId:'#campaignMultiInput',menuId:'#campaignMultiOptions',stateKey:'campaigns',placeholder:'全部广告计划',options:unique('name').map(value=>({value,label:value,keywords:value}))});
+    const groupMultiFilter=createMultiFilter({rootId:'#groupMultiFilter',controlId:'#groupMultiControl',tagsId:'#groupMultiTags',inputId:'#groupMultiInput',menuId:'#groupMultiOptions',stateKey:'groups',placeholder:'全部广告组',options:unique('group').map(value=>({value,label:value,keywords:value}))});
+    const adMultiFilter=createMultiFilter({rootId:'#adMultiFilter',controlId:'#adMultiControl',tagsId:'#adMultiTags',inputId:'#adMultiInput',menuId:'#adMultiOptions',stateKey:'ads',placeholder:'全部广告',options:unique('ad').map(value=>({value,label:value,keywords:value}))});
     function renderOperator(){
       const isGlobal=!state.operators.length,name=isGlobal?'全局投放总览':state.operators.length===1?state.operators[0]:`已选 ${state.operators.length} 位人员`,photo=document.querySelector('#operatorPhoto');
       document.querySelector('#operatorName').textContent=name;photo.classList.toggle('is-global',isGlobal);photo.setAttribute('aria-label',isGlobal?'全局投放总览头像':`${name} 头像`);
@@ -549,25 +596,25 @@
       const spend=sum(r,'spend'),exposure=sum(r,'exposure'),inquiries=sum(r,'inquiries'),transferredLeads=sum(r,'transfers'),crmCustomers=sum(r,'transfers'),projects=sum(r,'projects'),visits=sum(r,'visits'),amount=sum(r,'amount');
       const cpm=exposure?spend/exposure*1000:0,cpa=inquiries?spend/inquiries:0;
       const data=[
-        {key:'spend',label:'投放消耗',items:[{key:'spend',label:'投放消耗',value:cardMoney(spend*f),top:3,delta:5.4}]},
+        {key:'spend',label:'投放消耗',items:[{key:'spend',label:'投放消耗',value:cardMoney(spend*f),delta:5.4}]},
         {key:'delivery',label:'曝光 / CPM',items:[{key:'exposure',value:cardCompact(exposure*f),...dualMetricMeta.delivery.exposure},{key:'cpm',value:cpm?`¥${cpm.toFixed(1)}`:'—',...dualMetricMeta.delivery.cpm}]},
         {key:'inquiries',label:'询盘 / CPA',items:[{key:'inquiries',value:fmt.format(scaled(inquiries)),...dualMetricMeta.inquiries.inquiries},{key:'cpa',value:cpa?money(cpa):'—',...dualMetricMeta.inquiries.cpa}]},
-        {key:'leads',label:'转派线索',items:[{key:'leads',label:'转派线索',value:fmt.format(scaled(transferredLeads)),percentile:20,delta:7.1}]},
+        {key:'leads',label:'转派线索',items:[{key:'leads',label:'转派线索',value:fmt.format(scaled(transferredLeads)),delta:7.1}]},
         {key:'crm',label:'CRM客户 / CRM立项',items:[{key:'crmCustomers',value:fmt.format(scaled(crmCustomers)),...dualMetricMeta.crm.crmCustomers},{key:'crmProjects',value:fmt.format(scaled(projects)),...dualMetricMeta.crm.crmProjects}]},
-        {key:'visits',label:'客户到店',items:[{key:'visits',label:'客户到店',value:fmt.format(scaled(visits)),top:5,delta:4.2}]},
-        {key:'performance',label:'订单金额',items:[{key:'performance',label:'订单金额',value:cardMoney(amount*f),top:2,delta:13}]}
+        {key:'visits',label:'客户到店',items:[{key:'visits',label:'客户到店',value:fmt.format(scaled(visits)),delta:4.2}]},
+        {key:'performance',label:'订单金额',items:[{key:'performance',label:'订单金额',value:cardMoney(amount*f),delta:13}]}
       ];
-      document.querySelector('#metricsStrip').innerHTML=data.map(x=>{const primaryKey=state.metricPrimary[x.key]||x.items[0].key,primary=x.items.find(item=>item.key===primaryKey)||x.items[0],rankLabel=primary.top?`全司 Top${primary.top}`:primary.percentile&&primary.percentile<=50?`全司前${Math.ceil(primary.percentile/10)*10}%`:'';const value=x.items.length===1?`<strong class="metric-value" title="${primary.value}">${primary.value}</strong>`:`<span class="metric-value dual" title="点击数值切换主信息">${x.items.map((item,index)=>{const isPrimary=item.key===primary.key,swapClass=state.metricSwap?.key===x.key?(item.key===state.metricSwap.to?'swap-grow':item.key===state.metricSwap.from?'swap-shrink':''):'';return `${index?'<em>/</em>':''}<button class="metric-value-part ${isPrimary?'primary':'secondary'} ${swapClass}" type="button" data-metric-series="${item.key}" aria-label="将${item.label}设为主信息" aria-pressed="${isPrimary}" title="点击将${item.label}设为主信息">${item.value}</button>`}).join('')}</span>`;const negative=primary.goodWhenDown?primary.delta>0:primary.delta<0;return `<div class="metric metric-selector ${state.trend===x.key?'active':''}" data-trend-key="${x.key}" role="button" tabindex="0" aria-pressed="${state.trend===x.key}" aria-label="${x.label}趋势指标"><span class="metric-label">${x.label}</span>${value}<div class="metric-meta">${rankLabel?`<span class="metric-field rank">${rankLabel}</span>`:''}<span class="metric-field period ${negative?'negative':''}">较上周期 ${primary.delta>=0?'+':''}${primary.delta}%</span></div></div>`}).join('');
+      document.querySelector('#metricsStrip').innerHTML=data.map(x=>{const primaryKey=state.metricPrimary[x.key]||x.items[0].key,primary=x.items.find(item=>item.key===primaryKey)||x.items[0],rankLabel=operatorRankLabel(primary);const value=x.items.length===1?`<strong class="metric-value" title="${primary.value}">${primary.value}</strong>`:`<span class="metric-value dual" title="点击数值切换主信息">${x.items.map((item,index)=>{const isPrimary=item.key===primary.key,swapClass=state.metricSwap?.key===x.key?(item.key===state.metricSwap.to?'swap-grow':item.key===state.metricSwap.from?'swap-shrink':''):'';return `${index?'<em>/</em>':''}<button class="metric-value-part ${isPrimary?'primary':'secondary'} ${swapClass}" type="button" data-metric-series="${item.key}" aria-label="将${item.label}设为主信息" aria-pressed="${isPrimary}" title="点击将${item.label}设为主信息">${item.value}</button>`}).join('')}</span>`;const negative=primary.goodWhenDown?primary.delta>0:primary.delta<0;return `<div class="metric metric-selector ${state.trend===x.key?'active':''}" data-trend-key="${x.key}" role="button" tabindex="0" aria-pressed="${state.trend===x.key}" aria-label="${x.label}趋势指标"><span class="metric-label">${x.label}</span>${value}<div class="metric-meta">${rankLabel?`<span class="metric-field rank">${rankLabel}</span>`:''}<span class="metric-field period ${negative?'negative':''}">较上周期 ${primary.delta>=0?'+':''}${primary.delta}%</span></div></div>`}).join('');
     }
 
     const trendDefinitions={
-      spend:{title:'投放消耗趋势',dualAxis:false,delta:5.4,series:[{name:'投放消耗',unit:'money',values:[8200,7600,7900,9100,8750,8600,9400,10100,9700,9200,9550,10800,10300,10050,11200]}]},
+      spend:{title:'投放消耗趋势',subtitle:'展示所选时间范围内的投放消耗（元），悬停查看各时点实际值',dualAxis:false,delta:5.4,series:[{name:'投放消耗',unit:'money',totalKey:'spend',fullMoney:true,values:[8200,7600,7900,9100,8750,8600,9400,10100,9700,9200,9550,10800,10300,10050,11200]}]},
       delivery:{title:'曝光 / CPM趋势',subtitle:'曝光使用左侧刻度，CPM使用右侧刻度；两项按各自量纲展示',dualAxis:true,delta:8.6,analysisNote:'曝光量总体抬升但期间多次回落，CPM在低位与高位间独立波动，未与曝光形成完全相关趋势。',series:[{id:'exposure',name:'曝光',unit:'count',values:[980000,1020000,1070000,1015000,1120000,1085000,1180000,1140000,1215000,1170000,1260000,1230000,1305000,1270000,1390000]},{id:'cpm',name:'CPM',unit:'decimalMoney',axis:'right',values:[8.37,7.45,7.82,8.31,7.61,8.08,7.67,8.25,7.73,8.16,7.58,8.02,7.89,7.50,8.06]}]},
       inquiries:{title:'询盘 / CPA趋势',subtitle:'询盘使用左侧刻度，CPA使用右侧刻度；悬停查看实际值',dualAxis:true,delta:-3.2,analysisNote:'CPA与询盘量存在阶段性反向波动，询盘增长时获客成本并非同步上升。',series:[{id:'inquiries',name:'询盘',unit:'count',values:[118,112,116,128,125,121,133,139,132,127,130,145,137,142,149]},{id:'cpa',name:'CPA',unit:'money',axis:'right',values:[72,70,69,71,74,73,72,75,77,76,73,74,78,75,76]}]},
       leads:{title:'转派线索进线趋势',subtitle:'线索数量使用左轴，转派率使用右侧0–100%百分比轴；悬停查看同一时点的实际值',dualAxis:true,delta:7.1,analysisNote:'总线索量由A、B、C三级线索构成；转派率使用独立百分比轴观察询盘转派效率，避免与线索数量混用刻度。',series:[{name:'总线索量',unit:'count',color:'#1a4d8f',className:'lead-total',values:[74,70,73,81,78,76,84,87,80,79,82,90,85,89,94]},{name:'A级线索',unit:'count',color:'#2376df',values:[30,28,31,34,33,32,35,38,34,33,35,40,37,39,42]},{name:'B级线索',unit:'count',color:'#12aeb1',values:[27,26,25,29,28,27,31,30,29,29,30,32,31,32,33]},{name:'C级线索',unit:'count',color:'#f2a51a',values:[17,16,17,18,17,17,18,19,17,17,17,18,17,18,19]},{name:'转派率',unit:'percent',axis:'right',scaleWithSelection:false,color:'#8b5cf6',className:'transfer-rate',values:[73.3,72.9,74.5,76.4,75.0,74.5,77.1,78.4,76.9,76.7,78.1,79.6,78.7,80.2,81.0]}]},
       crm:{title:'CRM客户 / CRM立项趋势',subtitle:'两项均为客户数，CRM客户应高于CRM立项；悬停查看实际值',dualAxis:false,delta:6.8,analysisNote:'CRM客户量持续高于CRM立项量，但立项转化差随周期发生变化。',series:[{id:'crmCustomers',name:'CRM客户',unit:'count',values:[93,88,91,100,96,94,105,109,101,99,103,113,106,111,116]},{id:'crmProjects',name:'CRM立项',unit:'count',values:[52,49,51,57,54,56,60,64,59,61,63,69,66,70,74]}]},
-      visits:{title:'客户到店趋势',dualAxis:false,delta:4.2,series:[{name:'客户到店',unit:'count',values:[26,24,28,31,29,30,33,35,32,34,36,39,37,40,43]}]},
-      performance:{title:'订单金额趋势',dualAxis:false,delta:13,series:[{name:'订单金额',unit:'money',values:[72000,68000,75000,89000,84000,81000,93000,102000,97000,91000,96000,112000,105000,101000,118000]}]}
+      visits:{title:'客户到店趋势',subtitle:'展示所选时间范围内的客户到店数量，悬停查看各时点实际值',dualAxis:false,delta:4.2,series:[{name:'客户到店',unit:'count',values:[26,24,28,31,29,30,33,35,32,34,36,39,37,40,43]}]},
+      performance:{title:'订单金额趋势',dualAxis:false,delta:13,series:[{name:'订单金额',unit:'money',totalKey:'amount',fullMoney:true,values:[72000,68000,75000,89000,84000,81000,93000,102000,97000,91000,96000,112000,105000,101000,118000]}]}
     };
     let chartRuntime=null;
     const shortMoney=v=>`¥${v>=1000000?(v/1000000).toFixed(1)+'M':v>=1000?Math.round(v/1000)+'k':Math.round(v)}`;
@@ -581,20 +628,21 @@
     const chartColors=['#1677ff','#00a3b4','#8b5cf6','#f2a51a'];
     const seriesClass=(index,series)=>series.className||['primary','secondary','tertiary','quaternary'][index]||'tertiary';
     const formatSeriesValue=(series,value)=>series.unit==='money'?money(value):series.unit==='decimalMoney'?`¥${Number(value).toFixed(2)}`:series.unit==='percent'?`${Number(value).toFixed(1)}%`:fmt.format(Math.round(value));
-    const formatAxisValue=(series,value)=>(series.unit==='money'||series.unit==='decimalMoney')?shortMoney(value):series.unit==='percent'?`${Math.round(value)}%`:compact(value);
+    const formatAxisValue=(series,value)=>series.fullMoney?money(value):(series.unit==='money'||series.unit==='decimalMoney')?shortMoney(value):series.unit==='percent'?`${Math.round(value)}%`:compact(value);
+    function distributeMoney(total,weights){const weightTotal=weights.reduce((sum,value)=>sum+value,0),values=weights.map(value=>Math.floor(total*value/weightTotal));values[values.length-1]+=total-values.reduce((sum,value)=>sum+value,0);return values}
     function renderTrend(){
       const baseDef=trendDefinitions[state.trend],primarySeriesId=state.metricPrimary[state.trend],orderedSeries=primarySeriesId?[...baseDef.series].sort((a,b)=>a.id===primarySeriesId?-1:b.id===primarySeriesId?1:0):baseDef.series,primaryMeta=dualMetricMeta[state.trend]?.[primarySeriesId],primarySeries=orderedSeries[0],def={...baseDef,series:orderedSeries,delta:primaryMeta?.delta??baseDef.delta,title:primaryMeta?`${primarySeries.name}趋势`:baseDef.title,subtitle:primaryMeta?`${primarySeries.name}为当前主信息；${orderedSeries.slice(1).map(item=>item.name).join('、')}作为对比，悬停查看实际值`:baseDef.subtitle},activeRows=rows(),count=chartPointCount(),labels=chartLabels(count),selectionScale=activeRows.length/plans.length,timeScale=(state.range==='today'||state.range==='yesterday') ? .72 : 1;
       document.querySelector('#chartTooltip').style.display='none';
       const multiSeries=def.series.length>1,trendPanel=document.querySelector('.trend-panel'),chartHeading=document.querySelector('#chartHeading');
-      trendPanel.classList.toggle('multi-series',multiSeries);chartHeading.hidden=!multiSeries;
+      trendPanel.classList.toggle('multi-series',multiSeries);chartHeading.hidden=false;
       document.querySelector('#chartTitle').textContent=def.title;
       document.querySelector('#chartSubtitle').textContent=def.subtitle||'悬停节点定位对应时点，点击可固定定位';
       document.querySelector('#selectedMetricTag').textContent=`当前指标 · ${def.series.map(x=>x.name).join(' / ')}`;
       document.querySelector('#chartLegend').innerHTML=def.series.map((s,i)=>`<span class="legend-item"><i class="legend-dot" style="background:${s.color||chartColors[i%chartColors.length]}"></i>${s.name}</span>`).join('');
       if(!activeRows.length){document.querySelector('#trendChart').innerHTML='<text x="640" y="160" text-anchor="middle" class="chart-axis">当前筛选条件下暂无趋势数据</text>';document.querySelector('#chartTooltip').style.display='none';chartRuntime=null;return}
-      const seriesData=def.series.map(s=>({name:s.name,unit:s.unit,axis:s.axis||'left',color:s.color||'',className:s.className||'',values:s.values.slice(-count).map(v=>{const value=s.scaleWithSelection===false?v:v*selectionScale*timeScale;if(s.unit==='money')return Math.round(value/100)*100;if(s.unit==='decimalMoney')return Number(value.toFixed(2));if(s.unit==='percent')return Number(value.toFixed(1));return Math.max(0,Math.round(value))})}));
+      const seriesData=def.series.map(s=>({name:s.name,unit:s.unit,axis:s.axis||'left',color:s.color||'',className:s.className||'',fullMoney:!!s.fullMoney,values:s.totalKey?distributeMoney(scaled(sum(activeRows,s.totalKey)),s.values.slice(-count)):s.values.slice(-count).map(v=>{const value=s.scaleWithSelection===false?v:v*selectionScale*timeScale;if(s.unit==='money')return Math.round(value/100)*100;if(s.unit==='decimalMoney')return Number(value.toFixed(2));if(s.unit==='percent')return Number(value.toFixed(1));return Math.max(0,Math.round(value))})}));
       const leftSeries=seriesData.filter(s=>s.axis==='left'),rightSeries=seriesData.filter(s=>s.axis==='right');
-      const W=1280,H=320,p={l:62,r:rightSeries.length?72:24,t:22,b:44},iw=W-p.l-p.r,ih=H-p.t-p.b;
+      const W=1280,H=320,p={l:leftSeries.some(s=>s.fullMoney)?100:62,r:rightSeries.length?72:24,t:22,b:44},iw=W-p.l-p.r,ih=H-p.t-p.b;
       const leftMax=niceMax(Math.max(...leftSeries.flatMap(s=>s.values))*1.08),rightMax=rightSeries.length?niceMax(Math.max(...rightSeries.flatMap(s=>s.values))*1.08):leftMax;
       const scaleMax=series=>series.axis==='right'?rightMax:series.axis==='own'?niceMax(Math.max(...series.values)*1.08):leftMax;
       const points=seriesData.map(s=>s.values.map((v,i)=>({x:p.l+iw*i/(count-1),y:p.t+ih-v/scaleMax(s)*ih,v})));
@@ -798,7 +846,6 @@
     function toast(t){const el=document.querySelector('#toast');el.textContent=t;el.classList.add('show');clearTimeout(window.__tt);window.__tt=setTimeout(()=>el.classList.remove('show'),1600)}
     document.querySelector('#rangePreset').addEventListener('click',e=>{const b=e.target.closest('[data-range]');if(b)setRange(b.dataset.range)});
     ['startDate','endDate'].forEach(id=>document.querySelector('#'+id).addEventListener('change',()=>{const s=document.querySelector('#startDate').value,e=document.querySelector('#endDate').value;if(!s||!e)return;if(s>e){toast('开始日期不能晚于结束日期');return}state.range='custom';state.start=s;state.end=e;state.adsPage=1;state.pmPage=1;document.querySelectorAll('#rangePreset button').forEach(b=>b.classList.remove('active'));renderAll()}));
-    const filterMap={campaignFilter:'campaign',groupFilter:'group',adFilter:'ad'};Object.entries(filterMap).forEach(([id,key])=>document.querySelector('#'+id).addEventListener('change',e=>{state[key]=e.target.value;state.adsPage=1;state.pmPage=1;renderAll()}));
     let metricSwapTimer=null;
     function selectTrendMetric(key){state.trend=key;state.lockedPoint=null;renderMetrics();renderTrend()}
     function switchMetricPrimary(key,seriesKey){const previous=state.metricPrimary[key];state.trend=key;state.lockedPoint=null;if(!previous||previous===seriesKey){renderMetrics();renderTrend();return}state.metricPrimary[key]=seriesKey;state.metricSwap={key,from:previous,to:seriesKey};renderMetrics();renderTrend();clearTimeout(metricSwapTimer);metricSwapTimer=setTimeout(()=>{document.querySelectorAll('.metric-value-part.swap-grow,.metric-value-part.swap-shrink').forEach(item=>item.classList.remove('swap-grow','swap-shrink'));state.metricSwap=null},480)}
