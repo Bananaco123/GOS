@@ -578,7 +578,7 @@
       return rank<=10?`全司 Top${rank}`:percentile<=50?`全司前${Math.ceil(percentile/10)*10}%`:'全司后50%';
     }
     const growthTopics={overview:'投放全盘',spend:'投放消耗',delivery:'曝光效率',inquiries:'询盘成本',leads:'线索质量',crm:'CRM转化',visits:'客户到店',performance:'订单金额',quality:'询盘质量',conversion:'销售转化',result:'成交结果',funnel:'阶段漏斗',grades:'线索转化',projects:'立项与成交',contribution:'成交贡献'};
-    let growthOverview=null,growthSnapshotSequence=0,growthLastTrigger=null;const growthRowSnapshots=new Map();
+    let growthOverview=null,growthSnapshotSequence=0,growthLastTrigger=null,growthPanelOpen=false,growthIgnoreOutsideClick=false;const growthRowSnapshots=new Map();
     function growthButton(topic,label,extra='',className=''){return '<button type="button" class="growth-gpt-trigger '+className+'" data-growth-topic="'+topic+'" '+extra+' title="Growth GPT · '+label+'" aria-label="Growth GPT · '+label+'"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 2 2.2 5.8L18 10l-5.8 2.2L10 18l-2.2-5.8L2 10l5.8-2.2Z"/><path d="m16 1 .8 2.2L19 4l-2.2.8L16 7l-.8-2.2L13 4l2.2-.8Z"/></svg>'+ (className==='growth-row-trigger'?'<span>分析</span>':'')+'</button>'}
     function growthScopeKey(){return JSON.stringify({start:state.start,end:state.end,range:state.range,operators:state.operators,accounts:state.accounts,campaigns:state.campaigns,groups:state.groups,ads:state.ads,dimension:state.dimension,sortKey:state.sortKey,sortDir:state.sortDir,metricPrimary:state.metricPrimary})}
     function growthContext(entry={kind:'overview',topic:'overview'},detail){
@@ -587,7 +587,9 @@
       const metric=entry.metricKey?growthOverview.primary[entry.metricKey]:null;
       const filters={};['operators','accounts','campaigns','groups','ads'].forEach(key=>filters[key]=state[key].slice());
       const object=saved?{name:saved.name,dimension:saved.isTotal?'当前筛选总计':dimensionDefinitions[state.dimension],count:saved.count}:{name:state.operators.length===1?state.operators[0]+' · 投放汇总':state.operators.length?'已选运营 · 投放汇总':'全局投放总览',dimension:'当前筛选汇总',count:rows().length};
-      return {version:1,snapshotId:'growth-'+Date.now()+'-'+(++growthSnapshotSequence),scopeKey:growthScopeKey(),entry:saved||!entry.rowKey?entry:{kind:'group',topic:entry.topic},object,period:{start:state.start,end:state.end,label:state.start+' — '+state.end},filters,metrics:saved?saved.metrics:{...growthOverview.metrics},primary:metric,detail,exposureBasis:saved?'table':'summary',empty:rows().length===0};
+      const sourceRows=rows().filter(item=>!saved||saved.isTotal||(item[state.dimension]||'未标记')===saved.name);
+      const sources=sourceRows.map(item=>({id:String(item.id),ad:item.ad,account:item.account,campaign:item.name,group:item.group,platform:item.platform,operator:accountOwners[item.account]||''}));
+      return {version:1,snapshotId:'growth-'+Date.now()+'-'+(++growthSnapshotSequence),scopeKey:growthScopeKey(),entry:saved||!entry.rowKey?entry:{kind:'group',topic:entry.topic},object,period:{start:state.start,end:state.end,label:state.start+' — '+state.end},filters,sources,metrics:saved?saved.metrics:{...growthOverview.metrics},primary:metric,detail,exposureBasis:saved?'table':'summary',empty:rows().length===0};
     }
     function growthPost(type,context){if(typeof window!=='undefined'&&window.parent!==window&&context)window.parent.postMessage({channel:'gos-growth-gpt-v1',type,context},window.location.origin)}
     function notifyGrowthScope(){growthPost('scope',growthContext())}
@@ -914,6 +916,16 @@
     document.querySelector('#pmTableHead').addEventListener('click',e=>{const button=e.target.closest('[data-pm-sort]');if(!button)return;const key=button.dataset.pmSort;if(state.pmSortKey===key)state.pmSortDir=state.pmSortDir==='desc'?'asc':'desc';else{state.pmSortKey=key;state.pmSortDir='desc'}renderPmBoard()});
     ['ads','pm'].forEach(type=>{const el=document.querySelector(`#${type}Pagination`),pageKey=`${type}Page`,pageSizeKey=`${type}PageSize`,render=type==='ads'?renderTable:renderPmBoard;el.addEventListener('click',e=>{const button=e.target.closest('[data-page-target]');if(!button||button.disabled)return;state[pageKey]=Number(button.dataset.pageTarget);render()});el.addEventListener('submit',e=>{const form=e.target.closest('[data-page-jump]');if(!form)return;e.preventDefault();const input=form.querySelector('input'),value=Number(input.value),max=Number(input.max);if(!Number.isInteger(value)||value<1||value>max){toast(`请输入 1-${max} 之间的页码`);input.focus();return}state[pageKey]=value;render()});el.addEventListener('change',e=>{const select=e.target.closest('[data-page-size]');if(!select)return;state[pageSizeKey]=Number(select.value);state[pageKey]=1;render()})});
     document.querySelector('#boardSwitch').addEventListener('click',e=>{const b=e.target.closest('[data-board]');if(!b)return;state.board=b.dataset.board;document.querySelectorAll('#boardSwitch button').forEach(x=>x.classList.toggle('active',x===b));document.querySelector('#adsBoard').hidden=state.board!=='ads';document.querySelector('#ordersBoard').hidden=state.board!=='orders';document.querySelector('#orderAnalysisBoard').hidden=state.board!=='orders';document.querySelector('#pmBoard').hidden=state.board!=='pm'});
+    document.addEventListener('pointerdown',event=>{
+      growthIgnoreOutsideClick=false;
+      if(!growthPanelOpen||event.target.closest('[data-growth-topic]'))return;
+      growthIgnoreOutsideClick=true;event.preventDefault();event.stopImmediatePropagation();
+      window.parent.postMessage({channel:'gos-growth-gpt-v1',type:'dismiss'},window.location.origin);
+    },true);
+    document.addEventListener('click',event=>{
+      if(!growthIgnoreOutsideClick)return;
+      growthIgnoreOutsideClick=false;event.preventDefault();event.stopImmediatePropagation();
+    },true);
     document.addEventListener('click',event=>{
       const button=event.target.closest('[data-growth-topic]');if(!button)return;
       event.preventDefault();event.stopPropagation();growthLastTrigger=button;
@@ -926,6 +938,7 @@
     });
     window.addEventListener('message',event=>{
       if(event.origin!==window.location.origin||event.source!==window.parent||event.data?.channel!=='gos-growth-gpt-v1')return;
+      if(event.data.type==='panel-state'){growthPanelOpen=event.data.open===true;return}
       if(event.data.type==='focus-entry'){if(growthLastTrigger?.isConnected)growthLastTrigger.focus();return}
       if(event.data.type==='refresh'){
         const e=event.data.entry;if(!e||!growthTopics[e.topic]||!['overview','metric','group','row','detail'].includes(e.kind))return;
