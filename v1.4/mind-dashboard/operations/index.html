@@ -141,6 +141,7 @@
     @container (max-width:610px){.pm-primary-filters{align-items:stretch;flex-direction:column}.pm-search,.pm-country-filter{width:100%}#pmBoard tbody tr{grid-template-columns:repeat(2,minmax(0,1fr))}#pmBoard td:nth-child(3n){border-right:1px solid #e5ebf2}#pmBoard td:nth-child(2n){border-right:0}.pm-grade-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid #dbe4ef;border-radius:8px}.pm-grade-tabs button.active:after{left:18px;right:18px}}
 
     .multi-filter.ad-layer-filter{width:168px;min-width:150px}.multi-filter.ad-layer-filter .multi-filter-input{cursor:pointer}.multi-filter.ad-layer-filter.has-multiple:not(.is-open)::after{left:auto;right:0}#adMultiOptions{right:0;left:auto}
+    .operator-filter .multi-filter-tags{flex:1 1 0;justify-content:space-between;max-width:calc(100% - 18px);overflow:hidden}.operator-filter .multi-filter-tags:empty{display:none}.operator-filter .multi-filter-input{min-width:12px;flex:0 0 12px}.operator-filter .multi-filter-tags:empty+.multi-filter-input{flex:1 1 auto}.operator-filter .single-filter-value{min-width:0;max-width:105px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#245b97;font-size:11px}.operator-filter .single-filter-clear{flex:0 0 16px;opacity:0}.operator-filter:hover .single-filter-clear,.operator-filter:focus-within .single-filter-clear{opacity:1}
     @media(max-width:1560px){.toolbar{min-height:112px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:44px 40px;align-content:center;gap:6px 10px;padding:10px 14px}.filter-spacer{display:none}.toolbar-date-range{grid-column:1 / 5;grid-row:1}.toolbox-shell{grid-column:5;grid-row:1;justify-self:end}.operator-filter{grid-column:1;grid-row:2}.account-filter{grid-column:2;grid-row:2}#campaignMultiFilter{grid-column:3;grid-row:2}#groupMultiFilter{grid-column:4;grid-row:2}#adMultiFilter{grid-column:5;grid-row:2}.multi-filter,.multi-filter.operator-filter,.multi-filter.ad-layer-filter,.select{width:100%;min-width:0}}
     @media(max-width:1320px){.summary-main{grid-template-columns:220px 1fr}.operator{padding:18px}.metric{padding:18px 7px}.metric-stat{padding:0 3px}}
     @media(max-width:900px){:root{--sidebar:64px}.brand{justify-content:center;padding:0}.brand>div,.nav-title,.sidebar-foot{display:none}.nav{padding:14px 8px}.nav-item{justify-content:center;padding:10px 8px;font-size:0}.nav-icon{width:auto;font-size:14px}.topbar{padding:0 14px}main{padding:78px 14px 34px}.toolbar{top:64px}.dashboard-heading h1{font-size:22px}.range-preset button{padding:7px 8px;font-size:11px}.date-input{width:100px}.summary-main{grid-template-columns:1fr}.operator{border-right:0;border-bottom:1px solid rgba(255,255,255,.16)}.metrics-strip{overflow-x:auto;grid-template-columns:repeat(7,minmax(130px,1fr))}.trend-tabs{grid-template-columns:repeat(7,minmax(120px,1fr));overflow-x:auto}.chart-wrap{min-height:210px}.board-switch{width:230px}}
@@ -340,7 +341,7 @@
           <input class="multi-filter-input" id="operatorMultiSearch" type="search" placeholder="全部运营" autocomplete="off" aria-label="搜索运营姓名" />
           <span class="multi-filter-chevron" aria-hidden="true"></span>
         </div>
-        <div class="multi-filter-menu" id="operatorMultiOptions" role="listbox" aria-label="运营选项" aria-multiselectable="true" hidden></div>
+        <div class="multi-filter-menu" id="operatorMultiOptions" role="listbox" aria-label="运营选项" hidden></div>
       </div>
       <div class="multi-filter account-filter" id="accountMultiFilter">
         <div class="multi-filter-control" id="accountMultiControl" role="combobox" aria-label="选择广告账户" aria-haspopup="listbox" aria-expanded="false" aria-controls="accountMultiOptions">
@@ -550,7 +551,7 @@
       row.projectTypes=buildPmProjectTypeBreakdown(row,index);
       pmRegions.forEach((region,regionIndex)=>{row.regions[region].projectTypes=buildPmProjectTypeBreakdown(row.regions[region],index*pmRegions.length+regionIndex)});
     });
-    const state={range:'today',start:'',end:'',accounts:[],operators:['马凯 Kevin Ma'],campaigns:[],groups:[],ads:[],trend:'spend',metricPrimary:{delivery:'exposure',inquiries:'inquiries',crm:'crmCustomers'},metricSwap:null,board:'ads',lockedPoint:null,traceOrderId:'OS-202608-001',dimension:'ad',sortKey:'inquiries',sortDir:'desc',orderAnalysisDimension:'pm',expandedRowKeys:new Set(),expandedInitialized:false,pmGrade:'all',pmCountry:'all',pmProjectType:'all',pmSearch:'',pmSortKey:'assigned',pmSortDir:'desc',adsPage:1,pmPage:1,adsPageSize:15,pmPageSize:15};
+    const state={range:'today',start:'',end:'',accounts:[],operators:[],campaigns:[],groups:[],ads:[],trend:'spend',metricPrimary:{delivery:'exposure',inquiries:'inquiries',crm:'crmCustomers'},metricSwap:null,board:'ads',lockedPoint:null,traceOrderId:'OS-202608-001',dimension:'ad',sortKey:'inquiries',sortDir:'desc',orderAnalysisDimension:'pm',expandedRowKeys:new Set(),expandedInitialized:false,pmGrade:'all',pmCountry:'all',pmProjectType:'all',pmSearch:'',pmSortKey:'assigned',pmSortDir:'desc',adsPage:1,pmPage:1,adsPageSize:15,pmPageSize:15};
     const dualMetricMeta={
       delivery:{exposure:{label:'曝光',delta:8.6},cpm:{label:'CPM',delta:-2.4,goodWhenDown:true}},
       inquiries:{inquiries:{label:'询盘',delta:-3.2},cpa:{label:'CPA',delta:-5.7,goodWhenDown:true}},
@@ -586,7 +587,7 @@
       const saved=entry.rowKey?growthRowSnapshots.get(entry.rowKey):entry.kind==='group'?Array.from(growthRowSnapshots.values()).find(item=>item.isTotal):null;
       const metric=entry.metricKey?growthOverview.primary[entry.metricKey]:null;
       const filters={};['operators','accounts','campaigns','groups','ads'].forEach(key=>filters[key]=state[key].slice());
-      const object=saved?{name:saved.name,dimension:saved.isTotal?'当前筛选总计':dimensionDefinitions[state.dimension],count:saved.count}:{name:state.operators.length===1?state.operators[0]+' · 投放汇总':state.operators.length?'已选运营 · 投放汇总':'全局投放总览',dimension:'当前筛选汇总',count:rows().length};
+      const object=saved?{name:saved.name,dimension:saved.isTotal?'当前筛选总计':dimensionDefinitions[state.dimension],count:saved.count}:{name:state.operators.length?state.operators[0]+' · 投放汇总':'全局投放总览',dimension:'当前筛选汇总',count:rows().length};
       const sourceRows=rows().filter(item=>!saved||saved.isTotal||(item[state.dimension]||'未标记')===saved.name);
       const sources=sourceRows.map(item=>({id:String(item.id),ad:item.ad,account:item.account,campaign:item.name,group:item.group,platform:item.platform,operator:accountOwners[item.account]||''}));
       return {version:1,snapshotId:'growth-'+Date.now()+'-'+(++growthSnapshotSequence),scopeKey:growthScopeKey(),entry:saved||!entry.rowKey?entry:{kind:'group',topic:entry.topic},object,period:{start:state.start,end:state.end,label:state.start+' — '+state.end},filters,sources,metrics:saved?saved.metrics:{...growthOverview.metrics},primary:metric,detail,exposureBasis:saved?'table':'summary',empty:rows().length===0};
@@ -595,32 +596,32 @@
     function notifyGrowthScope(){growthPost('scope',growthContext())}
     function openGrowth(entry,detail){const context=growthContext(entry,detail);if(context)growthPost('open',context)}
 
-    function createMultiFilter({rootId,controlId,tagsId,inputId,menuId,stateKey,placeholder,options}){
+    function createMultiFilter({rootId,controlId,tagsId,inputId,menuId,stateKey,placeholder,options,single=false}){
       const root=document.querySelector(rootId),control=document.querySelector(controlId),tags=document.querySelector(tagsId),input=document.querySelector(inputId),menu=document.querySelector(menuId);
       let visibleOptions=[...options];
       const selectedValues=()=>state[stateKey];
       function close(){root.classList.remove('is-open');control.setAttribute('aria-expanded','false');menu.hidden=true}
       function open(){root.classList.add('is-open');control.setAttribute('aria-expanded','true');menu.hidden=false;renderOptions();input.focus()}
-      function renderTags(){const values=selectedValues();tags.innerHTML=values.map(value=>`<span class="multi-filter-tag"><span class="multi-filter-tag-label" title="${value}">${value}</span><button class="multi-filter-tag-remove" type="button" data-remove-value="${value}" aria-label="删除 ${value}">×</button></span>`).join('');input.placeholder=values.length?'':placeholder;root.classList.toggle('has-multiple',values.length>1);root.dataset.selectedSummary=values.length>1?`已选：${values.join('、')}`:''}
+      function renderTags(){const values=selectedValues();tags.innerHTML=single?(values[0]?`<span class="single-filter-value" title="${values[0]}">${values[0]}</span><button class="multi-filter-tag-remove single-filter-clear" type="button" data-remove-value="${values[0]}" aria-label="清除运营选择">×</button>`:''):values.map(value=>`<span class="multi-filter-tag"><span class="multi-filter-tag-label" title="${value}">${value}</span><button class="multi-filter-tag-remove" type="button" data-remove-value="${value}" aria-label="删除 ${value}">×</button></span>`).join('');input.placeholder=values.length?'':placeholder;root.classList.toggle('has-multiple',!single&&values.length>1);root.dataset.selectedSummary=!single&&values.length>1?`已选：${values.join('、')}`:''}
       function filterOptions(){const keyword=input.value.trim().toLocaleLowerCase();visibleOptions=options.filter(option=>!keyword||option.keywords.toLocaleLowerCase().includes(keyword));renderOptions()}
       function renderOptions(){menu.innerHTML=visibleOptions.length?visibleOptions.map(option=>{const selected=selectedValues().includes(option.value);return `<button class="multi-filter-option ${selected?'is-selected':''}" type="button" role="option" aria-selected="${selected}" data-option-value="${option.value}">${option.label}</button>`}).join(''):'<div class="multi-filter-empty">未找到匹配结果</div>'}
-      function update(value,removeOnly=false){const values=selectedValues(),index=values.indexOf(value);if(index>=0)values.splice(index,1);else if(!removeOnly)values.push(value);state.adsPage=1;state.pmPage=1;input.value='';visibleOptions=[...options];renderTags();renderOptions();renderAll()}
+      function update(value,removeOnly=false){const values=selectedValues(),index=values.indexOf(value);if(single)state[stateKey]=removeOnly||index>=0?[]:[value];else if(index>=0)values.splice(index,1);else if(!removeOnly)values.push(value);state.adsPage=1;state.pmPage=1;input.value='';visibleOptions=[...options];renderTags();renderOptions();renderAll()}
       control.addEventListener('click',event=>{if(event.target.closest('[data-remove-value]'))return;open()});
       tags.addEventListener('click',event=>{const button=event.target.closest('[data-remove-value]');if(!button)return;event.stopPropagation();update(button.dataset.removeValue,true)});
-      menu.addEventListener('click',event=>{const option=event.target.closest('[data-option-value]');if(!option)return;update(option.dataset.optionValue);open()});
+      menu.addEventListener('click',event=>{const option=event.target.closest('[data-option-value]');if(!option)return;update(option.dataset.optionValue);if(single)close();else open()});
       input.addEventListener('input',()=>{open();filterOptions()});
-      input.addEventListener('keydown',event=>{if(event.key==='Escape'){close();input.blur()}else if(event.key==='Backspace'&&!input.value&&selectedValues().length){update(selectedValues().at(-1),true)}else if(event.key==='Enter'&&visibleOptions.length){event.preventDefault();update(visibleOptions[0].value);open()}});
+      input.addEventListener('keydown',event=>{if(event.key==='Escape'){close();input.blur()}else if(event.key==='Backspace'&&!input.value&&selectedValues().length){update(selectedValues().at(-1),true)}else if(event.key==='Enter'&&visibleOptions.length){event.preventDefault();update(visibleOptions[0].value);if(single)close();else open()}});
       document.addEventListener('pointerdown',event=>{if(!root.contains(event.target))close()});
       renderTags();renderOptions();
       return {close,open};
     }
     const accountMultiFilter=createMultiFilter({rootId:'#accountMultiFilter',controlId:'#accountMultiControl',tagsId:'#accountMultiTags',inputId:'#accountMultiSearch',menuId:'#accountMultiOptions',stateKey:'accounts',placeholder:'全部广告账户',options:unique('account').map(account=>({value:account,label:account,keywords:account}))});
-    const operatorMultiFilter=createMultiFilter({rootId:'#operatorMultiFilter',controlId:'#operatorMultiControl',tagsId:'#operatorMultiTags',inputId:'#operatorMultiSearch',menuId:'#operatorMultiOptions',stateKey:'operators',placeholder:'全部运营',options:[...new Set(Object.values(accountOwners))].map(name=>({value:name,label:name,keywords:name}))});
+    const operatorMultiFilter=createMultiFilter({rootId:'#operatorMultiFilter',controlId:'#operatorMultiControl',tagsId:'#operatorMultiTags',inputId:'#operatorMultiSearch',menuId:'#operatorMultiOptions',stateKey:'operators',placeholder:'全部运营',single:true,options:[...new Set(Object.values(accountOwners))].map(name=>({value:name,label:name,keywords:name}))});
     const campaignMultiFilter=createMultiFilter({rootId:'#campaignMultiFilter',controlId:'#campaignMultiControl',tagsId:'#campaignMultiTags',inputId:'#campaignMultiInput',menuId:'#campaignMultiOptions',stateKey:'campaigns',placeholder:'全部广告计划',options:unique('name').map(value=>({value,label:value,keywords:value}))});
     const groupMultiFilter=createMultiFilter({rootId:'#groupMultiFilter',controlId:'#groupMultiControl',tagsId:'#groupMultiTags',inputId:'#groupMultiInput',menuId:'#groupMultiOptions',stateKey:'groups',placeholder:'全部广告组',options:unique('group').map(value=>({value,label:value,keywords:value}))});
     const adMultiFilter=createMultiFilter({rootId:'#adMultiFilter',controlId:'#adMultiControl',tagsId:'#adMultiTags',inputId:'#adMultiInput',menuId:'#adMultiOptions',stateKey:'ads',placeholder:'全部广告',options:unique('ad').map(value=>({value,label:value,keywords:value}))});
     function renderOperator(){
-      const isGlobal=!state.operators.length,name=isGlobal?'全局投放总览':state.operators.length===1?state.operators[0]:`已选 ${state.operators.length} 位人员`,photo=document.querySelector('#operatorPhoto');
+      const isGlobal=!state.operators.length,name=isGlobal?'全局投放总览':state.operators[0],photo=document.querySelector('#operatorPhoto');
       document.querySelector('#operatorName').textContent=name;photo.classList.toggle('is-global',isGlobal);photo.setAttribute('aria-label',isGlobal?'全局投放总览头像':`${name} 头像`);
     }
 
