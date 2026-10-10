@@ -35,7 +35,9 @@
     .dashboard-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:16px}
     .dashboard-heading h1{margin:0 0 6px;color:var(--ink);font-size:22px;line-height:32px;font-weight:600}
     .dashboard-heading p{margin:0;color:var(--muted);font-size:13px}
-    .update-state{display:flex;align-items:center;gap:7px;margin-top:6px;color:var(--muted);font-size:12px;white-space:nowrap}
+    .dashboard-heading-actions{display:flex;align-items:center;justify-content:flex-end;gap:24px;flex-shrink:0;min-height:34px;margin-top:12px}
+    .update-state{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:12px;white-space:nowrap}
+    .multi-filter.is-disabled{opacity:.45;pointer-events:none}.metric-selector.is-unavailable{cursor:default}.metric-selector.is-unavailable .metric-value{opacity:.65}.metric-unavailable-note{color:#dcecff;font-size:9px}.growth-gpt-global:disabled,.toolbox-bubble:disabled{opacity:.45;cursor:not-allowed}.pm-grade-tabs button:disabled{opacity:.4;cursor:not-allowed}
     .state-dot{width:7px;height:7px;border-radius:50%;background:#00b578;box-shadow:0 0 0 3px rgba(0,181,120,.12)}
     .toolbar{position:sticky;top:64px;z-index:20;min-height:66px;display:flex;align-items:center;gap:10px;padding:13px 14px;margin-bottom:16px;overflow:visible;box-shadow:0 8px 22px rgba(31,65,105,.08)}
     .toolbar:after{content:"";position:absolute;left:-1px;right:-1px;bottom:-17px;height:17px;background:var(--soft);pointer-events:none}
@@ -142,7 +144,7 @@
 
     .multi-filter.ad-layer-filter{width:168px;min-width:150px}.multi-filter.ad-layer-filter .multi-filter-input{cursor:pointer}.multi-filter.ad-layer-filter.has-multiple:not(.is-open)::after{left:auto;right:0}#adMultiOptions{right:0;left:auto}
     .operator-filter .multi-filter-tags{flex:1 1 0;justify-content:space-between;max-width:calc(100% - 18px);overflow:hidden}.operator-filter .multi-filter-tags:empty{display:none}.operator-filter .multi-filter-input{min-width:12px;flex:0 0 12px}.operator-filter .multi-filter-tags:empty+.multi-filter-input{flex:1 1 auto}.operator-filter .single-filter-value{min-width:0;max-width:105px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#245b97;font-size:11px}.operator-filter .single-filter-clear{flex:0 0 16px;opacity:0}.operator-filter:hover .single-filter-clear,.operator-filter:focus-within .single-filter-clear{opacity:1}
-    @media(max-width:1560px){.toolbar{min-height:112px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:44px 40px;align-content:center;gap:6px 10px;padding:10px 14px}.filter-spacer{display:none}.toolbar-date-range{grid-column:1 / 5;grid-row:1}.toolbox-shell{grid-column:5;grid-row:1;justify-self:end}.operator-filter{grid-column:1;grid-row:2}.account-filter{grid-column:2;grid-row:2}#campaignMultiFilter{grid-column:3;grid-row:2}#groupMultiFilter{grid-column:4;grid-row:2}#adMultiFilter{grid-column:5;grid-row:2}.multi-filter,.multi-filter.operator-filter,.multi-filter.ad-layer-filter,.select{width:100%;min-width:0}}
+    @media(max-width:1560px){.toolbar{min-height:112px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:44px 40px;align-content:center;gap:6px 10px;padding:10px 14px}.filter-spacer{display:none}.toolbar-date-range{grid-column:1 / -1;grid-row:1}.operator-filter{grid-column:1;grid-row:2}.account-filter{grid-column:2;grid-row:2}#campaignMultiFilter{grid-column:3;grid-row:2}#groupMultiFilter{grid-column:4;grid-row:2}#adMultiFilter{grid-column:5;grid-row:2}.multi-filter,.multi-filter.operator-filter,.multi-filter.ad-layer-filter,.select{width:100%;min-width:0}}
     @media(max-width:1320px){.summary-main{grid-template-columns:220px 1fr}.operator{padding:18px}.metric{padding:18px 7px}.metric-stat{padding:0 3px}}
     @media(max-width:900px){:root{--sidebar:64px}.brand{justify-content:center;padding:0}.brand>div,.nav-title,.sidebar-foot{display:none}.nav{padding:14px 8px}.nav-item{justify-content:center;padding:10px 8px;font-size:0}.nav-icon{width:auto;font-size:14px}.topbar{padding:0 14px}main{padding:78px 14px 34px}.toolbar{top:64px}.dashboard-heading h1{font-size:22px}.range-preset button{padding:7px 8px;font-size:11px}.date-input{width:100px}.summary-main{grid-template-columns:1fr}.operator{border-right:0;border-bottom:1px solid rgba(255,255,255,.16)}.metrics-strip{overflow-x:auto;grid-template-columns:repeat(7,minmax(130px,1fr))}.trend-tabs{grid-template-columns:repeat(7,minmax(120px,1fr));overflow-x:auto}.chart-wrap{min-height:210px}.board-switch{width:230px}}
     @media(max-width:900px){.analysis-trend .trend-panel{padding-right:10px;padding-left:10px}.metric-selector.active:before{display:none}}
@@ -308,9 +310,8 @@
     #ordersBoard .video-title{flex:1}
     .video-preview-link{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;color:var(--brand);font-size:11px;white-space:nowrap}
     .video-preview-link svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.4}
-    .order-analysis-table .order-dimension-country th:nth-child(2),.order-analysis-table .order-dimension-country td:nth-child(2){width:110px;text-align:left}
-    .order-analysis-table .order-dimension-country th:nth-child(3),.order-analysis-table .order-dimension-country td:nth-child(3){width:180px;text-align:left}
-    .order-analysis-table .order-dimension-country th:nth-child(n+4),.order-analysis-table .order-dimension-country td:nth-child(n+4){width:calc((100% - 372px)/5)}
+    .order-analysis-table .order-dimension-country th:nth-child(n+2),.order-analysis-table .order-dimension-country td:nth-child(n+2){width:calc((100% - 82px)/7);padding-right:12px;padding-left:12px;text-align:center}
+    .order-analysis-table .order-dimension-country .analysis-name{justify-content:center}
     body.trace-preview-open{overflow:hidden}
     .trace-preview{width:min(760px,calc(100vw - 40px));max-height:calc(100dvh - 40px);padding:0;overflow:auto;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 18px 60px rgba(23,32,51,.22)}
     .trace-preview::backdrop{background:rgba(23,32,51,.45)}
@@ -349,7 +350,9 @@
   <main>
     <section class="dashboard-heading" aria-label="运营看板标题">
       <div><h1>运营看板</h1><p>统一查看投放、询盘、转化与订单成效</p></div>
-      <div class="update-state"><span class="state-dot"></span><span>数据已更新 · 10:30</span></div>
+      <div class="dashboard-heading-actions">
+        <div class="update-state"><span class="state-dot"></span><span>数据已更新 · 10:30</span></div>
+      </div>
     </section>
     <section class="toolbar panel" aria-label="运营看板筛选">
       <div class="toolbar-date-range">
@@ -397,14 +400,6 @@
         </div>
         <div class="multi-filter-menu" id="adMultiOptions" role="listbox" aria-label="广告选项" aria-multiselectable="true" hidden></div>
       </div>
-      <div class="toolbox-shell">
-        <button class="toolbox" type="button" aria-label="工具箱"><span class="toolbox-icon">✦</span>工具箱</button>
-        <div class="toolbox-bubbles" role="group" aria-label="工具箱能力">
-          <button class="toolbox-bubble" type="button" data-growth-topic="overview" aria-label="Growth GPT · 分析当前投放"><span class="toolbox-bubble-mark">✦</span><span class="toolbox-bubble-label">Growth GPT</span></button>
-          <span class="toolbox-bubble commission"><span class="toolbox-bubble-mark">¥</span><span class="toolbox-bubble-label">提成试算</span></span>
-          <span class="toolbox-bubble library"><span class="toolbox-bubble-mark">▦</span><span class="toolbox-bubble-label">广告资料库</span></span>
-        </div>
-      </div>
     </section>
 
     <section class="performance-workspace">
@@ -439,7 +434,7 @@
           <div class="trace-arrow" aria-hidden="true"></div>
           <article class="trace-panel"><div class="trace-panel-head"><div class="trace-step"><b>2</b>客户画像</div><span class="trace-head-icon">♙</span></div><div class="trace-customer-scroll" id="traceCustomerContent"></div></article>
           <div class="trace-arrow" aria-hidden="true"></div>
-          <article class="trace-panel"><div class="trace-panel-head"><div class="trace-step"><b>3</b>投放溯源</div><span class="trace-head-icon">▹</span></div><div class="trace-video-body" id="traceVideoContent"></div></article>
+          <article class="trace-panel"><div class="trace-panel-head"><div class="trace-step"><b>3</b><span id="traceSourceTitle">投放溯源</span></div><span class="trace-head-icon">▹</span></div><div class="trace-video-body" id="traceVideoContent"></div></article>
         </div>
       </div>
       <div class="empty" id="orderEmpty" hidden>当前筛选条件下暂无订单，请调整筛选条件。</div>
@@ -537,6 +532,10 @@
     );
     // 金额种子调整到万级消耗、百万级订单的演示规模；所有金额仍以元存储。
     plans.forEach(plan=>{plan.spend=Math.round(plan.spend/100);plan.amount=Math.round(plan.amount/100)});
+    // 当前样本中 id 5 为明确的自然流，其余为广告归因；不能用是否有消耗判断来源。
+    plans.forEach(plan=>{plan.conversionSource=plan.id===5?'nonAdvertising':'advertising';plan.crmCustomers=plan.transfers});
+    // 非广告样本的 CRM 后段独立记录，不用缺失的询盘与评级推算。
+    Object.assign(plans.find(plan=>plan.id===5),{crmCustomers:36,crmPm:'Sarah Wong',crmRegion:'东南亚',crmProjectType:'家装'});
     const accountOwners={
       'Meta-亚洲华人':'马凯 Kevin Ma','Meta-海外增长':'陈琳 Linda Chen','TikTok-内容增长':'王莎 Sara Wang','Google-北美增长':'刘迈 Mike Liu','LinkedIn-B2B':'林杰 James Lin','Meta-大洋洲':'赵睿 Eric Zhao','Meta-欧洲市场':'陈琳 Linda Chen','TikTok-东南亚':'王莎 Sara Wang','Google-东南亚':'刘迈 Mike Liu','WhatsApp-拉美':'赵睿 Eric Zhao'
     };
@@ -586,11 +585,18 @@
     };
     const fmt=new Intl.NumberFormat('zh-CN'); const money=v=>`¥${fmt.format(Math.round(v))}`; const compact=v=>v>=1e6?`${(v/1e6).toFixed(2)}M`:v>=1e3?`${(v/1e3).toFixed(1)}k`:fmt.format(Math.round(v)); const cardCompact=v=>v>=1e6?`${(v/1e6).toFixed(1)}M`:v>=1e5?`${Math.round(v/1e3)}k`:v>=1e3?`${(v/1e3).toFixed(1)}k`:fmt.format(Math.round(v)); const cardMoney=money; const narrowMoney=money; const narrowNumber=v=>fmt.format(Math.round(v/10));
     const sum=(rows,key)=>rows.reduce((n,x)=>n+x[key],0); const rangeFactor=()=>state.range==='yesterday'?.91:state.range==='today'?1:state.range==='7'?5.8:state.range==='30'?22.6:Math.max(1,(new Date(state.end)-new Date(state.start))/86400000+1);
-    const rows=()=>plans.filter(x=>(!state.accounts.length||state.accounts.includes(x.account))&&(!state.operators.length||state.operators.includes(accountOwners[x.account]))&&(!state.campaigns.length||state.campaigns.includes(x.name))&&(!state.groups.length||state.groups.includes(x.group))&&(!state.ads.length||state.ads.includes(x.ad)));
+    const rows=()=>plans.filter(x=>matchesConversionSource(x)&&(!state.operators.length||state.operators.includes(ownerOf(x)))&&(state.conversionSource==='nonAdvertising'||((!state.accounts.length||state.accounts.includes(x.account))&&(!state.campaigns.length||state.campaigns.includes(x.name))&&(!state.groups.length||state.groups.includes(x.group))&&(!state.ads.length||state.ads.includes(x.ad)))));
+    state.conversionSource='all';
+    const ownerOf=plan=>plan.operator||accountOwners[plan.account]||'';
+    const operatorNames=()=>[...new Set(plans.map(ownerOf).filter(Boolean))];
+    const matchesConversionSource=plan=>state.conversionSource==='all'||plan.conversionSource===state.conversionSource;
+    const advertisingRows=()=>rows().filter(plan=>plan.conversionSource==='advertising');
+    const isCrmTrend=key=>['crm','visits','performance'].includes(key);
     const scaled=(v)=>Math.round(v*rangeFactor()); const unique=key=>[...new Set(plans.map(x=>x[key]))];
     function operatorRankLabel(metric){
       if(state.operators.length!==1||['accounts','campaigns','groups','ads'].some(key=>state[key].length))return '';
-      const field={spend:'spend',exposure:'exposure',inquiries:'inquiries',leads:'transfers',crmCustomers:'transfers',crmProjects:'projects',visits:'visits',performance:'amount'}[metric.key];
+      const field={spend:'spend',exposure:'exposure',inquiries:'inquiries',leads:'transfers',crmCustomers:'crmCustomers',crmProjects:'projects',visits:'visits',performance:'amount'}[metric.key];
+      const advertisingMetric=['spend','exposure','cpm','inquiries','cpa','leads'].includes(metric.key);
       const score=items=>{
         if(!items.length)return null;
         if(metric.key==='cpm'||metric.key==='cpa'){
@@ -599,7 +605,7 @@
         }
         return field?sum(items,field):null;
       };
-      const peers=[...new Set(Object.values(accountOwners))].map(name=>({name,value:score(plans.filter(item=>accountOwners[item.account]===name))})).filter(item=>Number.isFinite(item.value));
+      const peers=operatorNames().map(name=>({name,value:score(plans.filter(item=>matchesConversionSource(item)&&(!advertisingMetric||item.conversionSource==='advertising')&&ownerOf(item)===name))})).filter(item=>Number.isFinite(item.value));
       const current=peers.find(item=>item.name===state.operators[0]);
       if(!current)return '';
       const rank=1+peers.filter(item=>metric.goodWhenDown?item.value<current.value:item.value>current.value).length,percentile=rank/peers.length*100;
@@ -608,16 +614,16 @@
     const growthTopics={overview:'投放全盘',spend:'投放消耗',delivery:'曝光效率',inquiries:'询盘成本',leads:'线索质量',crm:'CRM转化',visits:'客户到店',performance:'业绩金额',quality:'询盘质量',conversion:'销售转化',result:'成交结果',funnel:'阶段漏斗',grades:'线索转化',projects:'立项与成交',contribution:'成交贡献'};
     let growthOverview=null,growthSnapshotSequence=0,growthLastTrigger=null,growthPanelOpen=false,growthIgnoreOutsideClick=false;const growthRowSnapshots=new Map();
     function growthButton(topic,label,extra='',className=''){return '<button type="button" class="growth-gpt-trigger '+className+'" data-growth-topic="'+topic+'" '+extra+' title="Growth GPT · '+label+'" aria-label="Growth GPT · '+label+'"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 2 2.2 5.8L18 10l-5.8 2.2L10 18l-2.2-5.8L2 10l5.8-2.2Z"/><path d="m16 1 .8 2.2L19 4l-2.2.8L16 7l-.8-2.2L13 4l2.2-.8Z"/></svg>'+ (className==='growth-row-trigger'?'<span>分析</span>':'')+'</button>'}
-    function growthScopeKey(){return JSON.stringify({start:state.start,end:state.end,range:state.range,operators:state.operators,accounts:state.accounts,campaigns:state.campaigns,groups:state.groups,ads:state.ads,dimension:state.dimension,sortKey:state.sortKey,sortDir:state.sortDir,metricPrimary:state.metricPrimary})}
+    function growthScopeKey(){return JSON.stringify({start:state.start,end:state.end,range:state.range,operators:state.operators,accounts:state.accounts,campaigns:state.campaigns,groups:state.groups,ads:state.ads,conversionSource:state.conversionSource,dimension:state.dimension,sortKey:state.sortKey,sortDir:state.sortDir,metricPrimary:state.metricPrimary})}
     function growthContext(entry={kind:'overview',topic:'overview'},detail){
       if(!growthOverview)return null;
       const saved=entry.rowKey?growthRowSnapshots.get(entry.rowKey):entry.kind==='group'?Array.from(growthRowSnapshots.values()).find(item=>item.isTotal):null;
       const metric=entry.metricKey?growthOverview.primary[entry.metricKey]:null;
-      const filters={};['operators','accounts','campaigns','groups','ads'].forEach(key=>filters[key]=state[key].slice());
-      const object=saved?{name:saved.name,dimension:saved.isTotal?'当前筛选总计':dimensionDefinitions[state.dimension],count:saved.count}:{name:state.operators.length?state.operators[0]+' · 投放汇总':'全局投放总览',dimension:'当前筛选汇总',count:rows().length};
-      const sourceRows=rows().filter(item=>!saved||saved.isTotal||(item[state.dimension]||'未标记')===saved.name);
-      const sources=sourceRows.map(item=>({id:String(item.id),ad:item.ad,account:item.account,campaign:item.name,group:item.group,platform:item.platform,operator:accountOwners[item.account]||''}));
-      return {version:1,snapshotId:'growth-'+Date.now()+'-'+(++growthSnapshotSequence),scopeKey:growthScopeKey(),entry:saved||!entry.rowKey?entry:{kind:'group',topic:entry.topic},object,period:{start:state.start,end:state.end,label:state.start+' — '+state.end},filters,sources,metrics:saved?saved.metrics:{...growthOverview.metrics},primary:metric,detail,exposureBasis:saved?'table':'summary',empty:rows().length===0};
+      const filters={conversionSource:'advertising'};['operators','accounts','campaigns','groups','ads'].forEach(key=>filters[key]=state[key].slice());
+      const object=saved?{name:saved.name,dimension:saved.isTotal?'当前筛选总计':dimensionDefinitions[state.dimension],count:saved.count}:{name:state.operators.length?state.operators[0]+' · 投放汇总':'全局投放总览',dimension:'广告投放汇总',count:advertisingRows().length};
+      const sourceRows=advertisingRows().filter(item=>!saved||saved.isTotal||(item[state.dimension]||'未标记')===saved.name);
+      const sources=sourceRows.map(item=>({id:String(item.id),ad:item.ad,account:item.account,campaign:item.name,group:item.group,platform:item.platform,operator:ownerOf(item)}));
+      return {version:1,snapshotId:'growth-'+Date.now()+'-'+(++growthSnapshotSequence),scopeKey:growthScopeKey(),entry:saved||!entry.rowKey?entry:{kind:'group',topic:entry.topic},object,period:{start:state.start,end:state.end,label:state.start+' — '+state.end},filters,sources,metrics:saved?saved.metrics:{...growthOverview.metrics},primary:metric,detail,exposureBasis:saved?'table':'summary',empty:advertisingRows().length===0};
     }
     function growthPost(type,context){if(typeof window!=='undefined'&&window.parent!==window&&context)window.parent.postMessage({channel:'gos-growth-gpt-v1',type,context},window.location.origin)}
     function notifyGrowthScope(){growthPost('scope',growthContext())}
@@ -643,18 +649,18 @@
       return {close,open};
     }
     const accountMultiFilter=createMultiFilter({rootId:'#accountMultiFilter',controlId:'#accountMultiControl',tagsId:'#accountMultiTags',inputId:'#accountMultiSearch',menuId:'#accountMultiOptions',stateKey:'accounts',placeholder:'全部广告账户',options:unique('account').map(account=>({value:account,label:account,keywords:account}))});
-    const operatorMultiFilter=createMultiFilter({rootId:'#operatorMultiFilter',controlId:'#operatorMultiControl',tagsId:'#operatorMultiTags',inputId:'#operatorMultiSearch',menuId:'#operatorMultiOptions',stateKey:'operators',placeholder:'全部运营',single:true,options:[...new Set(Object.values(accountOwners))].map(name=>({value:name,label:name,keywords:name}))});
+    const operatorMultiFilter=createMultiFilter({rootId:'#operatorMultiFilter',controlId:'#operatorMultiControl',tagsId:'#operatorMultiTags',inputId:'#operatorMultiSearch',menuId:'#operatorMultiOptions',stateKey:'operators',placeholder:'全部运营',single:true,options:operatorNames().map(name=>({value:name,label:name,keywords:name}))});
     const campaignMultiFilter=createMultiFilter({rootId:'#campaignMultiFilter',controlId:'#campaignMultiControl',tagsId:'#campaignMultiTags',inputId:'#campaignMultiInput',menuId:'#campaignMultiOptions',stateKey:'campaigns',placeholder:'全部广告计划',options:unique('name').map(value=>({value,label:value,keywords:value}))});
     const groupMultiFilter=createMultiFilter({rootId:'#groupMultiFilter',controlId:'#groupMultiControl',tagsId:'#groupMultiTags',inputId:'#groupMultiInput',menuId:'#groupMultiOptions',stateKey:'groups',placeholder:'全部广告组',options:unique('group').map(value=>({value,label:value,keywords:value}))});
     const adMultiFilter=createMultiFilter({rootId:'#adMultiFilter',controlId:'#adMultiControl',tagsId:'#adMultiTags',inputId:'#adMultiInput',menuId:'#adMultiOptions',stateKey:'ads',placeholder:'全部广告',options:unique('ad').map(value=>({value,label:value,keywords:value}))});
     function renderOperator(){
-      const isGlobal=!state.operators.length,name=isGlobal?'全局投放总览':state.operators[0],photo=document.querySelector('#operatorPhoto');
-      document.querySelector('#operatorName').textContent=name;photo.classList.toggle('is-global',isGlobal);photo.setAttribute('aria-label',isGlobal?'全局投放总览头像':`${name} 头像`);
+      const isGlobal=!state.operators.length,name=isGlobal?(state.conversionSource==='nonAdvertising'?'非广告转化总览':'全局投放总览'):state.operators[0],photo=document.querySelector('#operatorPhoto');
+      document.querySelector('#operatorName').textContent=name;photo.classList.toggle('is-global',isGlobal);photo.setAttribute('aria-label',`${name} 头像`);
     }
 
     function renderMetrics(){
-      const r=rows(),f=rangeFactor();
-      const spend=sum(r,'spend'),exposure=sum(r,'exposure'),inquiries=sum(r,'inquiries'),transferredLeads=sum(r,'transfers'),crmCustomers=sum(r,'transfers'),projects=sum(r,'projects'),visits=sum(r,'visits'),amount=sum(r,'amount');
+      const r=rows(),adRows=advertisingRows(),f=rangeFactor();
+      const spend=sum(adRows,'spend'),exposure=sum(adRows,'exposure'),inquiries=sum(adRows,'inquiries'),transferredLeads=sum(adRows,'transfers'),crmCustomers=sum(r,'crmCustomers'),projects=sum(r,'projects'),visits=sum(r,'visits'),amount=sum(r,'amount');
       const cpm=exposure?spend/exposure*1000:0,cpa=inquiries?spend/inquiries:0;
       const data=[
         {key:'spend',label:'投放消耗',items:[{key:'spend',label:'投放消耗',value:cardMoney(spend*f),delta:5.4}]},
@@ -665,8 +671,9 @@
         {key:'visits',label:'客户到店',items:[{key:'visits',label:'客户到店',value:fmt.format(scaled(visits)),delta:4.2}]},
         {key:'performance',label:'业绩金额',items:[{key:'performance',label:'业绩金额',value:cardMoney(amount*f),delta:13}]}
       ];
-      growthOverview={metrics:{spend:scaled(spend),exposure:scaled(exposure),total:scaled(inquiries),valid:scaled(transferredLeads),projects:scaled(projects),arrivals:scaled(visits),deals:scaled(sum(r,'deals')),amount:scaled(amount),cpm:cpm,cpa:cpa},primary:Object.fromEntries(data.map(item=>{const primary=item.items.find(value=>value.key===state.metricPrimary[item.key])||item.items[0];return [item.key,{key:primary.key,label:primary.label,display:primary.value}]}))};
+      growthOverview={metrics:{spend:scaled(spend),exposure:scaled(exposure),total:scaled(inquiries),valid:scaled(transferredLeads),projects:scaled(sum(adRows,'projects')),arrivals:scaled(sum(adRows,'visits')),deals:scaled(sum(adRows,'deals')),amount:scaled(sum(adRows,'amount')),cpm:cpm,cpa:cpa},primary:Object.fromEntries(data.map(item=>{const primary=item.items.find(value=>value.key===state.metricPrimary[item.key])||item.items[0];return [item.key,{key:primary.key,label:primary.label,display:primary.value}]}))};
       document.querySelector('#metricsStrip').innerHTML=data.map(x=>{const primaryKey=state.metricPrimary[x.key]||x.items[0].key,primary=x.items.find(item=>item.key===primaryKey)||x.items[0],rankLabel=operatorRankLabel(primary);const value=x.items.length===1?`<strong class="metric-value" title="${primary.value}">${primary.value}</strong>`:`<span class="metric-value dual" title="点击数值切换主信息">${x.items.map((item,index)=>{const isPrimary=item.key===primary.key,swapClass=state.metricSwap?.key===x.key?(item.key===state.metricSwap.to?'swap-grow':item.key===state.metricSwap.from?'swap-shrink':''):'';return `${index?'<em>/</em>':''}<button class="metric-value-part ${isPrimary?'primary':'secondary'} ${swapClass}" type="button" data-metric-series="${item.key}" aria-label="将${item.label}设为主信息" aria-pressed="${isPrimary}" title="点击将${item.label}设为主信息">${item.value}</button>`}).join('')}</span>`;const negative=primary.goodWhenDown?primary.delta>0:primary.delta<0;return `<div class="metric metric-selector ${state.trend===x.key?'active':''}" data-trend-key="${x.key}" role="button" tabindex="0" aria-pressed="${state.trend===x.key}" aria-label="${x.label}趋势指标"><span class="metric-heading"><span class="metric-label">${x.label}</span>${['spend','delivery','inquiries'].includes(x.key)?growthButton(x.key,primary.label,`data-growth-metric="${x.key}"`,"growth-metric-trigger"):''}</span>${value}<div class="metric-meta">${rankLabel?`<span class="metric-field rank">${rankLabel}</span>`:''}<span class="metric-field period ${negative?'negative':''}">较上周期 ${primary.delta>=0?'+':''}${primary.delta}%</span></div></div>`}).join('');
+      if(state.conversionSource==='nonAdvertising')document.querySelectorAll('#metricsStrip [data-trend-key]').forEach(card=>{if(isCrmTrend(card.dataset.trendKey))return;card.classList.add('is-unavailable');card.setAttribute('aria-disabled','true');card.setAttribute('tabindex','-1');card.innerHTML=`<span class="metric-heading"><span class="metric-label">${data.find(item=>item.key===card.dataset.trendKey).label}</span></span><strong class="metric-value">—</strong><div class="metric-meta"><span class="metric-unavailable-note">非广告来源不适用</span></div>`});
       notifyGrowthScope();
     }
 
@@ -695,7 +702,7 @@
     const formatAxisValue=(series,value)=>series.fullMoney?money(value):(series.unit==='money'||series.unit==='decimalMoney')?shortMoney(value):series.unit==='percent'?`${Math.round(value)}%`:compact(value);
     function distributeMoney(total,weights){const weightTotal=weights.reduce((sum,value)=>sum+value,0),values=weights.map(value=>Math.floor(total*value/weightTotal));values[values.length-1]+=total-values.reduce((sum,value)=>sum+value,0);return values}
     function renderTrend(){
-      const baseDef=trendDefinitions[state.trend],primarySeriesId=state.metricPrimary[state.trend],orderedSeries=primarySeriesId?[...baseDef.series].sort((a,b)=>a.id===primarySeriesId?-1:b.id===primarySeriesId?1:0):baseDef.series,primaryMeta=dualMetricMeta[state.trend]?.[primarySeriesId],primarySeries=orderedSeries[0],def={...baseDef,series:orderedSeries,delta:primaryMeta?.delta??baseDef.delta,title:primaryMeta?`${primarySeries.name}趋势`:baseDef.title,subtitle:primaryMeta?`${primarySeries.name}为当前主信息；${orderedSeries.slice(1).map(item=>item.name).join('、')}作为对比，悬停查看实际值`:baseDef.subtitle},activeRows=rows(),count=chartPointCount(),labels=chartLabels(count),selectionScale=activeRows.length/plans.length,timeScale=(state.range==='today'||state.range==='yesterday') ? .72 : 1;
+      const baseDef=trendDefinitions[state.trend],primarySeriesId=state.metricPrimary[state.trend],orderedSeries=primarySeriesId?[...baseDef.series].sort((a,b)=>a.id===primarySeriesId?-1:b.id===primarySeriesId?1:0):baseDef.series,primaryMeta=dualMetricMeta[state.trend]?.[primarySeriesId],primarySeries=orderedSeries[0],def={...baseDef,series:orderedSeries,delta:primaryMeta?.delta??baseDef.delta,title:primaryMeta?`${primarySeries.name}趋势`:baseDef.title,subtitle:primaryMeta?`${primarySeries.name}为当前主信息；${orderedSeries.slice(1).map(item=>item.name).join('、')}作为对比，悬停查看实际值`:baseDef.subtitle},activeRows=isCrmTrend(state.trend)?rows():advertisingRows(),count=chartPointCount(),labels=chartLabels(count),selectionScale=activeRows.length/(isCrmTrend(state.trend)?plans.length:plans.filter(plan=>plan.conversionSource==='advertising').length),timeScale=(state.range==='today'||state.range==='yesterday') ? .72 : 1;
       document.querySelector('#chartTooltip').style.display='none';
       const multiSeries=def.series.length>1,trendPanel=document.querySelector('.trend-panel'),chartHeading=document.querySelector('#chartHeading');
       trendPanel.classList.toggle('multi-series',multiSeries);chartHeading.hidden=false;
@@ -703,7 +710,7 @@
       document.querySelector('#trendChart').setAttribute('aria-label',def.title);
       document.querySelector('#chartLegend').innerHTML=def.series.map((s,i)=>`<span class="legend-item" role="listitem"><svg class="legend-swatch" style="--legend-color:${s.color||chartColors[i%chartColors.length]}" viewBox="0 0 24 12" aria-hidden="true"><line x1="1" y1="6" x2="23" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="6" r="3" fill="#fff" stroke="currentColor" stroke-width="2"/></svg>${s.name}</span>`).join('');
       if(!activeRows.length){document.querySelector('#trendChart').innerHTML='<text x="640" y="160" text-anchor="middle" class="chart-axis">当前筛选条件下暂无趋势数据</text>';document.querySelector('#chartTooltip').style.display='none';chartRuntime=null;return}
-      const seriesData=def.series.map(s=>({name:s.name,unit:s.unit,axis:s.axis||'left',color:s.color||'',className:s.className||'',fullMoney:!!s.fullMoney,values:s.totalKey?distributeMoney(scaled(sum(activeRows,s.totalKey)),s.values.slice(-count)):s.values.slice(-count).map(v=>{const value=s.scaleWithSelection===false?v:v*selectionScale*timeScale;if(s.unit==='money')return Math.round(value/100)*100;if(s.unit==='decimalMoney')return Number(value.toFixed(2));if(s.unit==='percent')return Number(value.toFixed(1));return Math.max(0,Math.round(value))})}));
+      const seriesData=def.series.map(s=>{const totalKey=s.totalKey||(state.trend==='crm'?(s.id==='crmCustomers'?'crmCustomers':'projects'):state.trend==='visits'?'visits':null);return {name:s.name,unit:s.unit,axis:s.axis||'left',color:s.color||'',className:s.className||'',fullMoney:!!s.fullMoney,values:totalKey?distributeMoney(scaled(sum(activeRows,totalKey)),s.values.slice(-count)):s.values.slice(-count).map(v=>{const value=s.scaleWithSelection===false?v:v*selectionScale*timeScale;if(s.unit==='money')return Math.round(value/100)*100;if(s.unit==='decimalMoney')return Number(value.toFixed(2));if(s.unit==='percent')return Number(value.toFixed(1));return Math.max(0,Math.round(value))})}});
       const leftSeries=seriesData.filter(s=>s.axis==='left'),rightSeries=seriesData.filter(s=>s.axis==='right');
       const W=1280,H=320,p={l:leftSeries.some(s=>s.fullMoney)?100:62,r:rightSeries.length?72:24,t:22,b:44},iw=W-p.l-p.r,ih=H-p.t-p.b;
       const leftMax=niceMax(Math.max(...leftSeries.flatMap(s=>s.values))*1.08),rightMax=rightSeries.length?niceMax(Math.max(...rightSeries.flatMap(s=>s.values))*1.08):leftMax;
@@ -730,7 +737,7 @@
     const tableMetricKeys=Object.keys(sortDefinitions);
     const dimensionOptions=selected=>Object.entries(dimensionDefinitions).map(([key,label])=>`<option value="${key}" ${key===selected?'selected':''}>${label}</option>`).join('');
     function groupedTableRows(){
-      const source=rows(),groups=new Map(),total={[state.dimension]:'总计',sourceCount:0,__total:true};tableMetricKeys.forEach(key=>total[key]=0);
+      const source=advertisingRows(),groups=new Map(),total={[state.dimension]:'总计',sourceCount:0,__total:true};tableMetricKeys.forEach(key=>total[key]=0);
       source.forEach(x=>{const label=x[state.dimension]||'未标记';if(!groups.has(label)){const item={[state.dimension]:label,sourceCount:0,__total:false};tableMetricKeys.forEach(key=>item[key]=0);groups.set(label,item)}const item=groups.get(label);item.sourceCount+=1;total.sourceCount+=1;tableMetricKeys.forEach(key=>{item[key]+=x[key]||0;total[key]+=x[key]||0})});
       return source.length?[total,...groups.values()]:[];
     }
@@ -832,8 +839,8 @@
       const groups=new Map(),totalAmount=sum(visibleOrders,'amount');
       visibleOrders.forEach(order=>{const plan=plans.find(item=>item.id===order.planId),name=dimension==='pm'?order.pm:plan.country;if(!groups.has(name))groups.set(name,{name,count:0,amount:0,paidCount:0,receivedAmount:0});const item=groups.get(name);item.count+=1;item.amount+=order.amount;item.receivedAmount+=order.receivedAmount||0;if(order.payment==='已收款')item.paidCount+=1});
       const ranked=[...groups.values()].sort((a,b)=>b.amount-a.amount);
-      head.innerHTML=dimension==='pm'?'<th>排名</th><th>PM</th><th>成交订单</th><th class="money-column">业绩金额</th><th class="money-column">平均客单价</th><th>已收款订单</th><th class="money-column">回款金额</th>':'<th>排名</th><th>地区</th><th>国家</th><th>成交订单</th><th class="money-column">业绩金额</th><th class="money-column">平均客单价</th><th>金额占比</th><th class="money-column">回款金额</th>';
-      body.innerHTML=ranked.map((item,index)=>{const initials=dimension==='pm'?item.name.split(' ').map(x=>x[0]).join('').slice(0,2):item.name.slice(0,1),regionCell=dimension==='country'?`<td><span class="analysis-value">${traceText(orderCountryRegions[item.name],'—')}</span></td>`:'',lastValue=dimension==='pm'?`${item.paidCount} 单`:`<span class="analysis-share"><i style="--share:${(item.amount/totalAmount*100).toFixed(1)}%"></i>${(item.amount/totalAmount*100).toFixed(1)}%</span>`;return `<tr><td><span class="rank ${index<3?'top':''}">${index+1}</span></td>${regionCell}<td><span class="analysis-name"><i class="analysis-avatar">${initials}</i>${item.name}</span></td><td><span class="analysis-value">${item.count} 单</span></td><td class="money-column"><span class="analysis-value">${money(item.amount)}</span></td><td class="money-column"><span class="analysis-value">${money(item.amount/item.count)}</span></td><td><span class="analysis-value">${lastValue}</span></td><td class="money-column"><span class="analysis-value">${money(item.receivedAmount)}</span></td></tr>`}).join('');
+      head.innerHTML=dimension==='pm'?'<th>排名</th><th>PM</th><th>成交订单</th><th class="money-column">业绩金额</th><th class="money-column">平均客单价</th><th>已收款订单</th><th class="money-column">回款金额</th>':'<th>排名</th><th>国家</th><th>地区</th><th>成交订单</th><th class="money-column">业绩金额</th><th class="money-column">平均客单价</th><th>金额占比</th><th class="money-column">回款金额</th>';
+      body.innerHTML=ranked.map((item,index)=>{const initials=dimension==='pm'?item.name.split(' ').map(x=>x[0]).join('').slice(0,2):item.name.slice(0,1),regionCell=dimension==='country'?`<td><span class="analysis-value">${traceText(orderCountryRegions[item.name],'—')}</span></td>`:'',lastValue=dimension==='pm'?`${item.paidCount} 单`:`<span class="analysis-share"><i style="--share:${(item.amount/totalAmount*100).toFixed(1)}%"></i>${(item.amount/totalAmount*100).toFixed(1)}%</span>`;return `<tr><td><span class="rank ${index<3?'top':''}">${index+1}</span></td><td><span class="analysis-name"><i class="analysis-avatar">${initials}</i>${item.name}</span></td>${regionCell}<td><span class="analysis-value">${item.count} 单</span></td><td class="money-column"><span class="analysis-value">${money(item.amount)}</span></td><td class="money-column"><span class="analysis-value">${money(item.amount/item.count)}</span></td><td><span class="analysis-value">${lastValue}</span></td><td class="money-column"><span class="analysis-value">${money(item.receivedAmount)}</span></td></tr>`}).join('');
     }
     function traceText(value,fallback='未记录'){
       return (String(value??'').trim()||fallback).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -883,6 +890,11 @@
       const cpa=plan.inquiries?plan.spend/plan.inquiries:0;
       const adHierarchy=[['广告账户',plan.account],['广告计划',plan.name],['广告组',plan.group],['广告',plan.ad]].map(([label,value])=>`<dt>${label}</dt><dd title="${traceText(value)}">${traceText(value)}</dd>`).join('');
       document.querySelector('#traceVideoContent').innerHTML=`<dl class="trace-ad-hierarchy" aria-label="广告归属">${adHierarchy}</dl><button class="video-card" type="button" data-ad-preview="${selected.id}" aria-haspopup="dialog" aria-controls="traceAdPreview" aria-label="预览广告：${traceText(profile.video)}"><span class="video-thumb" aria-hidden="true">🎬</span><span class="video-title"><strong>${traceText(profile.video)}</strong><span class="platform-tag">${traceText(plan.platform)}</span></span><span class="video-preview-link">预览<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 8s2.2-4 6.5-4 6.5 4 6.5 4-2.2 4-6.5 4-6.5-4-6.5-4Z"/><circle cx="8" cy="8" r="1.8"/></svg></span></button><div class="video-stats"><div class="video-stat"><span>业绩</span><strong class="green">${money(selected.amount)}</strong></div><div class="video-stat"><span>成交</span><strong>${fmt.format(plan.deals)} 单</strong></div><div class="video-stat"><span>询盘</span><strong>${fmt.format(plan.inquiries)}</strong></div><div class="video-stat"><span>平均 CPA</span><strong>${cpa?money(cpa):'不适用'}</strong></div></div>`;
+      document.querySelector('#traceSourceTitle').textContent=plan.conversionSource==='nonAdvertising'?'来源信息':'投放溯源';
+      if(plan.conversionSource==='nonAdvertising'){
+        document.querySelector('#traceCustomerContent .lifecycle').innerHTML=`<div class="life-item"><div class="life-head"><strong>创建 CRM 客户</strong><time>${selected.date}</time></div><p>${traceText(selected.customer)} 已录入 CRM，继续跟进项目与订单。</p></div>`;
+        document.querySelector('#traceVideoContent').innerHTML=`<dl class="trace-ad-hierarchy" aria-label="转化来源"><dt>转化来源</dt><dd>非广告 · ${traceText(plan.platform)} 自然流</dd><dt>来源内容</dt><dd>${traceText(plan.ad)}</dd></dl><div class="video-stats"><div class="video-stat"><span>业绩</span><strong class="green">${money(selected.amount)}</strong></div><div class="video-stat"><span>成交</span><strong>${fmt.format(plan.deals)} 单</strong></div></div>`;
+      }
       document.querySelectorAll('.trace-project').forEach(btn=>btn.addEventListener('click',()=>{state.traceOrderId=btn.dataset.orderId;renderOrders()}));
     }
     const pmGradeKeys=['a','b','c'];
@@ -900,41 +912,46 @@
       {key:'amount',label:'成交金额',sortable:true}
     ];
     function pmFieldTotal(row,field){return pmGradeKeys.reduce((total,key)=>total+(row[field]?.[key]||0),0)}
-    function pmSelectedValue(row,field){return state.pmGrade==='all'?pmFieldTotal(row,field):(row[field]?.[state.pmGrade]||0)}
+    function pmSelectedValue(row,field){return state.pmGrade==='all'?pmFieldTotal(row,field)+(row.crm?.[field]||0):(row[field]?.[state.pmGrade]||0)}
     function pmSelectedBase(row){return state.pmGrade==='all'?row.assigned:(row.grades?.[state.pmGrade]||0)}
     function pmScopedRow(row){
+      if(row.crmOnly)return (state.pmCountry==='all'||state.pmCountry===row.region)&&(state.pmProjectType==='all'||state.pmProjectType===row.projectType)?row:null;
       const region=state.pmCountry==='all'?'--':state.pmCountry,projectType=state.pmProjectType==='all'?'--':state.pmProjectType;
       const regionScope=state.pmCountry==='all'?row:row.regions?.[state.pmCountry],base=regionScope||row;
       const projectTypeScope=state.pmProjectType==='all'?base:base.projectTypes?.[state.pmProjectType];
       return {...row,...base,...(projectTypeScope||{}),region,projectType};
     }
     function aggregatePmRows(rows){
-      const total={name:'总计',region:state.pmCountry==='all'?'--':state.pmCountry,projectType:state.pmProjectType==='all'?'--':state.pmProjectType,assigned:0,grades:{a:0,b:0,c:0},connected:{a:0,b:0,c:0},projects:{a:0,b:0,c:0},deals:{a:0,b:0,c:0},amount:{a:0,b:0,c:0},__total:true};
-      rows.forEach(row=>{total.assigned+=row.assigned;['grades','connected','projects','deals','amount'].forEach(field=>pmGradeKeys.forEach(key=>total[field][key]+=row[field][key]))});
+      const total={name:'总计',region:state.pmCountry==='all'?'--':state.pmCountry,projectType:state.pmProjectType==='all'?'--':state.pmProjectType,assigned:0,adAssigned:0,crmOnly:rows.every(row=>row.crmOnly),crm:{projects:0,deals:0,amount:0},grades:{a:0,b:0,c:0},connected:{a:0,b:0,c:0},projects:{a:0,b:0,c:0},deals:{a:0,b:0,c:0},amount:{a:0,b:0,c:0},__total:true};
+      rows.forEach(row=>{total.assigned+=row.assigned;if(!row.crmOnly)total.adAssigned+=row.assigned;['projects','deals','amount'].forEach(field=>total.crm[field]+=row.crm?.[field]||0);['grades','connected','projects','deals','amount'].forEach(field=>pmGradeKeys.forEach(key=>total[field][key]+=row[field]?.[key]||0))});
       return total;
     }
     function pmSortValue(row,key){if(key==='assigned')return row.assigned;if(pmGradeKeys.includes(key))return row.grades[key];return pmSelectedValue(row,key)}
     function pmHeaderCell(column){
-      if(!column.sortable)return `<th>${column.label}</th>`;
+      if(!column.sortable||(state.conversionSource==='nonAdvertising'&&['a','b','c','connected'].includes(column.key)))return `<th>${column.label}</th>`;
       const active=state.pmSortKey===column.key,arrow=active?(state.pmSortDir==='desc'?'↓':'↑'):'↕';
       return `<th><button class="pm-sort ${active?'active':''}" type="button" data-pm-sort="${column.key}"><span>${column.label}${column.sub?`<small style="display:block;margin-top:4px;color:#6980a1;font-size:9px;font-weight:500">${column.sub}</small>`:''}</span><span class="pm-sort-arrow">${arrow}</span></button></th>`;
     }
     function pmGradeCell(row,key){
-      const muted=state.pmGrade!=='all'&&state.pmGrade!==key,rate=row.assigned?row.grades[key]/row.assigned*100:0;
+      if(row.crmOnly)return `<td data-label="${key.toUpperCase()}级"><span title="非广告来源不提供评级">—</span></td>`;
+      const muted=state.pmGrade!=='all'&&state.pmGrade!==key,base=row.adAssigned??row.assigned,rate=base?row.grades[key]/base*100:0;
       return `<td class="${muted?'pm-grade-muted':''}" data-label="${key.toUpperCase()}级"><div class="pm-cell grade-${key}"><strong>${fmt.format(row.grades[key])}</strong><small>${rate.toFixed(2)}%</small></div></td>`;
     }
     function pmStageCell(row,field,label){
-      const value=pmSelectedValue(row,field),base=pmSelectedBase(row),rate=base?value/base*100:0;
+      if(row.crmOnly&&field==='connected')return `<td data-label="${label}"><span title="非广告来源不提供建联数据">—</span></td>`;
+      const value=pmSelectedValue(row,field),base=field==='connected'&&state.pmGrade==='all'?(row.adAssigned??row.assigned):pmSelectedBase(row),rate=base?value/base*100:0;
       return `<td data-label="${label}"><div class="pm-cell stage"><strong>${fmt.format(value)}</strong><small>${rate.toFixed(2)}%</small></div></td>`;
     }
     function pmRowTemplate(row){
       return `<tr class="${row.__total?'pm-total-row':''}"><td data-label="PM"><span class="pm-name" title="${row.name}">${row.name}</span></td><td data-label="分配客户"><div class="pm-cell"><strong>${fmt.format(row.assigned)}</strong></div></td><td data-label="项目地区"><span class="pm-country">${row.region||'--'}</span></td><td data-label="项目类型"><span class="pm-project-type">${row.projectType||'--'}</span></td>${pmGradeKeys.map(key=>pmGradeCell(row,key)).join('')}${pmStageCell(row,'connected','建联成功')}${pmStageCell(row,'projects','立项客户')}${pmStageCell(row,'deals','成交客户')}<td data-label="成交金额"><div class="pm-cell amount"><strong>${money(pmSelectedValue(row,'amount'))}</strong></div></td></tr>`;
     }
     function renderPmBoard(){
-      const keyword=state.pmSearch.trim().toLocaleLowerCase(),matched=pmRows.filter(row=>!keyword||row.name.toLocaleLowerCase().includes(keyword)),visible=matched.map(pmScopedRow),direction=state.pmSortDir==='desc'?-1:1;
+      const crmRows=state.conversionSource==='advertising'||state.pmGrade!=='all'?[]:plans.filter(plan=>plan.conversionSource==='nonAdvertising').map(plan=>({name:plan.crmPm,assigned:plan.crmCustomers,region:plan.crmRegion,projectType:plan.crmProjectType,crmOnly:true,crm:{projects:plan.projects,deals:plan.deals,amount:plan.amount},grades:{a:0,b:0,c:0},connected:{a:0,b:0,c:0},projects:{a:0,b:0,c:0},deals:{a:0,b:0,c:0},amount:{a:0,b:0,c:0}}));
+      const source=[...(state.conversionSource==='nonAdvertising'?[]:pmRows),...crmRows];
+      const keyword=state.pmSearch.trim().toLocaleLowerCase(),matched=source.filter(row=>!keyword||row.name.toLocaleLowerCase().includes(keyword)),visible=matched.map(pmScopedRow).filter(Boolean),direction=state.pmSortDir==='desc'?-1:1;
       const pageSize=state.pmPageSize,sorted=[...visible].sort((a,b)=>(pmSortValue(a,state.pmSortKey)-pmSortValue(b,state.pmSortKey))*direction),totalPages=Math.max(1,Math.ceil(sorted.length/pageSize));state.pmPage=Math.min(Math.max(1,state.pmPage),totalPages);const offset=(state.pmPage-1)*pageSize,pageRows=sorted.slice(offset,offset+pageSize),body=document.querySelector('#pmTableBody'),empty=document.querySelector('#pmEmpty');
       document.querySelector('#pmTableHead').innerHTML=pmColumnDefinitions.map(pmHeaderCell).join('');
-      document.querySelectorAll('#pmGradeTabs button').forEach(button=>button.classList.toggle('active',button.dataset.pmGrade===state.pmGrade));
+      document.querySelectorAll('#pmGradeTabs button').forEach(button=>{button.classList.toggle('active',button.dataset.pmGrade===state.pmGrade);button.disabled=state.conversionSource==='nonAdvertising'&&button.dataset.pmGrade!=='all'});
       empty.hidden=visible.length>0;body.innerHTML=visible.length?[pmRowTemplate(aggregatePmRows(visible)),...pageRows.map(pmRowTemplate)].join(''):'';renderPagination('pmPagination',visible.length,'pm');
     }
     function renderAll(){renderOperator();renderMetrics();renderTrend();renderTable();renderOrders();renderPmBoard()}
@@ -943,7 +960,7 @@
     document.querySelector('#rangePreset').addEventListener('click',e=>{const b=e.target.closest('[data-range]');if(b)setRange(b.dataset.range)});
     ['startDate','endDate'].forEach(id=>document.querySelector('#'+id).addEventListener('change',()=>{const s=document.querySelector('#startDate').value,e=document.querySelector('#endDate').value;if(!s||!e)return;if(s>e){toast('开始日期不能晚于结束日期');return}state.range='custom';state.start=s;state.end=e;state.adsPage=1;state.pmPage=1;document.querySelectorAll('#rangePreset button').forEach(b=>b.classList.remove('active'));renderAll()}));
     let metricSwapTimer=null;
-    function selectTrendMetric(key){state.trend=key;state.lockedPoint=null;renderMetrics();renderTrend()}
+    function selectTrendMetric(key){if(state.conversionSource==='nonAdvertising'&&!isCrmTrend(key))return;state.trend=key;state.lockedPoint=null;renderMetrics();renderTrend()}
     function switchMetricPrimary(key,seriesKey){const previous=state.metricPrimary[key];state.trend=key;state.lockedPoint=null;if(!previous||previous===seriesKey){renderMetrics();renderTrend();return}state.metricPrimary[key]=seriesKey;state.metricSwap={key,from:previous,to:seriesKey};renderMetrics();renderTrend();clearTimeout(metricSwapTimer);metricSwapTimer=setTimeout(()=>{document.querySelectorAll('.metric-value-part.swap-grow,.metric-value-part.swap-shrink').forEach(item=>item.classList.remove('swap-grow','swap-shrink'));state.metricSwap=null},480)}
     document.querySelector('#metricsStrip').addEventListener('click',e=>{if(e.target.closest('[data-growth-topic]'))return;const card=e.target.closest('[data-trend-key]');if(!card)return;const series=e.target.closest('[data-metric-series]');series?switchMetricPrimary(card.dataset.trendKey,series.dataset.metricSeries):selectTrendMetric(card.dataset.trendKey)});
     document.querySelector('#metricsStrip').addEventListener('keydown',e=>{if(!['Enter',' '].includes(e.key)||e.target.closest('[data-metric-series], [data-growth-topic]'))return;const card=e.target.closest('[data-trend-key]');if(!card)return;e.preventDefault();selectTrendMetric(card.dataset.trendKey)});
