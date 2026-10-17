@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>三维看板 · 运营看板</title>
+  <title>四维看板 · 运营看板</title>
   <style>
     :root {
       --navy:#153d70; --brand:#1a4d8f; --blue:#1677ff; --cyan:#00a3b4;
@@ -338,14 +338,14 @@
     <div class="brand"><span class="brand-mark">G</span><div>G-Builder OS<small>营销与销售智能工作台</small></div></div>
     <nav class="nav">
       <div class="nav-group"><div class="nav-title">销售工作台</div><a class="nav-item" href="/jingchengjituan/scrm"><span class="nav-icon">▦</span>SCRM</a></div>
-      <div class="nav-group"><div class="nav-title">三维看板</div><a class="nav-item active" href="#"><span class="nav-icon">⌁</span>运营看板</a></div>
+      <div class="nav-group"><div class="nav-title">四维看板</div><a class="nav-item active" href="#"><span class="nav-icon">⌁</span>运营看板</a></div>
       <div class="nav-group"><div class="nav-title">会话管理</div><a class="nav-item" href="/jingchengjituan/conversation/lead-assignment"><span class="nav-icon">◎</span>线索分配</a><a class="nav-item" href="/jingchengjituan/conversation/handover"><span class="nav-icon">↗</span>转人工</a></div>
       <div class="nav-group"><div class="nav-title">AGENT</div><a class="nav-item" href="/jingchengjituan/agent/sales-rep"><span class="nav-icon">◇</span>AI 业务员</a><a class="nav-item" href="/jingchengjituan/agent/sales-king"><span class="nav-icon">✦</span>AI 销冠</a></div>
       <div class="nav-group"><div class="nav-title">数字资产</div><a class="nav-item" href="/jingchengjituan/knowledge"><span class="nav-icon">▤</span>知识库</a></div>
     </nav>
     <div class="sidebar-foot">演示环境 · Demo V1.3<br />运营看板数据为本地 Mock</div>
   </aside>
-  <header class="topbar"><div class="crumb"><span>三维看板</span><span>/</span><strong>运营看板</strong></div><div class="user"><span class="avatar">KM</span><span>Kevin Ma<br><small style="color:#94a3b8">运营</small></span></div></header>
+  <header class="topbar"><div class="crumb"><span>四维看板</span><span>/</span><strong>运营看板</strong></div><div class="user"><span class="avatar">KM</span><span>Kevin Ma<br><small style="color:#94a3b8">运营</small></span></div></header>
 
   <main>
     <section class="dashboard-heading" aria-label="运营看板标题">
@@ -506,6 +506,13 @@
   </dialog>
 
   <script>
+    if (new URLSearchParams(window.location.search).get('view') === 'sm') {
+      document.title = '四维看板 · 业绩看板（SM）';
+      document.querySelector('.dashboard-heading h1').textContent = '业绩看板（SM）';
+      document.querySelector('.dashboard-heading').setAttribute('aria-label', '业绩看板（SM）标题');
+      document.querySelector('.toolbar').setAttribute('aria-label', '业绩看板（SM）筛选');
+      document.querySelector('.topbar .crumb strong').textContent = '业绩看板（SM）';
+    }
     const plans=[
       {id:1,name:'全案广告系列0902',platform:'Instagram',account:'Meta-亚洲华人',group:'新加坡高净值人群',ad:'全屋实拍竖版A',country:'新加坡',language:'中文',age:'35–44岁',gender:'男',device:'移动端 · iOS',spend:14200,exposure:1278432,inquiries:142,transfers:118,high:84,visits:21,projects:38,deals:8,amount:386000},
       {id:2,name:'中东高端别墅表单0708',platform:'Messenger',account:'Meta-海外增长',group:'迪拜别墅业主人群',ad:'一对一方案咨询B',country:'阿联酋',language:'阿拉伯语',age:'35–44岁',gender:'男',device:'移动端 · Android',spend:12400,exposure:521874,inquiries:98,transfers:76,high:38,visits:9,projects:17,deals:3,amount:740000},
