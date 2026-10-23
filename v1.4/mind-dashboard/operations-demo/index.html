@@ -333,6 +333,7 @@
   <link rel="stylesheet" href="../dashboard-select.css">
   <script src="../dashboard-select.js" defer></script>
   <link rel="stylesheet" href="./demo.css" />
+  <link rel="stylesheet" href="../operations-organization.css">
 </head>
 <body class="embedded">
   <aside class="sidebar">
@@ -593,7 +594,7 @@
     };
     const fmt=new Intl.NumberFormat('zh-CN'); const money=v=>`¥${fmt.format(Math.round(v))}`; const compact=v=>v>=1e6?`${(v/1e6).toFixed(2)}M`:v>=1e3?`${(v/1e3).toFixed(1)}k`:fmt.format(Math.round(v)); const cardCompact=v=>v>=1e6?`${(v/1e6).toFixed(1)}M`:v>=1e5?`${Math.round(v/1e3)}k`:v>=1e3?`${(v/1e3).toFixed(1)}k`:fmt.format(Math.round(v)); const cardMoney=money; const narrowMoney=money; const narrowNumber=v=>fmt.format(Math.round(v/10));
     const sum=(rows,key)=>rows.reduce((n,x)=>n+x[key],0); const rangeFactor=()=>state.range==='yesterday'?.91:state.range==='today'?1:state.range==='7'?5.8:state.range==='30'?22.6:Math.max(1,(new Date(state.end)-new Date(state.start))/86400000+1);
-    const rows=()=>plans.filter(x=>(!state.departments?.length||state.departments.includes(window.opsDemoDepartmentOf?.(ownerOf(x))))&&(!state.adPlanIds||state.adPlanIds.includes(String(x.id)))&&matchesConversionSource(x)&&(!state.operators.length||state.operators.includes(ownerOf(x)))&&(state.conversionSource==='nonAdvertising'||((!state.accounts.length||state.accounts.includes(x.account))&&(!state.campaigns.length||state.campaigns.includes(x.name))&&(!state.groups.length||state.groups.includes(x.group))&&(!state.ads.length||state.ads.includes(x.ad)))));
+    const rows=()=>plans.filter(x=>(!state.organizationOperators||state.organizationOperators.includes(ownerOf(x)))&&(!state.departments?.length||state.departments.includes(window.opsDemoDepartmentOf?.(ownerOf(x))))&&(!state.adPlanIds||state.adPlanIds.includes(String(x.id)))&&matchesConversionSource(x)&&(!state.operators.length||state.operators.includes(ownerOf(x)))&&(state.conversionSource==='nonAdvertising'||((!state.accounts.length||state.accounts.includes(x.account))&&(!state.campaigns.length||state.campaigns.includes(x.name))&&(!state.groups.length||state.groups.includes(x.group))&&(!state.ads.length||state.ads.includes(x.ad)))));
     state.conversionSource='all';
     const ownerOf=plan=>plan.operator||accountOwners[plan.account]||'';
     const operatorNames=()=>[...new Set(plans.map(ownerOf).filter(Boolean))];
@@ -622,13 +623,13 @@
     const growthTopics={overview:'投放全盘',spend:'投放消耗',delivery:'曝光效率',inquiries:'询盘成本',leads:'线索质量',crm:'CRM转化',visits:'客户到店',performance:'业绩金额',quality:'询盘质量',conversion:'销售转化',result:'成交结果',funnel:'阶段漏斗',grades:'线索转化',projects:'立项与成交',contribution:'成交贡献'};
     let growthOverview=null,growthSnapshotSequence=0,growthLastTrigger=null,growthPanelOpen=false,growthIgnoreOutsideClick=false;const growthRowSnapshots=new Map();
     function growthButton(topic,label,extra='',className=''){return '<button type="button" class="growth-gpt-trigger '+className+'" data-growth-topic="'+topic+'" '+extra+' title="Growth GPT · '+label+'" aria-label="Growth GPT · '+label+'"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 2 2.2 5.8L18 10l-5.8 2.2L10 18l-2.2-5.8L2 10l5.8-2.2Z"/><path d="m16 1 .8 2.2L19 4l-2.2.8L16 7l-.8-2.2L13 4l2.2-.8Z"/></svg>'+ (className==='growth-row-trigger'?'<span>分析</span>':'')+'</button>'}
-    function growthScopeKey(){return JSON.stringify({start:state.start,end:state.end,range:state.range,operators:state.operators,accounts:state.accounts,campaigns:state.campaigns,groups:state.groups,ads:state.ads,conversionSource:state.conversionSource,dimension:state.dimension,sortKey:state.sortKey,sortDir:state.sortDir,metricPrimary:state.metricPrimary,departments:state.departments,adPlanIds:state.adPlanIds})}
+    function growthScopeKey(){return JSON.stringify({start:state.start,end:state.end,range:state.range,operators:state.operators,accounts:state.accounts,campaigns:state.campaigns,groups:state.groups,ads:state.ads,conversionSource:state.conversionSource,dimension:state.dimension,sortKey:state.sortKey,sortDir:state.sortDir,metricPrimary:state.metricPrimary,organizationPath:state.organizationPath||[],departments:state.departments,adPlanIds:state.adPlanIds})}
     function growthContext(entry={kind:'overview',topic:'overview'},detail){
       if(!growthOverview)return null;
       const saved=entry.rowKey?growthRowSnapshots.get(entry.rowKey):entry.kind==='group'?Array.from(growthRowSnapshots.values()).find(item=>item.isTotal):null;
       const metric=entry.metricKey?growthOverview.primary[entry.metricKey]:null;
-      const filters={conversionSource:'advertising'};['operators','accounts','campaigns','groups','ads'].forEach(key=>filters[key]=state[key].slice());
-      const object=saved?{name:saved.name,dimension:saved.isTotal?'当前筛选总计':dimensionDefinitions[state.dimension],count:saved.count}:{name:state.operators.length?state.operators[0]+' · 投放汇总':'全局投放总览',dimension:'广告投放汇总',count:advertisingRows().length};
+      const filters={conversionSource:'advertising'};['operators','accounts','campaigns','groups','ads'].forEach(key=>filters[key]=state[key].slice());filters.operators=state.organizationOperators?.slice()||filters.operators;
+      const object=saved?{name:saved.name,dimension:saved.isTotal?'当前筛选总计':dimensionDefinitions[state.dimension],count:saved.count}:{name:state.operators.length?state.operators[0]+' · 投放汇总':(state.organizationLabels?.join(' / ')||'全局投放总览'),dimension:'广告投放汇总',count:advertisingRows().length};
       const sourceRows=advertisingRows().filter(item=>!saved||saved.isTotal||(item[state.dimension]||'未标记')===saved.name);
       const sources=sourceRows.map(item=>({id:String(item.id),ad:item.ad,account:item.account,campaign:item.name,group:item.group,platform:item.platform,operator:ownerOf(item)}));
       return {version:1,snapshotId:'growth-'+Date.now()+'-'+(++growthSnapshotSequence),scopeKey:growthScopeKey(),entry:saved||!entry.rowKey?entry:{kind:'group',topic:entry.topic},object,period:{start:state.start,end:state.end,label:state.start+' — '+state.end},filters,sources,metrics:saved?saved.metrics:{...growthOverview.metrics},primary:metric,detail,exposureBasis:saved?'table':'summary',empty:advertisingRows().length===0};
@@ -662,7 +663,7 @@
     const groupMultiFilter=createMultiFilter({rootId:'#groupMultiFilter',controlId:'#groupMultiControl',tagsId:'#groupMultiTags',inputId:'#groupMultiInput',menuId:'#groupMultiOptions',stateKey:'groups',placeholder:'全部广告组',options:unique('group').map(value=>({value,label:value,keywords:value}))});
     const adMultiFilter=createMultiFilter({rootId:'#adMultiFilter',controlId:'#adMultiControl',tagsId:'#adMultiTags',inputId:'#adMultiInput',menuId:'#adMultiOptions',stateKey:'ads',placeholder:'全部广告',options:unique('ad').map(value=>({value,label:value,keywords:value}))});
     function renderOperator(){
-      const isGlobal=!state.operators.length,name=isGlobal?(state.conversionSource==='nonAdvertising'?'非广告转化总览':'全局投放总览'):state.operators[0],photo=document.querySelector('#operatorPhoto');
+      const isGlobal=!state.operators.length,name=isGlobal?(state.organizationLabels?.at(-1)||(state.conversionSource==='nonAdvertising'?'非广告转化总览':'全局投放总览')):state.operators[0],photo=document.querySelector('#operatorPhoto');
       document.querySelector('#operatorName').textContent=name;photo.classList.toggle('is-global',isGlobal);photo.setAttribute('aria-label',`${name} 头像`);
     }
 

@@ -1,4 +1,5 @@
-import { DEMO_CHANNEL, DEPARTMENTS, departmentOf, filterLinkedEntries, summarizeLinkedEntries, buildPmConversionRows, buildAdHierarchy, isWon } from './demo-data.js'
+import { DEMO_CHANNEL, departmentOf, filterLinkedEntries, summarizeLinkedEntries, buildPmConversionRows, buildAdHierarchy, isWon } from './demo-data.js'
+import { mountOperationsOrganization } from '../operations-organization.js'
 
 const legacy = window.opsDemoLegacy
 const { state } = legacy
@@ -15,12 +16,7 @@ window.opsDemoDepartmentOf = departmentOf
 state.departments = []
 state.operators = []
 
-const department = document.createElement('div')
-department.className='multi-filter demo-department-filter'
-department.id='departmentMultiFilter'
-department.innerHTML='<div class="multi-filter-control" id="departmentMultiControl" role="combobox" aria-label="选择部门" aria-haspopup="listbox" aria-expanded="false" aria-controls="departmentMultiOptions"><div class="multi-filter-tags" id="departmentMultiTags"></div><input class="multi-filter-input" id="departmentMultiInput" placeholder="全部部门" readonly aria-label="部门选择"><span class="multi-filter-chevron" aria-hidden="true"></span></div><div class="multi-filter-menu" id="departmentMultiOptions" role="listbox" aria-label="部门选项" hidden></div>'
-$('#operatorMultiFilter').before(department)
-const departmentFilter=legacy.createMultiFilter({rootId:'#departmentMultiFilter',controlId:'#departmentMultiControl',tagsId:'#departmentMultiTags',inputId:'#departmentMultiInput',menuId:'#departmentMultiOptions',stateKey:'departments',placeholder:'全部部门',single:true,options:optionRows(DEPARTMENTS)})
+const organizationFilter=mountOperationsOrganization({anchor:$('#operatorMultiFilter'),names:legacy.plans.map(plan=>plan.operator),state,render:legacy.render})
 for(const id of ['campaign','group','ad']) $(`#${id}MultiFilter`).hidden=true
 const cascade=document.createElement('div')
 cascade.className='demo-ad-picker'
@@ -74,7 +70,7 @@ let metricScrollTimer
 metricStrip.addEventListener('scroll',()=>{metricStrip.classList.add('demo-scrolling');clearTimeout(metricScrollTimer);metricScrollTimer=setTimeout(()=>metricStrip.classList.remove('demo-scrolling'),800)},{passive:true})
 
 window.opsDemoBeforeRender=()=>{
-  const inDepartment=legacy.plans.filter(plan=>!state.departments.length||state.departments.includes(departmentOf(plan.operator)))
+  const inDepartment=legacy.plans.filter(plan=>(!state.departments.length||state.departments.includes(departmentOf(plan.operator)))&&(!state.organizationOperators||state.organizationOperators.includes(plan.operator)))
   const operators=optionRows(inDepartment.map(plan=>plan.operator))
   state.operators=state.operators.filter(value=>operators.some(option=>option.value===value))
   const operated=inDepartment.filter(plan=>!state.operators.length||state.operators.includes(plan.operator))
@@ -85,8 +81,7 @@ window.opsDemoBeforeRender=()=>{
   if(path.campaign&&!hierarchy.some(item=>item.key===path.campaign)){
     path={campaign:null,group:null,ad:null};state.campaigns=[];state.groups=[];state.ads=[];state.adPlanIds=null
   }
-  departmentFilter.refresh(optionRows(DEPARTMENTS));legacy.operatorMultiFilter.refresh(operators);legacy.accountMultiFilter.refresh(accounts)
-  $('#departmentMultiTags button')?.setAttribute('aria-label','清除部门选择')
+  organizationFilter.refresh();legacy.operatorMultiFilter.refresh(operators);legacy.accountMultiFilter.refresh(accounts)
   renderCascade()
 }
 function scopeFor({plans=legacy.rows(),pmName,pm=false,label='当前筛选',...extra}={}){

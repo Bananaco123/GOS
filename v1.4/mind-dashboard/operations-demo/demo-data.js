@@ -1,11 +1,5 @@
 export const DEMO_CHANNEL = 'gos-operations-demo-v2'
-export const DEPARTMENTS = ['海外营销一部', '海外营销二部', '海外营销三部']
-const ownerDepartments = {
-  '马凯 Kevin Ma': DEPARTMENTS[0], '刘迈 Mike Liu': DEPARTMENTS[0],
-  '陈琳 Linda Chen': DEPARTMENTS[1], '林杰 James Lin': DEPARTMENTS[1],
-  '王莎 Sara Wang': DEPARTMENTS[2], '赵睿 Eric Zhao': DEPARTMENTS[2],
-}
-export const departmentOf = name => ownerDepartments[name] || '海外营销三部'
+export { DEPARTMENTS, departmentOf } from '../operations-organization-data.js'
 export const WON_STAGES = ['待下单', '交付中', '已完成']
 export const isWon = item => WON_STAGES.includes(item.status)
 export function filterLinkedEntries(index, scope = {}) {
