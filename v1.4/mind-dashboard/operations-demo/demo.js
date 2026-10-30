@@ -16,7 +16,7 @@ window.opsDemoDepartmentOf = departmentOf
 state.departments = []
 state.operators = []
 
-const organizationFilter=mountOperationsOrganization({anchor:$('#operatorMultiFilter'),names:legacy.plans.map(plan=>plan.operator),state,render:legacy.render})
+const organizationFilter=mountOperationsOrganization({anchor:$('#operatorMultiFilter'),names:legacy.plans.map(plan=>plan.operator),state,render:legacy.render,compact:true})
 for(const id of ['campaign','group','ad']) $(`#${id}MultiFilter`).hidden=true
 const cascade=document.createElement('div')
 cascade.className='demo-ad-picker'

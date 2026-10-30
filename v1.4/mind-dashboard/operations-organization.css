@@ -1,5 +1,6 @@
 .toolbar .multi-filter[hidden]{display:none!important}
 .ops-organization-filter{position:relative;flex:0 1 280px;min-width:190px;z-index:55}
+.ops-organization-filter.is-compact{flex:0 1 194px;min-width:150px}
 .ops-organization-trigger{position:relative;display:flex;align-items:center;width:100%;height:34px;box-sizing:border-box;padding:0 30px 0 11px;border:1px solid #d6e2f0;border-radius:10px;box-shadow:0 1px 2px #14355908;background:#fff;color:#172b4d;font:inherit;font-size:var(--control-font-size,12px);font-weight:600;cursor:pointer;text-align:left}
 .ops-organization-trigger>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ops-organization-trigger>i{position:absolute;right:11px;top:11px;width:8px;height:8px;border-right:1.5px solid #526f8e;border-bottom:1.5px solid #526f8e;transform:rotate(45deg);pointer-events:none}
@@ -19,3 +20,4 @@
 .ops-organization-menu button i{font-style:normal}
 .ops-organization-menu button[aria-selected=true],.ops-organization-menu button:hover{color:#1a69bd;background:#edf5ff}
 .ops-organization-trigger:focus-visible,.ops-organization-menu button:focus-visible{outline:2px solid #91b9e8;outline-offset:2px}
+@media(max-width:1100px){.ops-organization-filter.is-compact{flex-basis:128px;min-width:128px}}

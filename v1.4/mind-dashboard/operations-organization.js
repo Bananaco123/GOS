@@ -1,9 +1,9 @@
 import { buildOperationsOrganization, resolveOperationsOrganization } from './operations-organization-data.js'
 
-export function mountOperationsOrganization({ anchor, names, state, render }) {
+export function mountOperationsOrganization({ anchor, names, state, render, compact = false }) {
   const tree=buildOperationsOrganization(names)
   const root=document.createElement('div')
-  root.className='ops-organization-filter'
+  root.className=`ops-organization-filter${compact?' is-compact':''}`
   root.innerHTML='<button type="button" class="ops-organization-trigger" aria-label="选择部门、小组、人员" aria-haspopup="dialog" aria-expanded="false"><span>选择部门 / 小组 / 人员</span><i aria-hidden="true"></i></button><button type="button" class="ops-organization-clear" aria-label="清除部门、小组和人员选择" hidden>×</button><div class="ops-organization-menu" role="dialog" aria-label="部门、小组、人员三级联选" hidden></div>'
   anchor.before(root)
   anchor.hidden=true
@@ -17,9 +17,12 @@ export function mountOperationsOrganization({ anchor, names, state, render }) {
     const department=tree.find(item=>item.value===path[0]),team=department?.children.find(item=>item.value===path[1])
     const columns=[{label:'部门',items:tree},{label:'小组',items:department?.children||[]},{label:'人员',items:team?.children||[]}]
     menu.innerHTML=columns.map((column,level)=>`<section><header>${column.label}</header><div role="listbox" aria-label="${column.label}选项">${column.items.length?column.items.map(item=>`<button type="button" role="option" aria-selected="${item.value===path[level]}" data-org-level="${level}" data-org-value="${esc(item.value)}" title="${esc(item.label)}"><span>${esc(item.label)}</span>${item.children?'<i aria-hidden="true">›</i>':''}</button>`).join(''):`<p>${level?'请选择上一级':'暂无人员'}</p>`}</div></section>`).join('')
-    const label=selection.organizationLabels.join(' / ')
-    trigger.querySelector('span').textContent=label||'选择部门 / 小组 / 人员'
-    trigger.title=label||'选择部门 / 小组 / 人员'
+    const fullLabel=selection.organizationLabels.join(' / ')
+    const label=compact?selection.organizationLabels.at(-1):fullLabel
+    const placeholder=compact?'选择人员':'选择部门 / 小组 / 人员'
+    trigger.querySelector('span').textContent=label||placeholder
+    trigger.title=fullLabel||placeholder
+    if(compact)trigger.setAttribute('aria-label',fullLabel?`选择人员：${fullLabel}`:'选择人员')
     clear.hidden=!path.length
   }
   function apply() {
@@ -30,7 +33,7 @@ export function mountOperationsOrganization({ anchor, names, state, render }) {
   trigger.addEventListener('click',()=>{
     if(!menu.hidden){close();return}
     refresh();menu.hidden=false;trigger.setAttribute('aria-expanded','true')
-    const rect=trigger.getBoundingClientRect(),width=Math.min(640,window.innerWidth-16)
+    const rect=trigger.getBoundingClientRect(),width=Math.min(compact&&window.innerWidth<=1100?580:640,window.innerWidth-16)
     menu.style.width=`${width}px`
     menu.style.left=`${Math.max(8,Math.min(rect.right-width,window.innerWidth-width-8))}px`
     menu.style.top=`${Math.max(8,Math.min(rect.bottom+8,window.innerHeight-330))}px`
