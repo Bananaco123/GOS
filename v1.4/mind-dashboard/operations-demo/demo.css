@@ -46,6 +46,7 @@
 .demo-tool-icon svg {width:19px;height:19px}
 .demo-tool-icon.is-commission {color:#159a86;background:#edf9f6;border-color:#d9eee8}
 .demo-tool-icon.is-library {color:#7853c5;background:#f5f0fc;border-color:#eae1f6}
+.demo-tool-icon.is-meta {color:#1877f2;background:#eaf2ff;border-color:#d5e4fb}
 .demo-value-line {position:relative;display:inline-flex;align-items:center;justify-content:center;min-height:20px;white-space:nowrap}
 .demo-metric-number {padding:0;border:0;border-radius:2px;background:transparent;color:#1677ff;font:inherit;line-height:inherit;cursor:pointer}
 .demo-metric-number:hover {color:#0958d9;text-decoration:underline;text-underline-offset:3px}
