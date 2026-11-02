@@ -303,6 +303,7 @@
     .trace-ad-hierarchy dt{color:var(--muted);font-size:10px}
     .trace-ad-hierarchy dd{min-width:0;margin:0;color:var(--ink);font-size:11px;font-weight:600;overflow-wrap:anywhere}
     #ordersBoard .trace-ad-hierarchy{margin-top:0}
+    .trace-ad-hierarchy dd.is-empty{color:var(--weak);font-weight:400}
     #ordersBoard .video-card{width:100%;padding:8px 0 14px;margin:0 0 10px;background:transparent;border-radius:8px;text-align:left}
     #ordersBoard .video-card:hover{background:#f7faff}
     #ordersBoard .video-card:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
@@ -839,6 +840,25 @@
       'OS-202608-007':{country:'CA',region:'加拿大',role:'业主 · 公寓焕新',tags:['改善居住','关注收纳','远程沟通'],fields:['项目类型','公寓焕新','客户身份','业主','需求产品','厨房 + 衣柜','图纸资料','已有尺寸图','项目阶段','合同签订','国家','加拿大'],video:'Condo Refresh · Storage-led Renovation',quote:'围绕收纳和动线改善，展示公寓焕新的完整结果。'}
     };
     const orderCountryRegions={'阿联酋':'中东','新加坡':'东南亚','马来西亚':'东南亚'};
+    // 主页身份按关联广告记录配置；Threads 保留更多未配置样本，不从广告账户推断主页。
+    const traceSocialPages={
+      1:{fb:'Luxe Build Materials',ins:'luna_deco_global',threads:null},
+      2:{fb:'OK Group Middle East',ins:'okgroup_middleeast',threads:null},
+      3:{fb:'Luxe Build Materials',ins:'luna_deco_global',threads:null},
+      4:{fb:'OK Group Middle East',ins:'okgroup_middleeast',threads:'okgroup_middleeast'},
+      9:{fb:'OK Group Australia',ins:'okgroup_australia',threads:'okgroup_australia'},
+      10:{fb:'Luxe Living Europe',ins:'luxe_living_europe',threads:null},
+      11:{fb:'Luxe Living Europe',ins:'luxe_living_europe',threads:null},
+      16:{fb:'Luxe Build Materials',ins:'luna_deco_global',threads:null},
+      17:{fb:'OK Group Middle East',ins:'okgroup_middleeast',threads:null}
+    };
+    function renderTraceSocialPages(plan){
+      const pages=traceSocialPages[plan.id]||{};
+      return [['fb','FB主页'],['ins','INS主页'],['threads','Threads主页']].map(([key,label])=>{
+        const name=String(pages[key]??'').trim(),value=traceText(name,'—');
+        return `<dt>${label}</dt><dd data-homepage="${key}" class="${name?'':'is-empty'}" title="${value}">${value}</dd>`;
+      }).join('');
+    }
     function renderOrderAnalysis(visibleOrders){
       const table=document.querySelector('#orderAnalysisBoard table'),empty=document.querySelector('#orderAnalysisEmpty'),head=document.querySelector('#orderAnalysisHead'),body=document.querySelector('#orderAnalysisBody'),dimension=state.orderAnalysisDimension;
       table.className=`order-dimension-${dimension}`;
@@ -897,11 +917,11 @@
       document.querySelector('#traceCustomerContent').innerHTML=`<div class="customer-hero"><span class="country-mark">${profile.country}</span><div class="customer-name"><strong>${selected.customer}</strong><span>${profile.role}</span></div></div><div class="profile-tags">${profile.tags.map(x=>`<span>${x}</span>`).join('')}</div><div class="profile-grid">${profile.fields.map(x=>`<span>${x}</span>`).join('')}</div><div class="lifecycle-title">线索全生命周期</div><div class="lifecycle">${life.map(x=>`<div class="life-item"><div class="life-head"><strong>${x[0]}</strong><time>${selected.date.slice(5)} ${x[1]}</time></div><p>${x[2]}</p></div>`).join('')}</div>`;
       const cpa=plan.inquiries?plan.spend/plan.inquiries:0;
       const adHierarchy=[['广告账户',plan.account],['广告计划',plan.name],['广告组',plan.group],['广告',plan.ad]].map(([label,value])=>`<dt>${label}</dt><dd title="${traceText(value)}">${traceText(value)}</dd>`).join('');
-      document.querySelector('#traceVideoContent').innerHTML=`<dl class="trace-ad-hierarchy" aria-label="广告归属">${adHierarchy}</dl><button class="video-card" type="button" data-ad-preview="${selected.id}" aria-haspopup="dialog" aria-controls="traceAdPreview" aria-label="预览广告：${traceText(profile.video)}"><span class="video-thumb" aria-hidden="true">🎬</span><span class="video-title"><strong>${traceText(profile.video)}</strong><span class="platform-tag">${traceText(plan.platform)}</span></span><span class="video-preview-link">预览<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 8s2.2-4 6.5-4 6.5 4 6.5 4-2.2 4-6.5 4-6.5-4-6.5-4Z"/><circle cx="8" cy="8" r="1.8"/></svg></span></button><div class="video-stats"><div class="video-stat"><span>业绩</span><strong class="green">${money(selected.amount)}</strong></div><div class="video-stat"><span>成交</span><strong>${fmt.format(plan.deals)} 单</strong></div><div class="video-stat"><span>询盘</span><strong>${fmt.format(plan.inquiries)}</strong></div><div class="video-stat"><span>平均 CPA</span><strong>${cpa?money(cpa):'不适用'}</strong></div></div>`;
+      document.querySelector('#traceVideoContent').innerHTML=`<dl class="trace-ad-hierarchy" aria-label="广告归属">${adHierarchy}${renderTraceSocialPages(plan)}</dl><button class="video-card" type="button" data-ad-preview="${selected.id}" aria-haspopup="dialog" aria-controls="traceAdPreview" aria-label="预览广告：${traceText(profile.video)}"><span class="video-thumb" aria-hidden="true">🎬</span><span class="video-title"><strong>${traceText(profile.video)}</strong><span class="platform-tag">${traceText(plan.platform)}</span></span><span class="video-preview-link">预览<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 8s2.2-4 6.5-4 6.5 4 6.5 4-2.2 4-6.5 4-6.5-4-6.5-4Z"/><circle cx="8" cy="8" r="1.8"/></svg></span></button><div class="video-stats"><div class="video-stat"><span>业绩</span><strong class="green">${money(selected.amount)}</strong></div><div class="video-stat"><span>成交</span><strong>${fmt.format(plan.deals)} 单</strong></div><div class="video-stat"><span>询盘</span><strong>${fmt.format(plan.inquiries)}</strong></div><div class="video-stat"><span>平均 CPA</span><strong>${cpa?money(cpa):'不适用'}</strong></div></div>`;
       document.querySelector('#traceSourceTitle').textContent=plan.conversionSource==='nonAdvertising'?'来源信息':'投放溯源';
       if(plan.conversionSource==='nonAdvertising'){
         document.querySelector('#traceCustomerContent .lifecycle').innerHTML=`<div class="life-item"><div class="life-head"><strong>创建 CRM 客户</strong><time>${selected.date}</time></div><p>${traceText(selected.customer)} 已录入 CRM，继续跟进项目与订单。</p></div>`;
-        document.querySelector('#traceVideoContent').innerHTML=`<dl class="trace-ad-hierarchy" aria-label="转化来源"><dt>转化来源</dt><dd>非广告 · ${traceText(plan.platform)} 自然流</dd><dt>来源内容</dt><dd>${traceText(plan.ad)}</dd></dl><div class="video-stats"><div class="video-stat"><span>业绩</span><strong class="green">${money(selected.amount)}</strong></div><div class="video-stat"><span>成交</span><strong>${fmt.format(plan.deals)} 单</strong></div></div>`;
+        document.querySelector('#traceVideoContent').innerHTML=`<dl class="trace-ad-hierarchy" aria-label="转化来源"><dt>转化来源</dt><dd>非广告 · ${traceText(plan.platform)} 自然流</dd><dt>来源内容</dt><dd>${traceText(plan.ad)}</dd>${renderTraceSocialPages(plan)}</dl><div class="video-stats"><div class="video-stat"><span>业绩</span><strong class="green">${money(selected.amount)}</strong></div><div class="video-stat"><span>成交</span><strong>${fmt.format(plan.deals)} 单</strong></div></div>`;
       }
       document.querySelectorAll('.trace-project').forEach(btn=>btn.addEventListener('click',()=>{state.traceOrderId=btn.dataset.orderId;renderOrders()}));
     }
