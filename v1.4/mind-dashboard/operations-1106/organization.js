@@ -3,7 +3,6 @@ import { mountOperationsOrganization } from '../operations-organization.js'
 import { summarizeOperations, summarizeOperationsChannels, displayOperatorName } from './workspace-data.js'
 import { compareOperations, rankOperationsPeople, formatOperationsChange } from './comparison-data.js'
 import { renderOperationsTrend } from './trend-chart.js'
-import { mountAdPicker } from './ad-picker.js'
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char]))
 const number = value => new Intl.NumberFormat('zh-CN', { maximumFractionDigits:0 }).format(value)
@@ -48,8 +47,6 @@ function mountWorkspace(api) {
     if (drawer.open) closeDrawer()
     api.render()
   } })
-  const adPicker = mountAdPicker($('#opsAdFilterSlot'), api)
-  api.beforeRender = () => adPicker.refresh()
   const orgRoot = $('.ops-organization-filter')
   const polishNames = () => orgRoot.querySelectorAll('[data-org-level="2"] span').forEach(span => { span.textContent = displayOperatorName(span.closest('button').dataset.orgValue) })
   orgRoot.addEventListener('click', polishNames)
@@ -58,12 +55,12 @@ function mountWorkspace(api) {
     const ranks = rankMap()
     const rankOf = person => ranks.get(person.name).amount[state.department ? 'departmentRank' : 'companyRank']
     const members = scopedPeople().sort((a,b) => rankOf(a) - rankOf(b))
-    $('#opsDetailPerson').title = '四项均为当前周期的公司排名；CPA由低到高，其他指标由高到低'
+    $('#opsDetailPerson').title = '第一行为本部门排名，第二行为公司排名；CPA由低到高，其他指标由高到低'
     $('#opsTeamGrid').innerHTML = members.length ? members.map(person => {
       const source = memberPlans(person.name), { current:m, changes } = comparison(source), rank = rankOf(person)
       const cpaChange = formatOperationsChange(changes.cpa)
       return '<button type="button" class="ops-member-card rank-'+Math.min(rank,4)+'" data-ops-member="'+esc(person.name)+'" aria-label="查看'+esc(displayOperatorName(person.name))+'的运营详情">'+
-        '<span class="ops-member-top"><span class="ops-member-avatar">'+initials(person)+'</span><span class="ops-member-identity"><strong class="ops-member-name" title="'+esc(displayOperatorName(person.name))+'">'+esc(displayOperatorName(person.name))+'</strong><span class="ops-member-org" title="'+esc(person.department+' · '+person.team)+'">'+esc(person.department)+' · '+esc(person.team)+'</span></span><span class="ops-rank-badge">'+icons.rank+'第 '+rank+' 名</span></span>'+
+        '<span class="ops-member-top"><span class="ops-member-avatar">'+initials(person)+'</span><span class="ops-member-identity"><strong class="ops-member-name" title="'+esc(displayOperatorName(person.name))+'">'+esc(displayOperatorName(person.name))+'</strong><span class="ops-member-org" title="'+esc(person.department+' · '+person.team)+'">'+esc(person.department)+' · '+esc(person.team)+'</span></span><span class="ops-rank-badge">'+(rank >= 1 && rank <= 3 ? icons.rank : '')+'第 '+rank+' 名</span></span>'+
         '<span class="ops-member-metrics">'+[['spend','投放消耗',money(m.spend)],['inquiries','询盘进线',number(m.inquiries)],['amount','业绩金额',money(m.amount)]].map(([key,label,value])=>'<span class="ops-core-metric is-'+key+'"><span class="ops-metric-label">'+icons[key]+label+'</span><strong>'+value+'</strong>'+delta(changes[key])+'</span>').join('')+'<span class="ops-card-arrow" title="展开运营详情" aria-hidden="true">'+icon('<path d="m9 5 7 7-7 7"/>')+'</span></span>'+
         '<span class="ops-member-footer"><span>CPA <b>'+cost(m.cpa)+'</b> <i class="ops-change '+cpaChange.className+'">'+cpaChange.compact+'</i></span><span>'+m.channels+' 个广告渠道</span></span></button>'
     }).join('') : '<div class="ops-detail-empty">当前筛选条件下暂无团队数据</div>'
@@ -81,7 +78,12 @@ function mountWorkspace(api) {
     if (!person) { closeDrawer(); return }
     const source = memberPlans(person.name), channels = summarizeOperationsChannels(source,rangeFactor()), {current:m,changes} = comparison(source), ranks = ranksFor(person)
     $('#opsDetailPerson').innerHTML = '<div class="ops-person-main"><span class="ops-member-avatar">'+initials(person)+'</span><div class="ops-person-copy"><strong>'+esc(displayOperatorName(person.name))+'</strong><p>'+esc(person.department)+' · '+esc(person.team)+'</p></div></div><div class="ops-person-ranks">'+
-      [['公司投放消耗',ranks.spend.companyRank],['公司CPA',ranks.cpa.companyRank],['公司业绩',ranks.amount.companyRank],['公司询盘',ranks.inquiries.companyRank]].map(([label,value],i)=>'<span class="rank-type-'+i+'">'+icons.rank+label+'<b>'+(value===null?'暂无排名':'第 '+value+' 名')+'</b></span>').join('')+'</div>'
+      [['部门','departmentRank'],['公司','companyRank']].map(([scope,rankKey]) =>
+        [['spend','投放消耗',0],['inquiries','询盘',3],['cpa','CPA',1],['amount','业绩',2]].map(([key,label,tone]) => {
+          const value = ranks[key][rankKey]
+          return '<span class="rank-type-'+tone+'" data-rank-scope="'+rankKey+'">'+(value >= 1 && value <= 3 ? icons.rank : '')+'<span>'+scope+label+'</span><b>'+(value===null?'暂无排名':'第 '+value+' 名')+'</b></span>'
+        }).join('')
+      ).join('')+'</div>'
     $('#opsDetailPeriod').textContent = periodLabel()
     const cards = [
       ['spend','投放消耗',money(m.spend),'spend','blue'], ['exposure','曝光',number(m.exposure),'delivery','blue'], ['cpm','CPM',cost(m.cpm),'delivery','blue'],
