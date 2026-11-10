@@ -385,7 +385,7 @@
     </section>
 
     <section class="ops-section" id="opsTeamSection" aria-label="团队总览">
-      <div class="ops-section-header"><h2>团队总览</h2><span class="ops-team-caption">按业绩金额排名</span></div>
+      <div class="ops-section-header"><h2>团队总览</h2></div>
       <div id="opsTeamGrid" class="ops-team-grid"></div>
     </section>
     <section class="ops-section" id="opsAnalysisSection" data-growth-scope="analysis" aria-label="运营分析">
@@ -529,7 +529,7 @@
     import { summarizeOperations, displayOperatorName, buildOperationsPmRows } from './workspace-data.js';
     import { OPERATIONS_PEOPLE } from '../operations-organization-data.js';
     import { renderOperationsTrend } from './trend-chart.js';
-    import { compareOperations } from './comparison-data.js';
+    import { compareOperations, formatOperationsChange } from './comparison-data.js';
     if (new URLSearchParams(window.location.search).get('view') === 'sm') {
       document.title = '四维看板 · 业绩看板（二期）';
       document.querySelector('.dashboard-heading h1').textContent = '业绩看板（二期）';
@@ -610,8 +610,8 @@
     });
     const state={department:'',departmentOperators:null,range:'today',start:'',end:'',accounts:[],operators:[],campaigns:[],groups:[],ads:[],trend:'spend',metricPrimary:{delivery:'exposure',inquiries:'inquiries',crm:'crmCustomers'},metricSwap:null,board:'ads',lockedPoint:null,traceOrderId:'OS-202608-001',dimension:'ad',sortKey:'inquiries',sortDir:'desc',orderAnalysisDimension:'pm',expandedRowKeys:new Set(),expandedInitialized:false,pmGrade:'all',pmCountry:'all',pmProjectType:'all',pmSearch:'',pmSortKey:'assigned',pmSortDir:'desc',adsPage:1,pmPage:1,adsPageSize:15,pmPageSize:15};
     const dualMetricMeta={
-      delivery:{exposure:{label:'曝光',delta:8.6},cpm:{label:'CPM',delta:-2.4,goodWhenDown:true}},
-      inquiries:{inquiries:{label:'询盘',delta:-3.2},cpa:{label:'CPA',delta:-5.7,goodWhenDown:true}},
+      delivery:{exposure:{label:'曝光',delta:8.6},cpm:{label:'CPM',delta:-2.4}},
+      inquiries:{inquiries:{label:'询盘',delta:-3.2},cpa:{label:'CPA',delta:-5.7}},
       crm:{crmCustomers:{label:'CRM客户',delta:6.8},crmProjects:{label:'CRM立项',delta:9.3}}
     };
     const fmt=new Intl.NumberFormat('zh-CN'); const money=v=>`¥${fmt.format(Math.round(v))}`; const compact=v=>v>=1e6?`${(v/1e6).toFixed(2)}M`:v>=1e3?`${(v/1e3).toFixed(1)}k`:fmt.format(Math.round(v)); const cardCompact=v=>v>=1e6?`${(v/1e6).toFixed(1)}M`:v>=1e5?`${Math.round(v/1e3)}k`:v>=1e3?`${(v/1e3).toFixed(1)}k`:fmt.format(Math.round(v)); const cardMoney=money; const narrowMoney=money; const narrowNumber=v=>fmt.format(Math.round(v/10));
@@ -717,7 +717,7 @@
       const changes=compareOperations(r,rangeFactor(),state.start+'|'+state.end).changes;
       for(const group of data)for(const item of group.items){const key=({leads:'valid',crmProjects:'projects',performance:'amount'})[item.key]||item.key;item.delta=changes[key]===null?null:Number(changes[key].toFixed(1));}
       growthOverview={metrics:growthMetrics(summary),primary:Object.fromEntries(data.map(item=>{const primary=item.items.find(value=>value.key===state.metricPrimary[item.key])||item.items[0];return [item.key,{key:primary.key,label:primary.label,display:primary.value}]}))};
-      document.querySelector('#metricsStrip').innerHTML=data.map(x=>{const primaryKey=state.metricPrimary[x.key]||x.items[0].key,primary=x.items.find(item=>item.key===primaryKey)||x.items[0],rankLabel='';const value=x.items.length===1?`<strong class="metric-value" title="${primary.value}">${primary.value}</strong>`:`<span class="metric-value dual" title="点击数值切换主信息">${x.items.map((item,index)=>{const isPrimary=item.key===primary.key,swapClass=state.metricSwap?.key===x.key?(item.key===state.metricSwap.to?'swap-grow':item.key===state.metricSwap.from?'swap-shrink':''):'';return `${index?'<em>/</em>':''}<button class="metric-value-part ${isPrimary?'primary':'secondary'} ${swapClass}" type="button" data-metric-series="${item.key}" aria-label="将${item.label}设为主信息" aria-pressed="${isPrimary}" title="点击将${item.label}设为主信息">${item.value}</button>`}).join('')}</span>`;const negative=primary.goodWhenDown?primary.delta>0:primary.delta<0;return `<div class="metric metric-selector ${state.trend===x.key?'active':''}" data-trend-key="${x.key}" role="button" tabindex="0" aria-pressed="${state.trend===x.key}" aria-label="${x.label}趋势指标"><span class="metric-heading"><span class="metric-label">${x.label}</span>${['spend','delivery','inquiries'].includes(x.key)?growthButton(x.key,primary.label,`data-growth-metric="${x.key}"`,"growth-metric-trigger"):''}</span>${value}<div class="metric-meta">${rankLabel?`<span class="metric-field rank">${rankLabel}</span>`:''}<span class="metric-field period ${negative?'negative':''}">较上周期 ${primary.delta===null?'新增':(primary.delta>=0?'+':'')+primary.delta+'%'}</span></div></div>`}).join('');
+      document.querySelector('#metricsStrip').innerHTML=data.map(x=>{const primaryKey=state.metricPrimary[x.key]||x.items[0].key,primary=x.items.find(item=>item.key===primaryKey)||x.items[0],rankLabel='';const value=x.items.length===1?`<strong class="metric-value" title="${primary.value}">${primary.value}</strong>`:`<span class="metric-value dual" title="点击数值切换主信息">${x.items.map((item,index)=>{const isPrimary=item.key===primary.key,swapClass=state.metricSwap?.key===x.key?(item.key===state.metricSwap.to?'swap-grow':item.key===state.metricSwap.from?'swap-shrink':''):'';return `${index?'<em>/</em>':''}<button class="metric-value-part ${isPrimary?'primary':'secondary'} ${swapClass}" type="button" data-metric-series="${item.key}" aria-label="将${item.label}设为主信息" aria-pressed="${isPrimary}" title="点击将${item.label}设为主信息">${item.value}</button>`}).join('')}</span>`;const change=formatOperationsChange(primary.delta);return `<div class="metric metric-selector ${state.trend===x.key?'active':''}" data-trend-key="${x.key}" role="button" tabindex="0" aria-pressed="${state.trend===x.key}" aria-label="${x.label}趋势指标"><span class="metric-heading"><span class="metric-label">${x.label}</span>${['spend','delivery','inquiries'].includes(x.key)?growthButton(x.key,primary.label,`data-growth-metric="${x.key}"`,"growth-metric-trigger"):''}</span>${value}<div class="metric-meta">${rankLabel?`<span class="metric-field rank">${rankLabel}</span>`:''}<span class="metric-field period ${change.className}">${change.label}</span></div></div>`}).join('');
       notifyGrowthScope();
     }
 

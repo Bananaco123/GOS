@@ -81,8 +81,7 @@ main > .toolbar.panel::after { bottom: -21px; height: 21px; }
 .ops-section .metric-value-part:focus-visible { box-shadow: 0 0 0 2px #8ab9fa; }
 .ops-section .metric-meta { align-items: flex-start; min-height: 16px; margin-top: 8px; gap: 4px; }
 .ops-section .metric-field { font-size: 10px; font-weight: 500; }
-.ops-section .metric-field.period { color: #079982; }
-.ops-section .metric-field.period.negative { color: #d87349; }
+.ops-section .metric-field.period { color: #8193aa; }
 .ops-section .metric-field.rank { color: #436a9c; }
 .ops-section .metric-unavailable-note { color: #8694a7; }
 .ops-section .metric .growth-gpt-trigger { color: #477cbd; background: #f0f6ff; border-color: #d7e6fc; }
@@ -124,7 +123,6 @@ main > .toolbar.panel::after { bottom: -21px; height: 21px; }
 .ops-ad-menu button:hover { background:#f5f8fc; }
 .ops-ad-menu button[aria-selected=true] { background:#edf5ff; color:#1677ff; font-weight:600; }
 /* 团队卡片 */
-.ops-team-caption { color:#8794a6; font-size:12px; }
 .ops-team-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
 .ops-member-card { --rank-color:#86a8cf; position:relative; min-width:0; padding:18px 16px 12px; border:1px solid #dce6f3; border-radius:13px; color:#172b4d; background:#fff; text-align:left; box-shadow:0 3px 12px #254e7f04; cursor:pointer; transition:box-shadow .16s,border-color .16s; overflow:hidden; }
 .ops-member-card:before { content:''; position:absolute; left:0; top:19px; height:32px; width:3px; background:var(--rank-color); border-radius:0 3px 3px 0; }
@@ -154,12 +152,12 @@ main > .toolbar.panel::after { bottom: -21px; height: 21px; }
 .ops-core-metric strong { display:block; margin:7px 0 5px; font-size:20px; line-height:25px; color:#172b4d; letter-spacing:-.6px; font-variant-numeric:tabular-nums; white-space:nowrap; }
 .ops-core-metric.is-amount strong { color:#6650a7; }
 .ops-change { display:block; font-size:10px; line-height:16px; white-space:nowrap; font-weight:400; }
-.is-good { color:#0b9b87!important; }
-.is-bad { color:#d67a50!important; }
-.is-neutral { color:#8193aa!important; }
+.ops-change.is-up, .ops-section .metric-field.period.is-up { color:#0b9b87; }
+.ops-change.is-down, .ops-section .metric-field.period.is-down { color:#d67a50; }
+.ops-change.is-neutral, .ops-section .metric-field.period.is-neutral { color:#8193aa; }
 .ops-member-footer { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:16px; padding-top:11px; border-top:1px solid #edf1f7; color:#8794a6; font-size:11px; line-height:18px; }
 .ops-member-footer b { color:#48617e; margin-left:4px; font-weight:600; }
-.ops-member-footer i { font-size:10px; font-style:normal; margin-left:4px; }
+.ops-member-footer i { display:inline; font-size:10px; font-style:normal; margin-left:4px; }
 .ops-card-arrow { position:absolute; right:0; top:50%; transform:translateY(-50%); display:inline-flex; align-items:center; justify-content:center; width:25px; height:25px; border:1px solid #d9e9fd; border-radius:50%; background:#f1f7ff; color:#4388db; transition:background .16s,border-color .16s; }
 .ops-card-arrow svg { width:13px; height:13px; }
 .ops-member-card:hover .ops-card-arrow { background:#e2efff; border-color:#b9d6fa; }

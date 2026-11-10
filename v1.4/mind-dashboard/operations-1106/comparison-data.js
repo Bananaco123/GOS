@@ -8,6 +8,20 @@ const previousRatios = {
 }
 const safeNumber = value => Number.isFinite(Number(value)) ? Math.max(0, Number(value)) : 0
 
+// 颜色只表达涨跌方向，所有指标共用；按展示精度判断持平，避免出现下降 0.0%。
+export function formatOperationsChange(value) {
+  if (value === null || !Number.isFinite(value)) {
+    return { className:'is-neutral', label:'较上周期 新增', compact:'新增' }
+  }
+  const rounded = Number(value.toFixed(1))
+  const arrow = rounded > 0 ? '↑' : rounded < 0 ? '↓' : '—'
+  return {
+    className: rounded > 0 ? 'is-up' : rounded < 0 ? 'is-down' : 'is-neutral',
+    label: arrow + ' 较上周期 ' + (rounded > 0 ? '+' : '') + rounded.toFixed(1) + '%',
+    compact: arrow + Math.abs(rounded).toFixed(1) + '%',
+  }
+}
+
 function hash(text) {
   let value = 2166136261
   for (const char of String(text)) value = Math.imul(value ^ char.charCodeAt(0), 16777619) >>> 0
