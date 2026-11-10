@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { summarizeOperations, displayOperatorName, buildOperationsPmRows } from './workspace-data.js'
+import { summarizeOperations, summarizeOperationsChannels, operationsChannelOf, displayOperatorName, buildOperationsPmRows } from './workspace-data.js'
 
 const plans = [
   { id: 1, name: '新加坡公寓整装', account: 'Meta 亚洲', operator: '甲', country: '新加坡', conversionSource: 'advertising', spend: 31, exposure: 2100, inquiries: 13, transfers: 9, crmCustomers: 9, projects: 4, visits: 2, deals: 2, amount: 1835 },
@@ -9,6 +9,35 @@ const plans = [
 ]
 const addFields = ['spend', 'exposure', 'inquiries', 'valid', 'crmCustomers', 'projects', 'visits', 'deals', 'amount']
 const pmSum = (rows, field) => rows.reduce((sum, row) => sum + Object.values(row[field]).reduce((value, part) => value + part, 0) + (row.crm[field] || 0), 0)
+
+test('广告渠道合并同集团触点，保留独立渠道', () => {
+  for (const platform of ['Facebook', 'Instagram', 'Messenger', 'Threads', 'WhatsApp', 'Meta']) {
+    assert.equal(operationsChannelOf({ platform }), 'Meta')
+  }
+  for (const platform of ['YouTube', 'Google Ads']) assert.equal(operationsChannelOf({ platform }), 'Google Ads')
+  assert.equal(operationsChannelOf({ platform:'TikTok' }), 'TikTok')
+  assert.equal(operationsChannelOf({ platform:'LinkedIn' }), 'LinkedIn')
+})
+
+test('渠道去重与金额、成本汇总一致，非广告不会增加广告渠道数', () => {
+  const source = [
+    { ...plans[0], platform:'Facebook' },
+    { ...plans[1], platform:'Instagram' },
+    { ...plans[0], id:4, platform:'YouTube' },
+    { ...plans[2], platform:'Instagram' },
+    { ...plans[2], id:5, platform:'TikTok' },
+  ]
+  const summary = summarizeOperations(source, 1.7)
+  const channels = summarizeOperationsChannels(source, 1.7)
+  assert.equal(summary.channels, 2)
+  assert.equal(channels.find(row => row.channel === 'Meta').adCount, 2)
+  assert.equal(channels.find(row => row.channel === 'TikTok').adCount, 0)
+  for (const key of addFields) assert.equal(channels.reduce((sum,row) => sum+row[key],0),summary[key])
+  const meta = channels.find(row => row.channel === 'Meta')
+  assert.equal(meta.cpa, meta.spend / meta.inquiries)
+  assert.equal(meta.cpm, meta.spend / meta.exposure * 1000)
+  assert.equal(summarizeOperations([plans[2]]).channels, 0)
+})
 
 test('部门概览等于人员合计和账号合计，逐条取整不会产生跨层误差', () => {
   const summary = summarizeOperations(plans, 22.6)

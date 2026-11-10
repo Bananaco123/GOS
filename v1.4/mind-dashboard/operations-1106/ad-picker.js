@@ -10,6 +10,8 @@ export function mountAdPicker(slot, api) {
   let hierarchy = [], path = { campaign: null, group: null, ad: null }
   const close = () => { menu.hidden = true; trigger.setAttribute('aria-expanded', 'false') }
   function refresh() {
+    slot.hidden = api.state.board === 'orders'
+    if (slot.hidden) close()
     hierarchy = buildAdHierarchy(api.globalRows().filter(p => p.conversionSource === 'advertising'))
     const campaign = hierarchy.find(p => p.key === path.campaign), group = campaign?.groups.find(p => p.label === path.group), ad = group?.ads.find(p => p.id === path.ad)
     path = { campaign: campaign?.key || null, group: group?.label || null, ad: ad?.id || null }

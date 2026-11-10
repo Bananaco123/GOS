@@ -1,4 +1,4 @@
-// 1106 的概览、人员卡和账号明细使用同一套逐条计量口径。
+// 1106 的概览、人员卡和渠道明细使用同一套逐条计量口径。
 const gradeKeys = ['a', 'b', 'c']
 const pmNames = [
   '周悦 Joy Zhou', '黄琳 Helen Huang', '吴晨 Leo Wu', '赵敏 Nina Zhao',
@@ -25,16 +25,42 @@ export function displayOperatorName(raw = '') {
   return match && /[\u3400-\u9fff]/.test(match[1]) ? `${match[1]}（${match[2]}）` : value
 }
 
+// 主页/消息触点归入实际投放渠道；自然流仍由 conversionSource 独立标记。
+export function operationsChannelOf(plan = {}) {
+  const value = String(plan.advertisingChannel || plan.platform || plan.account || '').trim()
+  if (/^(meta|facebook|instagram|messenger|threads|whatsapp)\b/i.test(value)) return 'Meta'
+  if (/^(google|youtube)\b/i.test(value)) return 'Google Ads'
+  if (/^tiktok\b/i.test(value)) return 'TikTok'
+  if (/^linkedin\b/i.test(value)) return 'LinkedIn'
+  return value || '未标记渠道'
+}
+
+export function summarizeOperationsChannels(plans = [], factor = 1) {
+  const groups = new Map()
+  for (const plan of plans) {
+    const channel = operationsChannelOf(plan)
+    if (!groups.has(channel)) groups.set(channel, [])
+    groups.get(channel).push(plan)
+  }
+  return [...groups].map(([channel, source]) => ({
+    channel,
+    adCount: source.filter(plan => plan.conversionSource === 'advertising').length,
+    ...summarizeOperations(source, factor),
+  })).sort((a, b) => b.spend - a.spend || a.channel.localeCompare(b.channel))
+}
+
 export function summarizeOperations(plans = [], factor = 1) {
   const result = {
     spend: 0, exposure: 0, inquiries: 0, valid: 0,
     crmCustomers: 0, projects: 0, visits: 0, deals: 0, amount: 0,
-    cpm: 0, cpa: 0, validRate: 0, accounts: 0,
+    cpm: 0, cpa: 0, validRate: 0, accounts: 0, channels: 0,
   }
   const accounts = new Set()
+  const channels = new Set()
   for (const plan of plans) {
     if (plan.account) accounts.add(plan.account)
     if (plan.conversionSource === 'advertising') {
+      channels.add(operationsChannelOf(plan))
       for (const key of ['spend', 'exposure', 'inquiries']) result[key] += periodValue(plan[key], factor)
       result.valid += periodValue(plan.transfers, factor)
     }
@@ -46,6 +72,7 @@ export function summarizeOperations(plans = [], factor = 1) {
   result.cpa = result.inquiries ? result.spend / result.inquiries : 0
   result.validRate = result.inquiries ? result.valid / result.inquiries * 100 : 0
   result.accounts = accounts.size
+  result.channels = channels.size
   return result
 }
 

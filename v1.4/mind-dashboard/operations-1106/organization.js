@@ -1,6 +1,6 @@
 import { OPERATIONS_PEOPLE } from '../operations-organization-data.js'
 import { mountOperationsOrganization } from '../operations-organization.js'
-import { summarizeOperations, displayOperatorName } from './workspace-data.js'
+import { summarizeOperations, summarizeOperationsChannels, displayOperatorName } from './workspace-data.js'
 import { compareOperations, rankOperationsPeople, formatOperationsChange } from './comparison-data.js'
 import { renderOperationsTrend } from './trend-chart.js'
 import { mountAdPicker } from './ad-picker.js'
@@ -39,11 +39,10 @@ function mountWorkspace(api) {
   const initials = person => person.name.split(' ').slice(1).map(word => word[0]).join('').slice(0, 2)
   const comparison = rows => compareOperations(rows, rangeFactor(), state.start+'|'+state.end)
   const memberPlans = name => globalRows().filter(plan => ownerOf(plan) === name)
-  const rankMap = () => rankOperationsPeople(plans.filter(plan=>!state.accounts.length||state.accounts.includes(plan.account)), people, ownerOf, rangeFactor())
+  const rankMap = () => rankOperationsPeople(plans, people, ownerOf, rangeFactor())
   const ranksFor = person => rankMap().get(person.name)
   const scopedPeople = () => people.filter(person => globalRows().some(plan => ownerOf(plan) === person.name))
 
-  $('#opsGlobalFilters').append($('#accountMultiFilter'))
   const organization = mountOperationsOrganization({ anchor:$('#opsPersonnelAnchor'), names:people.map(p => p.name), state, compact:true, render:() => {
     state.department = state.departments?.[0] || ''
     if (drawer.open) closeDrawer()
@@ -59,14 +58,14 @@ function mountWorkspace(api) {
     const ranks = rankMap()
     const rankOf = person => ranks.get(person.name).amount[state.department ? 'departmentRank' : 'companyRank']
     const members = scopedPeople().sort((a,b) => rankOf(a) - rankOf(b))
-    $('#opsDetailPerson').title = '四项均为公司排名，按当前周期与所选账户计算；CPA由低到高，其他指标由高到低'
+    $('#opsDetailPerson').title = '四项均为当前周期的公司排名；CPA由低到高，其他指标由高到低'
     $('#opsTeamGrid').innerHTML = members.length ? members.map(person => {
       const source = memberPlans(person.name), { current:m, changes } = comparison(source), rank = rankOf(person)
       const cpaChange = formatOperationsChange(changes.cpa)
       return '<button type="button" class="ops-member-card rank-'+Math.min(rank,4)+'" data-ops-member="'+esc(person.name)+'" aria-label="查看'+esc(displayOperatorName(person.name))+'的运营详情">'+
         '<span class="ops-member-top"><span class="ops-member-avatar">'+initials(person)+'</span><span class="ops-member-identity"><strong class="ops-member-name" title="'+esc(displayOperatorName(person.name))+'">'+esc(displayOperatorName(person.name))+'</strong><span class="ops-member-org" title="'+esc(person.department+' · '+person.team)+'">'+esc(person.department)+' · '+esc(person.team)+'</span></span><span class="ops-rank-badge">'+icons.rank+'第 '+rank+' 名</span></span>'+
         '<span class="ops-member-metrics">'+[['spend','投放消耗',money(m.spend)],['inquiries','询盘进线',number(m.inquiries)],['amount','业绩金额',money(m.amount)]].map(([key,label,value])=>'<span class="ops-core-metric is-'+key+'"><span class="ops-metric-label">'+icons[key]+label+'</span><strong>'+value+'</strong>'+delta(changes[key])+'</span>').join('')+'<span class="ops-card-arrow" title="展开运营详情" aria-hidden="true">'+icon('<path d="m9 5 7 7-7 7"/>')+'</span></span>'+
-        '<span class="ops-member-footer"><span>CPA <b>'+cost(m.cpa)+'</b> <i class="ops-change '+cpaChange.className+'">'+cpaChange.compact+'</i></span><span>'+m.accounts+' 个广告账户</span></span></button>'
+        '<span class="ops-member-footer"><span>CPA <b>'+cost(m.cpa)+'</b> <i class="ops-change '+cpaChange.className+'">'+cpaChange.compact+'</i></span><span>'+m.channels+' 个广告渠道</span></span></button>'
     }).join('') : '<div class="ops-detail-empty">当前筛选条件下暂无团队数据</div>'
   }
 
@@ -80,7 +79,7 @@ function mountWorkspace(api) {
     if (!local.member) return
     const person = scopedPeople().find(item => item.name === local.member)
     if (!person) { closeDrawer(); return }
-    const source = memberPlans(person.name), accounts = [...new Set(source.map(p=>p.account))], {current:m,changes} = comparison(source), ranks = ranksFor(person)
+    const source = memberPlans(person.name), channels = summarizeOperationsChannels(source,rangeFactor()), {current:m,changes} = comparison(source), ranks = ranksFor(person)
     $('#opsDetailPerson').innerHTML = '<div class="ops-person-main"><span class="ops-member-avatar">'+initials(person)+'</span><div class="ops-person-copy"><strong>'+esc(displayOperatorName(person.name))+'</strong><p>'+esc(person.department)+' · '+esc(person.team)+'</p></div></div><div class="ops-person-ranks">'+
       [['公司投放消耗',ranks.spend.companyRank],['公司CPA',ranks.cpa.companyRank],['公司业绩',ranks.amount.companyRank],['公司询盘',ranks.inquiries.companyRank]].map(([label,value],i)=>'<span class="rank-type-'+i+'">'+icons.rank+label+'<b>'+(value===null?'暂无排名':'第 '+value+' 名')+'</b></span>').join('')+'</div>'
     $('#opsDetailPeriod').textContent = periodLabel()
@@ -90,13 +89,12 @@ function mountWorkspace(api) {
       ['crmCustomers','CRM客户',number(m.crmCustomers),'crm','violet'], ['projects','CRM立项',number(m.projects),'crm','violet'], ['visits','客户到店',number(m.visits),'visits','amber'], ['amount','业绩金额',money(m.amount),'performance','violet'],
     ]
     $('#opsDetailMetrics').innerHTML = cards.map(([key,label,value,trend,tone])=>'<button type="button" class="ops-detail-metric tone-'+tone+'" data-detail-trend="'+trend+'" data-detail-primary="'+key+'" aria-pressed="false"><span>'+label+'</span><strong>'+value+'</strong>'+delta(changes[key])+'</button>').join('')
-    $('#opsDetailAccounts').innerHTML = accounts.map(account => {
-      const scoped=source.filter(plan=>plan.account===account), metrics=summarizeOperations(scoped,rangeFactor())
-      return '<tr><td><strong>'+esc(account)+'</strong><span>'+scoped.filter(p=>p.conversionSource==='advertising').length+' 条广告</span></td><td>'+money(metrics.spend)+'</td><td>'+number(metrics.exposure)+'</td><td>'+number(metrics.inquiries)+'</td><td>'+number(metrics.valid)+'</td><td>'+cost(metrics.cpa)+'</td><td>'+money(metrics.amount)+'</td></tr>'
+    $('#opsDetailChannels').innerHTML = channels.map(metrics => {
+      return '<tr><td><strong>'+esc(metrics.channel)+'</strong><span>'+(metrics.adCount ? metrics.adCount+' 条广告' : '自然流')+'</span></td><td>'+money(metrics.spend)+'</td><td>'+number(metrics.exposure)+'</td><td>'+number(metrics.inquiries)+'</td><td>'+number(metrics.valid)+'</td><td>'+cost(metrics.cpa)+'</td><td>'+money(metrics.amount)+'</td></tr>'
     }).join('')
-    $('#opsDetailAccountCount').textContent = accounts.length + ' 个广告账户'
-    $('#opsDetailEmpty').hidden = accounts.length > 0
-    $('.ops-account-table-wrap').hidden = accounts.length === 0
+    $('#opsDetailChannelCount').textContent = m.channels + ' 个广告渠道'
+    $('#opsDetailEmpty').hidden = channels.length > 0
+    $('.ops-account-table-wrap').hidden = channels.length === 0
     renderMemberTrend()
   }
 
