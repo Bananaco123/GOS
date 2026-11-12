@@ -109,3 +109,16 @@ test('姓名格式保留既有英文名，并避免重复括号', () => {
   assert.equal(displayOperatorName('Sarah Wong'), 'Sarah Wong')
   assert.equal(displayOperatorName(''), '')
 })
+
+test('每位演示 PM 固定一个项目地区，按地区单选筛选后金额可加总', () => {
+  const regions = new Map()
+  const all = buildOperationsPmRows(plans, 1)
+  for (const row of all) {
+    assert.ok(!row.region.includes('、'))
+    if(regions.has(row.name))assert.equal(row.region,regions.get(row.name))
+    regions.set(row.name,row.region)
+  }
+  const split = [...new Set(all.map(row=>row.region))].flatMap(region=>buildOperationsPmRows(plans,1,{region}))
+  assert.equal(pmSum(split,'amount'),pmSum(all,'amount'))
+  assert.equal(split.reduce((sum,row)=>sum+row.assigned,0),all.reduce((sum,row)=>sum+row.assigned,0))
+})

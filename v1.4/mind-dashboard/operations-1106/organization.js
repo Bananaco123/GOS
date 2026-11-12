@@ -1,6 +1,5 @@
-import { OPERATIONS_PEOPLE } from '../operations-organization-data.js'
-import { mountOperationsOrganization } from '../operations-organization.js'
-import { summarizeOperations, summarizeOperationsChannels, displayOperatorName } from './workspace-data.js'
+import { OPERATIONS_PEOPLE, buildOperationsOrganization, resolveOperationsOrganization } from '../operations-organization-data.js'
+import { summarizeOperations, displayOperatorName } from './workspace-data.js'
 import { compareOperations, rankOperationsPeople, formatOperationsChange } from './comparison-data.js'
 import { renderOperationsTrend } from './trend-chart.js'
 
@@ -26,7 +25,8 @@ function mountWorkspace(api) {
   const people = OPERATIONS_PEOPLE.filter(person => plans.some(plan => ownerOf(plan) === person.name))
   const local = { member:null, trend:'spend', primary:null }
   const drawer = $('#opsMemberDrawer')
-  let returnFocus = null, previousOverflow = '', closeTimer = null
+  const analysisSection = $('#opsAnalysisSection'), analysisHome = document.createComment('运营分析原位置')
+  let returnFocus = null, previousOverflow = '', previousScroll = 0, closeTimer = null
   const closeDrawer = () => {
     if (!drawer.open || drawer.classList.contains('is-closing')) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { drawer.close(); return }
@@ -42,14 +42,31 @@ function mountWorkspace(api) {
   const ranksFor = person => rankMap().get(person.name)
   const scopedPeople = () => people.filter(person => globalRows().some(plan => ownerOf(plan) === person.name))
 
-  const organization = mountOperationsOrganization({ anchor:$('#opsPersonnelAnchor'), names:people.map(p => p.name), state, compact:true, render:() => {
-    state.department = state.departments?.[0] || ''
-    if (drawer.open) closeDrawer()
+  const tree = buildOperationsOrganization(people.map(person => person.name))
+  const departmentSelect = $('#opsDepartment'), groupSelect = $('#opsGroup')
+  departmentSelect.innerHTML = '<option value="" data-placeholder="true">全部部门</option>'+tree.map(item=>'<option value="'+esc(item.value)+'">'+esc(item.label)+'</option>').join('')
+  function refreshGroups() {
+    const department = tree.find(item => item.value === state.department)
+    groupSelect.innerHTML = '<option value="" data-placeholder="true">请选择小组</option>'+(department?.children || []).map(item=>'<option value="'+esc(item.value)+'">'+esc(item.label)+'</option>').join('')
+    groupSelect.disabled = !department
+  }
+  function applyOrganization() {
+    Object.assign(state, resolveOperationsOrganization(tree, [departmentSelect.value, groupSelect.value].filter(Boolean)), {department:departmentSelect.value,adsPage:1,pmPage:1})
     api.render()
-  } })
-  const orgRoot = $('.ops-organization-filter')
-  const polishNames = () => orgRoot.querySelectorAll('[data-org-level="2"] span').forEach(span => { span.textContent = displayOperatorName(span.closest('button').dataset.orgValue) })
-  orgRoot.addEventListener('click', polishNames)
+  }
+  departmentSelect.addEventListener('change', () => {
+    state.department = departmentSelect.value; state.organizationTeam = null
+    refreshGroups(); applyOrganization()
+  })
+  groupSelect.addEventListener('change', applyOrganization)
+  function refreshOrganization() {
+    departmentSelect.value = state.department || ''
+    groupSelect.value = state.organizationTeam || ''
+    window.GOSDashboardSelect?.sync(departmentSelect)
+    window.GOSDashboardSelect?.sync(groupSelect)
+  }
+  Object.assign(state, resolveOperationsOrganization(tree, []))
+  refreshGroups()
 
   function renderTeam() {
     const ranks = rankMap()
@@ -76,7 +93,7 @@ function mountWorkspace(api) {
     if (!local.member) return
     const person = scopedPeople().find(item => item.name === local.member)
     if (!person) { closeDrawer(); return }
-    const source = memberPlans(person.name), channels = summarizeOperationsChannels(source,rangeFactor()), {current:m,changes} = comparison(source), ranks = ranksFor(person)
+    const source = memberPlans(person.name), {current:m,changes} = comparison(source), ranks = ranksFor(person)
     $('#opsDetailPerson').innerHTML = '<div class="ops-person-main"><span class="ops-member-avatar">'+initials(person)+'</span><div class="ops-person-copy"><strong>'+esc(displayOperatorName(person.name))+'</strong><p>'+esc(person.department)+' · '+esc(person.team)+'</p></div></div><div class="ops-person-ranks">'+
       [['部门','departmentRank'],['公司','companyRank']].map(([scope,rankKey]) =>
         [['spend','投放消耗',0],['inquiries','询盘',3],['cpa','CPA',1],['amount','业绩',2]].map(([key,label,tone]) => {
@@ -91,22 +108,22 @@ function mountWorkspace(api) {
       ['crmCustomers','CRM客户',number(m.crmCustomers),'crm','violet'], ['projects','CRM立项',number(m.projects),'crm','violet'], ['visits','客户到店',number(m.visits),'visits','amber'], ['amount','业绩金额',money(m.amount),'performance','violet'],
     ]
     $('#opsDetailMetrics').innerHTML = cards.map(([key,label,value,trend,tone])=>'<button type="button" class="ops-detail-metric tone-'+tone+'" data-detail-trend="'+trend+'" data-detail-primary="'+key+'" aria-pressed="false"><span>'+label+'</span><strong>'+value+'</strong>'+delta(changes[key])+'</button>').join('')
-    $('#opsDetailChannels').innerHTML = channels.map(metrics => {
-      return '<tr><td><strong>'+esc(metrics.channel)+'</strong><span>'+(metrics.adCount ? metrics.adCount+' 条广告' : '自然流')+'</span></td><td>'+money(metrics.spend)+'</td><td>'+number(metrics.exposure)+'</td><td>'+number(metrics.inquiries)+'</td><td>'+number(metrics.valid)+'</td><td>'+cost(metrics.cpa)+'</td><td>'+money(metrics.amount)+'</td></tr>'
-    }).join('')
-    $('#opsDetailChannelCount').textContent = m.channels + ' 个广告渠道'
-    $('#opsDetailEmpty').hidden = channels.length > 0
-    $('.ops-account-table-wrap').hidden = channels.length === 0
     renderMemberTrend()
   }
 
-  function render() { organization.refresh(); polishNames(); renderTeam(); if (local.member) renderMember() }
+  function render() { refreshOrganization(); renderTeam(); if (local.member) renderMember() }
   $('#opsTeamGrid').addEventListener('click', event => {
     const card = event.target.closest('[data-ops-member]'); if (!card) return
     returnFocus = card; local.member = card.dataset.opsMember; local.trend = 'spend'; local.primary = null
     previousOverflow = document.documentElement.style.overflow
+    previousScroll = window.scrollY
     document.documentElement.style.overflow = 'hidden'
-    drawer.showModal(); renderMember(); $('#opsMemberClose').focus()
+    window.GOSDashboardSelect?.close()
+    analysisSection.before(analysisHome)
+    $('#opsMemberAnalysis').appendChild(analysisSection)
+    drawer.showModal(); api.openMemberAnalysis(local.member); renderMember()
+    $('.ops-drawer-body').scrollTop = 0
+    $('#opsMemberClose').focus()
   })
   drawer.addEventListener('click', event => {
     const trend = event.target.closest('[data-detail-trend]')
@@ -118,8 +135,12 @@ function mountWorkspace(api) {
   drawer.addEventListener('animationend', event => { if (event.target===drawer && event.animationName==='opsDrawerSlideOut') drawer.close() })
   drawer.addEventListener('close', () => {
     window.clearTimeout(closeTimer); closeTimer = null; drawer.classList.remove('is-closing')
+    window.GOSDashboardSelect?.close()
+    analysisHome.replaceWith(analysisSection)
     local.member = null; document.documentElement.style.overflow = previousOverflow
-    if (returnFocus?.isConnected) returnFocus.focus()
+    api.closeMemberAnalysis()
+    if (returnFocus?.isConnected) returnFocus.focus({preventScroll:true})
+    window.scrollTo(0, previousScroll)
   })
   api.onRender = render
   api.render()

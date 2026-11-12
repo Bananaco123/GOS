@@ -362,7 +362,7 @@
         <div class="range-preset" id="rangePreset"><button data-range="yesterday">昨天</button><button class="active" data-range="today">今天</button><button data-range="7">近7天</button><button data-range="30">近30天</button></div>
         <div class="exact-range"><input class="date-input" id="startDate" type="date" aria-label="开始日期"><span style="color:#9aa8b9">至</span><input class="date-input" id="endDate" type="date" aria-label="结束日期"></div>
       </div>
-      <span class="filter-spacer"></span><div class="ops-global-filters" id="opsGlobalFilters"><span id="opsPersonnelAnchor" hidden></span></div>
+      <span class="filter-spacer"></span><div class="ops-global-filters" id="opsGlobalFilters"><select id="opsDepartment" aria-label="选择部门"><option value="" data-placeholder="true">全部部门</option></select><select id="opsGroup" aria-label="选择小组" disabled><option value="" data-placeholder="true">请选择小组</option></select></div>
     </section>
 
     <section class="performance-workspace ops-section" id="opsOverviewSection" data-growth-scope="global">
@@ -457,19 +457,6 @@
               <div class="pm-country-no-results" id="pmCountryNoResults" hidden>未找到匹配的地区</div>
             </div>
           </div>
-          <div class="pm-country-filter" id="pmProjectTypeFilter">
-            <div class="pm-country-combobox">
-              <input class="pm-country-input" id="pmProjectTypeInput" type="search" placeholder="选择项目类型" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="pmProjectTypeOptions" />
-              <button class="pm-country-clear" id="pmProjectTypeClear" type="button" aria-label="清除项目类型筛选" hidden>×</button>
-              <span class="pm-country-chevron" aria-hidden="true"></span>
-            </div>
-            <div class="pm-country-options" id="pmProjectTypeOptions" role="listbox" hidden>
-              <button class="pm-country-option is-selected" type="button" role="option" aria-selected="true" data-project-type-value="all" data-project-type-keywords="不限 全部 all">不限项目类型</button>
-              <button class="pm-country-option" type="button" role="option" aria-selected="false" data-project-type-value="工装" data-project-type-keywords="工装 商业 commercial gongzhuang">工装</button>
-              <button class="pm-country-option" type="button" role="option" aria-selected="false" data-project-type-value="家装" data-project-type-keywords="家装 住宅 residential jiazhuang">家装</button>
-              <div class="pm-country-no-results" id="pmProjectTypeNoResults" hidden>未找到匹配的项目类型</div>
-            </div>
-          </div>
         </div>
         <div class="pm-grade-tabs" id="pmGradeTabs" aria-label="线索等级筛选">
           <button class="active" type="button" data-pm-grade="all">全部线索</button>
@@ -480,7 +467,7 @@
       </div>
       <div class="pm-table-wrap">
         <table aria-label="PM转化数据">
-          <colgroup><col class="pm-col-name"><col class="pm-col-base"><col class="pm-col-country"><col class="pm-col-project-type"><col class="pm-col-grade"><col class="pm-col-grade"><col class="pm-col-grade"><col class="pm-col-stage"><col class="pm-col-stage"><col class="pm-col-stage"><col class="pm-col-amount"></colgroup>
+          <colgroup><col class="pm-col-name"><col class="pm-col-base"><col class="pm-col-country"><col class="pm-col-grade"><col class="pm-col-grade"><col class="pm-col-grade"><col class="pm-col-stage"><col class="pm-col-stage"><col class="pm-col-stage"><col class="pm-col-amount"></colgroup>
           <thead><tr id="pmTableHead"></tr></thead>
           <tbody id="pmTableBody"></tbody>
         </table>
@@ -495,7 +482,7 @@
     <div class="ops-drawer-body">
       <div id="opsDetailPerson" class="ops-drawer-person"></div>
       <section class="ops-detail-section ops-detail-overview"><div class="ops-section-header"><h3>运营数据</h3><span class="ops-period" id="opsDetailPeriod"></span></div><div class="ops-detail-metrics" id="opsDetailMetrics"></div><div class="ops-detail-chart" id="opsDetailChart"></div></section>
-      <section class="ops-detail-section ops-account-section"><header><h3>广告渠道</h3><span id="opsDetailChannelCount"></span></header><div class="ops-account-table-wrap"><table class="ops-account-table"><thead><tr><th>广告渠道</th><th>投放消耗</th><th>曝光</th><th>询盘</th><th>有效询盘</th><th>CPA</th><th>业绩金额</th></tr></thead><tbody id="opsDetailChannels"></tbody></table></div><p id="opsDetailEmpty" class="ops-detail-empty" hidden>当前条件下暂无渠道投放数据</p></section>
+      <div id="opsMemberAnalysis"></div>
     </div>
   </dialog>
   <div class="toast" id="toast"></div>
@@ -510,6 +497,7 @@
     import { OPERATIONS_PEOPLE } from '../operations-organization-data.js';
     import { renderOperationsTrend } from './trend-chart.js';
     import { compareOperations, formatOperationsChange } from './comparison-data.js';
+    import { createMemberAnalysisContext } from './analysis-context.js';
     if (new URLSearchParams(window.location.search).get('view') === 'sm') {
       document.title = '四维看板 · 业绩看板（二期）';
       document.querySelector('.dashboard-heading h1').textContent = '业绩看板（二期）';
@@ -588,7 +576,7 @@
       row.projectTypes=buildPmProjectTypeBreakdown(row,index);
       pmRegions.forEach((region,regionIndex)=>{row.regions[region].projectTypes=buildPmProjectTypeBreakdown(row.regions[region],index*pmRegions.length+regionIndex)});
     });
-    const state={department:'',departmentOperators:null,range:'today',start:'',end:'',accounts:[],operators:[],campaigns:[],groups:[],ads:[],trend:'spend',metricPrimary:{delivery:'exposure',inquiries:'inquiries',crm:'crmCustomers'},metricSwap:null,board:'ads',lockedPoint:null,traceOrderId:'OS-202608-001',dimension:'channel',sortKey:'inquiries',sortDir:'desc',orderAnalysisDimension:'pm',expandedRowKeys:new Set(),expandedInitialized:false,pmGrade:'all',pmCountry:'all',pmProjectType:'all',pmSearch:'',pmSortKey:'assigned',pmSortDir:'desc',adsPage:1,pmPage:1,adsPageSize:15,pmPageSize:15};
+    const state={department:'',departmentOperators:null,range:'today',start:'',end:'',accounts:[],operators:[],campaigns:[],groups:[],ads:[],trend:'spend',metricPrimary:{delivery:'exposure',inquiries:'inquiries',crm:'crmCustomers'},metricSwap:null,board:'ads',lockedPoint:null,traceOrderId:'OS-202608-001',dimension:'channel',sortKey:'inquiries',sortDir:'desc',orderAnalysisDimension:'pm',expandedRowKeys:new Set(),expandedInitialized:false,pmGrade:'all',pmCountry:'all',pmSearch:'',pmSortKey:'assigned',pmSortDir:'desc',adsPage:1,pmPage:1,adsPageSize:15,pmPageSize:15};
     const dualMetricMeta={
       delivery:{exposure:{label:'曝光',delta:8.6},cpm:{label:'CPM',delta:-2.4}},
       inquiries:{inquiries:{label:'询盘',delta:-3.2},cpa:{label:'CPA',delta:-5.7}},
@@ -598,9 +586,10 @@
     const sum=(rows,key)=>rows.reduce((n,x)=>n+x[key],0); const rangeFactor=()=>state.range==='yesterday'?.91:state.range==='today'?1:state.range==='7'?5.8:state.range==='30'?22.6:Math.max(1,(new Date(state.end)-new Date(state.start))/86400000+1);
     const personnelRows=()=>plans.filter(x=>!state.organizationOperators||state.organizationOperators.includes(ownerOf(x)));
     const globalRows=()=>personnelRows();
-    const rows=()=>globalRows().filter(matchesConversionSource);
+    const rows=()=>memberAnalysis.rows().filter(matchesConversionSource);
     state.conversionSource='all';
     const ownerOf=plan=>plan.operator||accountOwners[plan.account]||'';
+    const memberAnalysis=createMemberAnalysisContext({state,globalRows,ownerOf});
     const operatorNames=()=>[...new Set(plans.map(ownerOf).filter(Boolean))];
     const matchesConversionSource=plan=>state.conversionSource==='all'||plan.conversionSource===state.conversionSource;
     const advertisingRows=()=>rows().filter(plan=>plan.conversionSource==='advertising');
@@ -633,7 +622,7 @@
       const selected=globalScope?globalRows():rows();
       const adRows=selected.filter(item=>item.conversionSource==='advertising');
       const saved=globalScope?null:entry.rowKey?growthRowSnapshots.get(entry.rowKey):entry.kind==='group'?Array.from(growthRowSnapshots.values()).find(item=>item.isTotal):null;
-      const filters={conversionSource:'advertising',operators:state.organizationOperators||[]};
+      const filters={conversionSource:'advertising',operators:!globalScope&&memberAnalysis.member?[memberAnalysis.member]:state.organizationOperators||[]};
       for(const key of ['accounts','campaigns','groups','ads'])filters[key]=globalScope&&key!=='accounts'?[]:state[key].slice();
       const sourceRows=adRows.filter(item=>!saved||saved.isTotal||dimensionValue(item)===saved.name);
       const summary=summarizeOperations(sourceRows,rangeFactor());
@@ -881,8 +870,8 @@
       document.body.classList.add('trace-preview-open');
     }
     function renderOrders(){
-      // 订单分析仅跟随全局人员与日期，广告结构只作用于投放/PM转化。
-      const ids=new Set(globalRows().filter(matchesConversionSource).map(plan=>plan.id));
+      // 外部跟随全局范围，个人详情额外限定当前运营；三个看板共用同一事实范围。
+      const ids=new Set(rows().map(plan=>plan.id));
       renderOrderAnalysis(orders.filter(order=>ids.has(order.planId)&&order.date>=state.start&&order.date<=state.end));
     }
     const pmGradeKeys=['a','b','c'];
@@ -890,7 +879,6 @@
       {key:'name',label:'PM',sortable:false},
       {key:'assigned',label:'分配客户',sortable:true},
       {key:'region',label:'项目地区',sortable:false},
-      {key:'projectType',label:'项目类型',sortable:false},
       {key:'a',label:'A级',sortable:true},
       {key:'b',label:'B级',sortable:true},
       {key:'c',label:'C级',sortable:true},
@@ -902,15 +890,8 @@
     function pmFieldTotal(row,field){return pmGradeKeys.reduce((total,key)=>total+(row[field]?.[key]||0),0)}
     function pmSelectedValue(row,field){return state.pmGrade==='all'?pmFieldTotal(row,field)+(row.crm?.[field]||0):(row[field]?.[state.pmGrade]||0)}
     function pmSelectedBase(row){return state.pmGrade==='all'?row.assigned:(row.grades?.[state.pmGrade]||0)}
-    function pmScopedRow(row){
-      if(row.crmOnly)return (state.pmCountry==='all'||state.pmCountry===row.region)&&(state.pmProjectType==='all'||state.pmProjectType===row.projectType)?row:null;
-      const region=state.pmCountry==='all'?'--':state.pmCountry,projectType=state.pmProjectType==='all'?'--':state.pmProjectType;
-      const regionScope=state.pmCountry==='all'?row:row.regions?.[state.pmCountry],base=regionScope||row;
-      const projectTypeScope=state.pmProjectType==='all'?base:base.projectTypes?.[state.pmProjectType];
-      return {...row,...base,...(projectTypeScope||{}),region,projectType};
-    }
     function aggregatePmRows(rows){
-      const total={name:'总计',region:state.pmCountry==='all'?'--':state.pmCountry,projectType:state.pmProjectType==='all'?'--':state.pmProjectType,assigned:0,adAssigned:0,crmOnly:rows.every(row=>row.crmOnly),crm:{projects:0,deals:0,amount:0},grades:{a:0,b:0,c:0},connected:{a:0,b:0,c:0},projects:{a:0,b:0,c:0},deals:{a:0,b:0,c:0},amount:{a:0,b:0,c:0},__total:true};
+      const total={name:'总计',region:state.pmCountry==='all'?'--':state.pmCountry,assigned:0,adAssigned:0,crmOnly:rows.every(row=>row.crmOnly),crm:{projects:0,deals:0,amount:0},grades:{a:0,b:0,c:0},connected:{a:0,b:0,c:0},projects:{a:0,b:0,c:0},deals:{a:0,b:0,c:0},amount:{a:0,b:0,c:0},__total:true};
       rows.forEach(row=>{total.assigned+=row.assigned;if(!row.crmOnly)total.adAssigned+=row.assigned;['projects','deals','amount'].forEach(field=>total.crm[field]+=row.crm?.[field]||0);['grades','connected','projects','deals','amount'].forEach(field=>pmGradeKeys.forEach(key=>total[field][key]+=row[field]?.[key]||0))});
       return total;
     }
@@ -931,17 +912,37 @@
       return `<td data-label="${label}"><div class="pm-cell stage"><strong>${fmt.format(value)}</strong><small>${rate.toFixed(2)}%</small></div></td>`;
     }
     function pmRowTemplate(row){
-      return `<tr class="${row.__total?'pm-total-row':''}"><td data-label="PM"><span class="pm-name" title="${row.name}">${row.name}</span></td><td data-label="分配客户"><div class="pm-cell"><strong>${fmt.format(row.assigned)}</strong></div></td><td data-label="项目地区"><span class="pm-country">${row.region||'--'}</span></td><td data-label="项目类型"><span class="pm-project-type">${row.projectType||'--'}</span></td>${pmGradeKeys.map(key=>pmGradeCell(row,key)).join('')}${pmStageCell(row,'connected','建联成功')}${pmStageCell(row,'projects','立项客户')}${pmStageCell(row,'deals','成交客户')}<td data-label="成交金额"><div class="pm-cell amount"><strong>${money(pmSelectedValue(row,'amount'))}</strong></div></td></tr>`;
+      return `<tr class="${row.__total?'pm-total-row':''}"><td data-label="PM"><span class="pm-name" title="${row.name}">${row.name}</span></td><td data-label="分配客户"><div class="pm-cell"><strong>${fmt.format(row.assigned)}</strong></div></td><td data-label="项目地区"><span class="pm-country">${row.region||'--'}</span></td>${pmGradeKeys.map(key=>pmGradeCell(row,key)).join('')}${pmStageCell(row,'connected','建联成功')}${pmStageCell(row,'projects','立项客户')}${pmStageCell(row,'deals','成交客户')}<td data-label="成交金额"><div class="pm-cell amount"><strong>${money(pmSelectedValue(row,'amount'))}</strong></div></td></tr>`;
     }
     function renderPmBoard(){
-      const source=buildOperationsPmRows(rows(),rangeFactor(),{region:state.pmCountry,projectType:state.pmProjectType});
+      const source=buildOperationsPmRows(rows(),rangeFactor(),{region:state.pmCountry});
       const keyword=state.pmSearch.trim().toLocaleLowerCase(),visible=source.filter(row=>!keyword||row.name.toLocaleLowerCase().includes(keyword)),direction=state.pmSortDir==='desc'?-1:1;
       const pageSize=state.pmPageSize,sorted=[...visible].sort((a,b)=>(pmSortValue(a,state.pmSortKey)-pmSortValue(b,state.pmSortKey))*direction),totalPages=Math.max(1,Math.ceil(sorted.length/pageSize));state.pmPage=Math.min(Math.max(1,state.pmPage),totalPages);const offset=(state.pmPage-1)*pageSize,pageRows=sorted.slice(offset,offset+pageSize),body=document.querySelector('#pmTableBody'),empty=document.querySelector('#pmEmpty');
       document.querySelector('#pmTableHead').innerHTML=pmColumnDefinitions.map(pmHeaderCell).join('');
       document.querySelectorAll('#pmGradeTabs button').forEach(button=>{button.classList.toggle('active',button.dataset.pmGrade===state.pmGrade);button.disabled=state.conversionSource==='nonAdvertising'&&button.dataset.pmGrade!=='all'});
       empty.hidden=visible.length>0;body.innerHTML=visible.length?[pmRowTemplate(aggregatePmRows(visible)),...pageRows.map(pmRowTemplate)].join(''):'';renderPagination('pmPagination',visible.length,'pm');
     }
-    function renderAll(){renderOperator();renderMetrics();renderTrend();renderTable();renderOrders();renderPmBoard();window.ops1106?.onRender?.()}
+    function renderAnalysisControls(){
+      document.querySelectorAll('#boardSwitch button').forEach(button=>button.classList.toggle('active',button.dataset.board===state.board));
+      document.querySelector('#adsBoard').hidden=state.board!=='ads';
+      document.querySelector('#orderAnalysisBoard').hidden=state.board!=='orders';
+      document.querySelector('#pmBoard').hidden=state.board!=='pm';
+      document.querySelector('#pmSearch').value=state.pmSearch;
+      for(const [prefix,key,attribute] of [['pmCountry','pmCountry','countryValue']]){
+        document.querySelector('#'+prefix+'Input').value=state[key]==='all'?'':state[key];
+        document.querySelector('#'+prefix+'Clear').hidden=state[key]==='all';
+        document.querySelector('#'+prefix+'Options').hidden=true;
+        document.querySelector('#'+prefix+'NoResults').hidden=true;
+        document.querySelector('#'+prefix+'Input').setAttribute('aria-expanded','false');
+        document.querySelector('#'+prefix+'Filter').classList.remove('is-open');
+        document.querySelectorAll('#'+prefix+'Options button').forEach(button=>{
+          const selected=button.dataset[attribute]===state[key];
+          button.classList.toggle('is-selected',selected);button.setAttribute('aria-selected',String(selected));button.hidden=false;
+        });
+      }
+    }
+    function renderAnalysis(){renderAnalysisControls();renderTable();renderOrders();renderPmBoard()}
+    function renderAll(){renderOperator();renderMetrics();renderTrend();renderAnalysis();window.ops1106?.onRender?.()}
     function formatDate(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}function setRange(type){const end=new Date(),start=new Date();if(type==='yesterday'){start.setDate(end.getDate()-1);end.setDate(end.getDate()-1)}else if(type==='7'){start.setDate(end.getDate()-6)}else if(type==='30'){start.setDate(end.getDate()-29)}state.range=type;state.start=formatDate(start);state.end=formatDate(end);state.adsPage=1;state.pmPage=1;document.querySelector('#startDate').value=state.start;document.querySelector('#endDate').value=state.end;document.querySelectorAll('#rangePreset button').forEach(b=>b.classList.toggle('active',b.dataset.range===type));renderAll()}
     function toast(t){const el=document.querySelector('#toast');el.textContent=t;el.classList.add('show');clearTimeout(window.__tt);window.__tt=setTimeout(()=>el.classList.remove('show'),1600)}
     document.querySelector('#rangePreset').addEventListener('click',e=>{const b=e.target.closest('[data-range]');if(b)setRange(b.dataset.range)});
@@ -965,13 +966,6 @@
     function selectPmCountry(value){state.pmCountry=value;state.pmPage=1;pmCountryInput.value=value==='all'?'':value;pmCountryClear.hidden=value==='all';pmCountryButtons.forEach(button=>{const selected=button.dataset.countryValue===value;button.classList.toggle('is-selected',selected);button.setAttribute('aria-selected',String(selected))});closePmCountryOptions(false);renderPmBoard()}
     pmCountryInput.addEventListener('focus',()=>{openPmCountryOptions();if(state.pmCountry!=='all')pmCountryInput.select()});pmCountryInput.addEventListener('click',openPmCountryOptions);pmCountryInput.addEventListener('input',()=>{openPmCountryOptions();filterPmCountryOptions(pmCountryInput.value)});pmCountryInput.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();closePmCountryOptions()}if(e.key==='Enter'){const first=filterPmCountryOptions(pmCountryInput.value)[0];if(first){e.preventDefault();selectPmCountry(first.dataset.countryValue)}}if(e.key==='ArrowDown'){const first=filterPmCountryOptions(pmCountryInput.value)[0];if(first){e.preventDefault();first.focus()}}});
     pmCountryOptions.addEventListener('click',e=>{const option=e.target.closest('[data-country-value]');if(option)selectPmCountry(option.dataset.countryValue)});pmCountryOptions.addEventListener('keydown',e=>{const option=e.target.closest('[data-country-value]');if(option&&['Enter',' '].includes(e.key)){e.preventDefault();selectPmCountry(option.dataset.countryValue)}});pmCountryClear.addEventListener('click',e=>{e.stopPropagation();selectPmCountry('all');pmCountryInput.focus()});document.addEventListener('click',e=>{if(!pmCountryFilter.contains(e.target))closePmCountryOptions()});
-    const pmProjectTypeFilter=document.querySelector('#pmProjectTypeFilter'),pmProjectTypeInput=document.querySelector('#pmProjectTypeInput'),pmProjectTypeOptions=document.querySelector('#pmProjectTypeOptions'),pmProjectTypeClear=document.querySelector('#pmProjectTypeClear'),pmProjectTypeNoResults=document.querySelector('#pmProjectTypeNoResults'),pmProjectTypeButtons=[...pmProjectTypeOptions.querySelectorAll('[data-project-type-value]')];
-    function filterPmProjectTypeOptions(query=''){const keyword=query.trim().toLocaleLowerCase(),visible=pmProjectTypeButtons.filter(button=>{const match=!keyword||button.dataset.projectTypeKeywords.toLocaleLowerCase().includes(keyword);button.hidden=!match;return match});pmProjectTypeNoResults.hidden=visible.length>0;return visible}
-    function openPmProjectTypeOptions(){pmProjectTypeFilter.classList.add('is-open');pmProjectTypeOptions.hidden=false;pmProjectTypeInput.setAttribute('aria-expanded','true');filterPmProjectTypeOptions(pmProjectTypeInput.value===state.pmProjectType?'':pmProjectTypeInput.value)}
-    function closePmProjectTypeOptions(restore=true){pmProjectTypeFilter.classList.remove('is-open');pmProjectTypeOptions.hidden=true;pmProjectTypeInput.setAttribute('aria-expanded','false');if(restore)pmProjectTypeInput.value=state.pmProjectType==='all'?'':state.pmProjectType}
-    function selectPmProjectType(value){state.pmProjectType=value;state.pmPage=1;pmProjectTypeInput.value=value==='all'?'':value;pmProjectTypeClear.hidden=value==='all';pmProjectTypeButtons.forEach(button=>{const selected=button.dataset.projectTypeValue===value;button.classList.toggle('is-selected',selected);button.setAttribute('aria-selected',String(selected))});closePmProjectTypeOptions(false);renderPmBoard()}
-    pmProjectTypeInput.addEventListener('focus',()=>{openPmProjectTypeOptions();if(state.pmProjectType!=='all')pmProjectTypeInput.select()});pmProjectTypeInput.addEventListener('click',openPmProjectTypeOptions);pmProjectTypeInput.addEventListener('input',()=>{openPmProjectTypeOptions();filterPmProjectTypeOptions(pmProjectTypeInput.value)});pmProjectTypeInput.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();closePmProjectTypeOptions()}if(e.key==='Enter'){const first=filterPmProjectTypeOptions(pmProjectTypeInput.value)[0];if(first){e.preventDefault();selectPmProjectType(first.dataset.projectTypeValue)}}if(e.key==='ArrowDown'){const first=filterPmProjectTypeOptions(pmProjectTypeInput.value)[0];if(first){e.preventDefault();first.focus()}}});
-    pmProjectTypeOptions.addEventListener('click',e=>{const option=e.target.closest('[data-project-type-value]');if(option)selectPmProjectType(option.dataset.projectTypeValue)});pmProjectTypeOptions.addEventListener('keydown',e=>{const option=e.target.closest('[data-project-type-value]');if(option&&['Enter',' '].includes(e.key)){e.preventDefault();selectPmProjectType(option.dataset.projectTypeValue)}});pmProjectTypeClear.addEventListener('click',e=>{e.stopPropagation();selectPmProjectType('all');pmProjectTypeInput.focus()});document.addEventListener('click',e=>{if(!pmProjectTypeFilter.contains(e.target))closePmProjectTypeOptions()});
     document.querySelector('#pmTableHead').addEventListener('click',e=>{const button=e.target.closest('[data-pm-sort]');if(!button)return;const key=button.dataset.pmSort;if(state.pmSortKey===key)state.pmSortDir=state.pmSortDir==='desc'?'asc':'desc';else{state.pmSortKey=key;state.pmSortDir='desc'}renderPmBoard()});
     ['ads','pm'].forEach(type=>{const el=document.querySelector(`#${type}Pagination`),pageKey=`${type}Page`,pageSizeKey=`${type}PageSize`,render=type==='ads'?renderTable:renderPmBoard;el.addEventListener('click',e=>{const button=e.target.closest('[data-page-target]');if(!button||button.disabled)return;state[pageKey]=Number(button.dataset.pageTarget);render()});el.addEventListener('submit',e=>{const form=e.target.closest('[data-page-jump]');if(!form)return;e.preventDefault();const input=form.querySelector('input'),value=Number(input.value),max=Number(input.max);if(!Number.isInteger(value)||value<1||value>max){toast(`请输入 1-${max} 之间的页码`);input.focus();return}state[pageKey]=value;render()});el.addEventListener('change',e=>{const select=e.target.closest('[data-page-size]');if(!select)return;state[pageSizeKey]=Number(select.value);state[pageKey]=1;render()})});
     document.querySelector('#boardSwitch').addEventListener('click',e=>{const b=e.target.closest('[data-board]');if(!b)return;state.board=b.dataset.board;document.querySelectorAll('#boardSwitch button').forEach(x=>x.classList.toggle('active',x===b));document.querySelector('#adsBoard').hidden=state.board!=='ads';document.querySelector('#orderAnalysisBoard').hidden=state.board!=='orders';document.querySelector('#pmBoard').hidden=state.board!=='pm'});
@@ -1010,7 +1004,10 @@
     });
 
     setRange('30');
-    window.ops1106={state,plans,globalRows,analysisRows:rows,ownerOf,rangeFactor,operatorNames,render:renderAll};
+    window.ops1106={state,plans,globalRows,analysisRows:rows,ownerOf,rangeFactor,operatorNames,render:renderAll,
+      openMemberAnalysis(name){memberAnalysis.enter(name);renderAnalysis()},
+      closeMemberAnalysis(){memberAnalysis.leave();renderAnalysis()},
+    };
     window.dispatchEvent(new Event('ops1106-ready'));
   </script>
   <script type="module" src="./organization.js"></script>

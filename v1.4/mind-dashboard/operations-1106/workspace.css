@@ -93,8 +93,14 @@ main > .toolbar.panel::after { bottom: -21px; height: 21px; }
 .ops-section .analysis-trend .chart-heading { padding-top: 14px; }
 .ops-section .chart-heading h2 { color: #334761; font-size: 14px; }
 
-/* 顶栏统一范围，运营分析仅保留广告结构选择。 */
+/* 顶栏部门与小组分列，复用看板单选组件。 */
 .ops-global-filters { display:flex; align-items:center; gap:10px; min-width:0; }
+.ops-global-filters #opsDepartment { width:216px; height:36px; }
+.ops-global-filters #opsGroup { width:248px; height:36px; }
+.ops-global-filters .gos-dashboard-select:first-child { --gos-select-width:216px!important; }
+.ops-global-filters .gos-dashboard-select:last-child { --gos-select-width:248px!important; }
+.ops-global-filters .gos-dashboard-select__trigger { border-radius:8px; font-weight:400; font-size:13px; }
+.ops-global-filters .gos-dashboard-select__trigger:disabled { color:#acb4bf; background:#fff; opacity:1; cursor:not-allowed; }
 .ops-global-filters .ops-organization-filter.is-compact { flex:0 1 190px; width:190px; min-width:150px; }
 .ops-global-filters #accountMultiFilter { flex:0 1 210px; width:210px; min-width:160px; }
 .ops-global-filters .multi-filter-control { border-radius:9px; }
@@ -179,13 +185,13 @@ main > .toolbar.panel::after { bottom: -21px; height: 21px; }
 .ops-chart-tooltip > span { display:flex; align-items:center; gap:5px; line-height:24px; color:#7c8b9d; }
 .ops-chart-tooltip b { margin-left:auto; color:#1a3659; }
 .ops-chart-tooltip i { width:6px; height:6px; border-radius:50%; }
-/* 个人运营详情：人员、数据与趋势、账户。 */
-.ops-member-drawer { position:fixed; inset:0 0 0 auto; width:min(960px,calc(100vw - 32px)); height:100dvh; max-width:none; max-height:none; margin:0; padding:0; overflow:hidden; border:0; border-left:1px solid #dbe4ef; border-radius:0; color:#172b4d; background:#f4f7fc; box-shadow:-12px 0 42px #12284729; }
+/* 个人运营详情：人员、数据与趋势、完整运营分析。 */
+.ops-member-drawer { position:fixed; inset:0 0 0 auto; width:min(1440px,calc(100vw - 64px)); height:100dvh; max-width:none; max-height:none; margin:0; padding:0; overflow:hidden; border:0; border-left:1px solid #dbe4ef; border-radius:0; color:#172b4d; background:#f4f7fc; box-shadow:-12px 0 42px #12284729; }
 .ops-member-drawer[open] { display:flex; flex-direction:column; animation:opsDrawerSlideIn .32s cubic-bezier(.22,1,.36,1) both; }
 .ops-member-drawer[open].is-closing { animation:opsDrawerSlideOut .22s ease-in both; pointer-events:none; }
 .ops-member-drawer::backdrop { background:#19273b59; animation:opsDrawerBackdropIn .32s ease-out both; }
 .ops-member-drawer.is-closing::backdrop { animation:opsDrawerBackdropOut .22s ease-in both; }
-@keyframes opsDrawerSlideIn { from { transform:translateX(100%); } to { transform:translateX(0); } }
+@keyframes opsDrawerSlideIn { from { transform:translateX(100%); } to { transform:none; } }
 @keyframes opsDrawerSlideOut { from { transform:translateX(0); } to { transform:translateX(100%); } }
 @keyframes opsDrawerBackdropIn { from { opacity:0; } to { opacity:1; } }
 @keyframes opsDrawerBackdropOut { from { opacity:1; } to { opacity:0; } }
@@ -220,6 +226,12 @@ main > .toolbar.panel::after { bottom: -21px; height: 21px; }
 .ops-detail-metric > strong { display:block; margin:8px 0 6px; color:#1e3859; font-size:18px; font-variant-numeric:tabular-nums; letter-spacing:-.4px; white-space:nowrap; }
 .ops-detail-metric:hover,.ops-detail-metric.is-active { border-color:var(--tone); box-shadow:0 0 0 1px color-mix(in srgb,var(--tone) 12%,transparent); }
 .ops-detail-chart { margin-top:18px; border-top:1px solid #edf1f7; }
+#opsMemberAnalysis { min-width:0; margin-top:16px; }
+#opsMemberAnalysis #opsAnalysisSection { margin-bottom:0; padding:18px; border-radius:12px; box-shadow:none; }
+#opsMemberAnalysis .ops-section-header h2 { font-size:15px; padding-left:10px; }
+#opsMemberAnalysis .ops-section-header h2:before { width:3px; height:15px; top:6px; background:#558ee0; }
+#opsMemberAnalysis .funnel-detail { grid-template-columns:repeat(2,minmax(0,1fr)); }
+#opsMemberAnalysis .table-wrap { overscroll-behavior-x:contain; }
 .ops-account-section { overflow:hidden; padding-bottom:0; }
 .ops-account-section > header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
 .ops-account-section > header > span { color:#91a0b4; font-size:11px; }
@@ -255,6 +267,7 @@ main > .toolbar.panel::after { bottom: -21px; height: 21px; }
   main > .toolbar.panel { padding:12px; }
   .toolbar .filter-spacer { display:none; }
   .ops-global-filters { width:100%; }
+  .ops-global-filters .gos-dashboard-select { flex:1 1 0; width:0; min-width:0; }
   .ops-global-filters .ops-organization-filter.is-compact,.ops-global-filters #accountMultiFilter { width:auto; flex:1 1 0; min-width:0; }
   .ops-section { padding:14px; }
   .ops-section .metric.metric-selector { padding:11px; }
@@ -267,6 +280,8 @@ main > .toolbar.panel::after { bottom: -21px; height: 21px; }
   .ops-member-drawer { width:calc(100vw - 12px); }
   .ops-drawer-body { padding:12px; }
   .ops-detail-section { padding:14px; }
+  #opsMemberAnalysis #opsAnalysisSection { padding:14px; }
+  #opsMemberAnalysis .funnel-detail { grid-template-columns:1fr; }
   .ops-detail-metrics { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .ops-detail-metric > strong { font-size:17px; }
   .ops-account-table-wrap { margin:0 -14px; }

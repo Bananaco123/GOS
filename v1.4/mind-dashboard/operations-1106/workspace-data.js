@@ -6,6 +6,9 @@ const pmNames = [
   '韩梅 May Han', '杨帆 Frank Yang', '何静 Jane He', '郭明 Mark Guo',
   '罗莎 Rosa Luo', '谢宁 Nina Xie',
 ]
+const pmRegions = ['东南亚', '北美', '欧洲', '中东', '非洲', '南美', '澳洲']
+const pmRoster = pmNames.map((name, index) => ({name, region:pmRegions[index % pmRegions.length]}))
+const regionOwners = region => pmRoster.filter(person => person.region === region).map(person => person.name)
 const regionByCountry = {
   新加坡: '东南亚', 马来西亚: '东南亚', 印度尼西亚: '东南亚', 印尼: '东南亚',
   泰国: '东南亚', 菲律宾: '东南亚', 越南: '东南亚',
@@ -115,13 +118,13 @@ function projectTypeOf(plan) {
   return plan.crmProjectType || (/设计师|承包商|经销商|联营|门店|办公|酒店/.test(`${plan.name || ''} ${plan.group || ''}`) ? '工装' : '家装')
 }
 
-function newPmRow(name, crmOnly) {
+function newPmRow(name, crmOnly, region) {
   return {
-    name, assigned: 0, adAssigned: 0, crmOnly,
+    name, region, assigned: 0, adAssigned: 0, crmOnly,
     grades: emptyGrades(), connected: emptyGrades(), projects: emptyGrades(),
     deals: emptyGrades(), amount: emptyGrades(),
     crm: { projects: 0, deals: 0, amount: 0 },
-    regions: new Set(), projectTypes: new Set(),
+    projectTypes: new Set(),
   }
 }
 
@@ -129,10 +132,9 @@ export function buildOperationsPmRows(plans = [], factor = 1, filters = {}) {
   const { region = 'all', projectType = 'all' } = filters
   const rows = new Map()
   const getRow = (name, crmOnly, regionName, typeName) => {
-    const key = `${name}/${crmOnly ? 'crm' : 'ad'}`
-    if (!rows.has(key)) rows.set(key, newPmRow(name, crmOnly))
+    const key = `${name}/${crmOnly ? 'crm' : 'ad'}/${regionName}`
+    if (!rows.has(key)) rows.set(key, newPmRow(name, crmOnly, regionName))
     const row = rows.get(key)
-    row.regions.add(regionName)
     row.projectTypes.add(typeName)
     return row
   }
@@ -143,15 +145,18 @@ export function buildOperationsPmRows(plans = [], factor = 1, filters = {}) {
     if (region !== 'all' && region !== regionName) continue
     if (projectType !== 'all' && projectType !== typeName) continue
     const seed = stableSeed(plan)
+    const candidates = regionOwners(regionName)
+    // 同一 PM 固定承接一个地区；未标记地区使用独立的演示人员。
+    const pool = candidates.length ? candidates : ['江晨 Chris Jiang', '唐悦 Tina Tang']
     if (plan.conversionSource !== 'advertising') {
-      const row = getRow(plan.crmPm || pmNames[seed % pmNames.length], true, regionName, typeName)
+      const row = getRow(plan.crmPm || pool[seed % pool.length], true, regionName, typeName)
       row.assigned += periodValue(plan.crmCustomers, factor)
       for (const key of ['projects', 'deals', 'amount']) row.crm[key] += periodValue(plan[key], factor)
       continue
     }
 
     // 固定业务归属不随筛选范围变化，运营人员和承接 PM 不直接等同。
-    const owners = plan.crmPm ? [plan.crmPm] : [pmNames[seed % pmNames.length], pmNames[(seed + 5) % pmNames.length]]
+    const owners = plan.crmPm ? [plan.crmPm] : [pool[seed % pool.length], pool[(seed + 1) % pool.length]]
     const ownerWeights = owners.length === 1 ? [1] : [3, 2]
     const assigned = periodValue(plan.transfers, factor)
     const grades = allocate(assigned, [40 + seed % 9, 34, 26 - seed % 9])
@@ -182,9 +187,8 @@ export function buildOperationsPmRows(plans = [], factor = 1, filters = {}) {
     }
   }
 
-  return [...rows.values()].map(({ regions, projectTypes, ...row }) => ({
+  return [...rows.values()].map(({ projectTypes, ...row }) => ({
     ...row,
-    region: [...regions].join('、'),
     projectType: [...projectTypes].join('、'),
   }))
 }

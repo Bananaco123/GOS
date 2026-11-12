@@ -167,7 +167,7 @@
       }
     });
 
-    document.body.appendChild(menu);
+    (select.closest('dialog[open]') || document.body).appendChild(menu);
     active = { select, state, menu };
     state.trigger.classList.add('is-open');
     state.trigger.setAttribute('aria-expanded', 'true');
