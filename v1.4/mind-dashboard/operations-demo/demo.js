@@ -1,5 +1,7 @@
 import { DEMO_CHANNEL, departmentOf, filterLinkedEntries, summarizeLinkedEntries, buildPmConversionRows, buildAdHierarchy, isWon } from './demo-data.js'
 import { mountOperationsOrganization } from '../operations-organization.js'
+import { mountOperationsTeam } from '../operations-1106/organization.js'
+import { summarizeOperations } from '../operations-1106/workspace-data.js'
 
 const legacy = window.opsDemoLegacy
 const { state } = legacy
@@ -66,10 +68,6 @@ const metaIcon=icon('<path d="M20 11a8 8 0 0 0-14.5-4.5L4 8"/><path d="M4 4v4h4"
 toolbox.innerHTML=`<summary aria-label="工具箱">${toolsIcon}<span>工具箱</span><i class="demo-toolbox-chevron" aria-hidden="true"></i></summary><div class="demo-toolbox-menu" role="group" aria-label="工具箱功能"><button type="button" data-demo-tool="commission"><span class="demo-tool-icon is-commission">${calculatorIcon}</span><span>提成试算</span></button><button type="button" data-demo-tool="audience"><span class="demo-tool-icon is-audience">${audienceIcon}</span><span>人群包提取</span></button><button type="button" data-demo-tool="meta"><span class="demo-tool-icon is-meta">${metaIcon}</span><span>Meta 事件回传</span></button></div>`
 cascade.after(toolbox)
 toolbox.querySelectorAll('[data-demo-tool]').forEach(button=>button.setAttribute('aria-label',button.lastElementChild.textContent))
-const metricStrip=$('#metricsStrip')
-let metricScrollTimer
-metricStrip.addEventListener('scroll',()=>{metricStrip.classList.add('demo-scrolling');clearTimeout(metricScrollTimer);metricScrollTimer=setTimeout(()=>metricStrip.classList.remove('demo-scrolling'),800)},{passive:true})
-
 window.opsDemoBeforeRender=()=>{
   const inDepartment=legacy.plans.filter(plan=>(!state.departments.length||state.departments.includes(departmentOf(plan.operator)))&&(!state.organizationOperators||state.organizationOperators.includes(plan.operator)))
   const operators=optionRows(inDepartment.map(plan=>plan.operator))
@@ -93,6 +91,34 @@ function scopeFor({plans=legacy.rows(),pmName,pm=false,label='当前筛选',...e
 }
 const entriesFor=scope=>filterLinkedEntries(linkedIndex,scope)
 const summaryFor=scope=>summarizeLinkedEntries(entriesFor(scope))
+
+// 概览和人员详情使用二期项目归因数据，投放消耗与曝光沿用广告记录。
+let overviewCache
+function overviewRowsFor(plans) {
+  const { start, end } = state
+  const factor = legacy.rangeFactor()
+  if (overviewCache?.index !== linkedIndex || overviewCache.start !== start || overviewCache.end !== end || overviewCache.factor !== factor) {
+    const entriesByPlan = new Map()
+    for (const entry of entriesFor(scopeFor({ plans: legacy.plans }))) {
+      const id = String(entry.attribution.planId)
+      if (!entriesByPlan.has(id)) entriesByPlan.set(id, [])
+      entriesByPlan.get(id).push(entry)
+    }
+    const rowsById = new Map(legacy.plans.map(plan => {
+      const id = String(plan.id)
+      const totals = buildPmConversionRows(entriesByPlan.get(id) || []).total
+      return [id, { ...plan, exposure: plan.exposure / 10, inquiries: totals.inquiries / factor, transfers: totals.assigned / factor,
+        crmCustomers: totals.assigned / factor, projects: totals.projects / factor, visits: totals.visits / factor,
+        deals: totals.dealCustomers / factor, amount: totals.amount / factor }]
+    }))
+    overviewCache = { index: linkedIndex, start, end, factor, rowsById }
+  }
+  return plans.map(plan => overviewCache.rowsById.get(String(plan.id)))
+}
+legacy.overviewRows = () => overviewRowsFor(legacy.globalRows())
+legacy.rankRows = () => overviewRowsFor(legacy.plans)
+window.opsDemoOverviewRows = legacy.overviewRows
+
 const scopes=new Map()
 function countButton(scope,key,value,noun,mode='conversion'){
   scopes.set(key,{...scope,mode})
@@ -113,15 +139,19 @@ function metricCell(cell,scope,key,value,noun,caption,title,mode='conversion'){
   if(caption){const small=document.createElement('small');small.textContent=caption;small.title=title||caption;stack.append(small)}
   cell.replaceChildren(stack)
 }
-function plansForRow(row){return legacy.advertisingRows().filter(plan=>row.__total||(plan[state.dimension]||'未标记')===row[state.dimension])}
+function plansForRow(row){return legacy.advertisingRows().filter(plan=>row.__total||legacy.dimensionValue(plan)===row[state.dimension])}
 window.opsDemoFunnel=(row,metrics)=>{
   const entries=entriesFor(scopeFor({plans:plansForRow(row)})),summary=buildPmConversionRows(entries).total
   const byGrade=grade=>summarizeLinkedEntries(entries.filter(entry=>entry.project.level===grade)).dealCustomers
   return {...metrics,total:summary.inquiries,valid:summary.assigned,gradeA:summary.grades.a,gradeB:summary.grades.b,gradeC:summary.grades.c,floorplan:summary.floorplan,duplicate:summary.duplicate,connected:summary.connected,arrivals:summary.visits,projects:summary.projects,deals:summary.dealCustomers,amount:summary.amount,aDeals:byGrade('A'),bDeals:byGrade('B'),cDeals:byGrade('C')}
 }
-window.opsDemoGroupRows=rows=>rows.map(row=>{const summary=buildPmConversionRows(entriesFor(scopeFor({plans:plansForRow(row)}))).total,factor=legacy.rangeFactor();return {...row,inquiries:summary.inquiries/factor,transfers:summary.assigned/factor,visits:summary.visits/factor,projects:summary.projects/factor,deals:summary.dealCustomers/factor,amount:summary.amount/factor}})
-window.opsDemoSummary=(advertising=false)=>buildPmConversionRows(entriesFor(scopeFor({plans:advertising?legacy.advertisingRows():legacy.rows()}))).total
-window.opsDemoTrendTotal=key=>({projects:window.opsDemoSummary().projects,crmCustomers:window.opsDemoSummary().assigned,amount:window.opsDemoSummary().amount,inquiries:window.opsDemoSummary(true).inquiries,transfers:window.opsDemoSummary(true).assigned,visits:window.opsDemoSummary().visits})[key]
+window.opsDemoGroupRows=rows=>rows.map(row=>{
+  const plans=plansForRow(row), factor=legacy.rangeFactor()
+  const summary=buildPmConversionRows(entriesFor(scopeFor({plans}))).total
+  const {spend,exposure}=summarizeOperations(overviewRowsFor(plans),factor)
+  return {...row,spend:spend/factor,exposure:exposure/factor,inquiries:summary.inquiries/factor,transfers:summary.assigned/factor,
+    visits:summary.visits/factor,projects:summary.projects/factor,deals:summary.dealCustomers/factor,amount:summary.amount/factor}
+})
 function addAdsColumn(){
   const head=$('#planHead .metric-column-row')
   if(!head.querySelector('[data-ops-column]')){
@@ -136,7 +166,7 @@ function addAdsColumn(){
   head.querySelector('[data-sort-key="deals"]').title='筛选周期内成交客户去重数'
   for(const row of document.querySelectorAll('#planBody .funnel-summary-row')){
     const snapshot=legacy.snapshot(row.dataset.rowKey);if(!snapshot||row.querySelector('[data-ops-cell]'))continue
-    const plans=legacy.advertisingRows().filter(plan=>snapshot.isTotal||(plan[state.dimension]||'未标记')===snapshot.name)
+    const plans=legacy.advertisingRows().filter(plan=>snapshot.isTotal||legacy.dimensionValue(plan)===snapshot.name)
     const scope=scopeFor({plans,label:snapshot.isTotal?'投放转化 · 当前总计':snapshot.name}), summary=summaryFor(scope)
     metricCell(row.children[11],{...scope,measure:'projects'},`project:${row.dataset.rowKey}`,summary.projects,'个项目',rate(summary.projects,snapshot.metrics.valid),'立项数 ÷ 有效询盘数')
     const cell=document.createElement('td');cell.dataset.opsCell='true';cell.dataset.label='商机数'
@@ -152,20 +182,22 @@ const pmColumns=[['name','PM'],['assigned','分配客户'],['region','项目地�
 const periodTitles={projects:'筛选周期内新建的项目数',opportunities:'筛选周期内新建的商机数',dealCustomers:'筛选周期内成交客户去重数'}
 window.opsDemoRenderPm=()=>{
   const scope=scopeFor({pm:true}), entries=entriesFor(scope), result=buildPmConversionRows(entries)
+  const inMemberDetail = Boolean(legacy.memberName())
+  const columns = inMemberDetail ? pmColumns.filter(([key]) => key !== 'projectType') : pmColumns
   const key={deals:'dealCustomers'}[state.pmSortKey]||state.pmSortKey
   const value=row=>['a','b','c'].includes(key)?row.grades[key]:row[key]||0
   const sorted=result.rows.sort((a,b)=>(value(a)-value(b))*(state.pmSortDir==='asc'?1:-1)||a.name.localeCompare(b.name))
   const totalPages=Math.max(1,Math.ceil(sorted.length/state.pmPageSize));state.pmPage=Math.min(Math.max(1,state.pmPage),totalPages)
   const page=sorted.slice((state.pmPage-1)*state.pmPageSize,state.pmPage*state.pmPageSize)
-  $('#pmTableHead').innerHTML=pmColumns.map(([key,label])=>`<th title="${periodTitles[key]||label}">${['name','region','projectType'].includes(key)?label:`<button type="button" class="pm-sort ${state.pmSortKey===key?'active':''}" data-pm-sort="${key}">${label}<span class="pm-sort-arrow">${state.pmSortKey===key?(state.pmSortDir==='desc'?'↓':'↑'):'↕'}</span></button>`}</th>`).join('')
-  $('#pmBoard colgroup').innerHTML='<col class="pm-col-name"><col class="pm-col-base"><col class="pm-col-country"><col class="pm-col-project-type">'+Array.from({length:3},()=>'<col class="pm-col-grade">').join('')+Array.from({length:4},()=>'<col class="pm-col-stage">').join('')+'<col class="pm-col-amount">'
+  $('#pmTableHead').innerHTML=columns.map(([key,label])=>`<th title="${periodTitles[key]||label}">${['name','region','projectType'].includes(key)?label:`<button type="button" class="pm-sort ${state.pmSortKey===key?'active':''}" data-pm-sort="${key}">${label}<span class="pm-sort-arrow">${state.pmSortKey===key?(state.pmSortDir==='desc'?'↓':'↑'):'↕'}</span></button>`}</th>`).join('')
+  $('#pmBoard colgroup').innerHTML='<col class="pm-col-name"><col class="pm-col-base"><col class="pm-col-country">'+(inMemberDetail?'':'<col class="pm-col-project-type">')+Array.from({length:3},()=>'<col class="pm-col-grade">').join('')+Array.from({length:4},()=>'<col class="pm-col-stage">').join('')+'<col class="pm-col-amount">'
   document.querySelectorAll('#pmGradeTabs button').forEach(button=>button.classList.toggle('active',button.dataset.pmGrade===state.pmGrade))
   $('#pmEmpty').hidden=sorted.length>0
   $('#pmTableBody').replaceChildren()
   for(const row of sorted.length?[{...result.total,total:true},...page]:[]){
     const tr=document.createElement('tr');if(row.total)tr.className='pm-total-row'
     const rowScope=scopeFor({pm:true,pmName:row.total?undefined:row.name,label:row.total?'PM 转化 · 当前总计':row.name})
-    for(const [key,label] of pmColumns){
+    for(const [key,label] of columns){
       const td=document.createElement('td');td.dataset.label=label
       if(key==='name')td.innerHTML=`<span class="pm-name">${esc(row.name)}</span>`
       else if(key==='region'||key==='projectType')td.textContent=(key==='region'?state.pmCountry:state.pmProjectType)==='all'?'—':key==='region'?state.pmCountry:state.pmProjectType
@@ -231,5 +263,5 @@ window.addEventListener('message',event=>{
   if(event.origin!==window.location.origin||event.source!==window.parent||event.data?.channel!==DEMO_CHANNEL)return
   if(event.data.type==='project-index'&&Array.isArray(event.data.index)){linkedIndex=event.data.index;scopes.clear();legacy.render()}
 })
+mountOperationsTeam(legacy, { keepGlobalOrganization: true })
 post({type:'ready',plans:legacy.plans,orders:legacy.orders})
-legacy.render()

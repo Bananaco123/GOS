@@ -63,8 +63,6 @@
 #pmBoard col.pm-col-grade {width:6%}
 #pmBoard col.pm-col-stage {width:9%}
 #pmBoard col.pm-col-amount {width:12%}
-.metrics-strip {min-width:0;grid-template-columns:repeat(7,minmax(170px,1fr));overflow-x:auto}
-.metrics-strip::-webkit-scrollbar {height:5px}.metrics-strip::-webkit-scrollbar-track {background:transparent}.metrics-strip::-webkit-scrollbar-thumb {border-radius:4px;background:transparent}.metrics-strip.demo-scrolling::-webkit-scrollbar-thumb {background:#9bc4eb}
 .demo-trace-project {position:relative;margin-bottom:10px}
 .demo-trace-project .trace-project {margin:0;padding-bottom:15px}
 .demo-trace-project .trace-project-foot {padding-right:44px}
@@ -73,6 +71,8 @@
 .demo-trace-project>.demo-detail-link {position:absolute;right:12px;bottom:10px}
 #traceVideoContent .video-stat {position:relative}
 #traceVideoContent .video-stat>.demo-detail-link {position:absolute;right:7px;top:7px}
+#opsAnalysisSection > #ordersBoard:not([hidden]) + #orderAnalysisBoard:not([hidden]) {margin-top:12px}
+#opsMemberAnalysis #pmProjectTypeFilter {display:none}
 .order-analysis-head>div:first-child {display:flex;gap:18px;align-items:center}
 @media(max-width:1400px){.toolbar{--control-font-size:11px;gap:7px;padding:12px}.toolbar .toolbar-date-range{gap:7px}.toolbar .range-preset button{padding:0 9px}.toolbar .date-input{width:108px;min-width:108px}.toolbar .exact-range{gap:5px}.toolbar :is(.demo-department-filter,.operator-filter){min-width:108px}.toolbar .account-filter{min-width:120px}.demo-ad-picker{min-width:130px}}
 @media(max-width:1100px){

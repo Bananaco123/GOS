@@ -8,9 +8,9 @@ const defaults = () => ({
   adsPage: 1, pmPage: 1, adsPageSize: 15, pmPageSize: 15,
 })
 
-export function createMemberAnalysisContext({ state, globalRows, ownerOf }) {
+export function createMemberAnalysisContext({ state, globalRows, ownerOf, initial = {} }) {
   let member = null, saved = null
-  const keys = Object.keys(defaults())
+  const keys = Object.keys({ ...defaults(), ...initial })
   return {
     get member() { return member },
     rows() { return globalRows().filter(plan => !member || ownerOf(plan) === member) },
@@ -18,7 +18,7 @@ export function createMemberAnalysisContext({ state, globalRows, ownerOf }) {
       if (saved) throw new Error('请先关闭当前人员详情')
       saved = Object.fromEntries(keys.map(key => [key, structuredClone(state[key])]))
       member = name
-      Object.assign(state, defaults())
+      Object.assign(state, defaults(), initial)
     },
     leave() {
       if (!saved) return

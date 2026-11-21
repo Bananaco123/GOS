@@ -19,29 +19,8 @@ const delta = value => {
   return '<span class="ops-change '+change.className+'">'+change.label+'</span>'
 }
 
-function mountWorkspace(api) {
-  const { state, plans, ownerOf, globalRows, rangeFactor } = api
-  const $ = selector => document.querySelector(selector)
-  const people = OPERATIONS_PEOPLE.filter(person => plans.some(plan => ownerOf(plan) === person.name))
-  const local = { member:null, trend:'spend', primary:null }
-  const drawer = $('#opsMemberDrawer')
-  const analysisSection = $('#opsAnalysisSection'), analysisHome = document.createComment('运营分析原位置')
-  let returnFocus = null, previousOverflow = '', previousScroll = 0, closeTimer = null
-  const closeDrawer = () => {
-    if (!drawer.open || drawer.classList.contains('is-closing')) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { drawer.close(); return }
-    drawer.classList.add('is-closing')
-    // 超时兜底保障后台标签页或动画被中断时也能完成关闭。
-    closeTimer = window.setTimeout(() => drawer.close(), 260)
-  }
-  const periodLabel = () => state.start.replaceAll('-', '/') + ' — ' + state.end.replaceAll('-', '/')
-  const initials = person => person.name.split(' ').slice(1).map(word => word[0]).join('').slice(0, 2)
-  const comparison = rows => compareOperations(rows, rangeFactor(), state.start+'|'+state.end)
-  const memberPlans = name => globalRows().filter(plan => ownerOf(plan) === name)
-  const rankMap = () => rankOperationsPeople(plans, people, ownerOf, rangeFactor())
-  const ranksFor = person => rankMap().get(person.name)
-  const scopedPeople = () => people.filter(person => globalRows().some(plan => ownerOf(plan) === person.name))
-
+function mountOrganizationControls(api, people, $) {
+  const { state } = api
   const tree = buildOperationsOrganization(people.map(person => person.name))
   const departmentSelect = $('#opsDepartment'), groupSelect = $('#opsGroup')
   departmentSelect.innerHTML = '<option value="" data-placeholder="true">全部部门</option>'+tree.map(item=>'<option value="'+esc(item.value)+'">'+esc(item.label)+'</option>').join('')
@@ -67,10 +46,38 @@ function mountWorkspace(api) {
   }
   Object.assign(state, resolveOperationsOrganization(tree, []))
   refreshGroups()
+  return refreshOrganization
+}
+
+export function mountOperationsTeam(api, { keepGlobalOrganization = false } = {}) {
+  const { state, plans, ownerOf, rangeFactor } = api
+  const globalRows = api.overviewRows || api.globalRows
+  const $ = selector => document.querySelector(selector)
+  const people = OPERATIONS_PEOPLE.filter(person => plans.some(plan => ownerOf(plan) === person.name))
+  const local = { member:null, trend:'spend', primary:null }
+  const drawer = $('#opsMemberDrawer')
+  const analysisSection = $('#opsAnalysisSection'), analysisHome = document.createComment('运营分析原位置')
+  let returnFocus = null, previousOverflow = '', previousScroll = 0, closeTimer = null
+  const closeDrawer = () => {
+    if (!drawer.open || drawer.classList.contains('is-closing')) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { drawer.close(); return }
+    drawer.classList.add('is-closing')
+    // 超时兜底保障后台标签页或动画被中断时也能完成关闭。
+    closeTimer = window.setTimeout(() => drawer.close(), 260)
+  }
+  const periodLabel = () => state.start.replaceAll('-', '/') + ' — ' + state.end.replaceAll('-', '/')
+  const initials = person => person.name.split(' ').slice(1).map(word => word[0]).join('').slice(0, 2)
+  const comparison = rows => compareOperations(rows, rangeFactor(), state.start+'|'+state.end)
+  const memberPlans = name => globalRows().filter(plan => ownerOf(plan) === name)
+  const rankMap = () => rankOperationsPeople(api.rankRows?.() || plans, people, ownerOf, rangeFactor())
+  const ranksFor = person => rankMap().get(person.name)
+  const scopedPeople = () => people.filter(person => globalRows().some(plan => ownerOf(plan) === person.name))
+
+  const refreshOrganization = keepGlobalOrganization ? () => {} : mountOrganizationControls(api, people, $)
 
   function renderTeam() {
     const ranks = rankMap()
-    const rankOf = person => ranks.get(person.name).amount[state.department ? 'departmentRank' : 'companyRank']
+    const rankOf = person => ranks.get(person.name).amount[state.department || state.departments?.length ? 'departmentRank' : 'companyRank']
     const members = scopedPeople().sort((a,b) => rankOf(a) - rankOf(b))
     $('#opsDetailPerson').title = '第一行为本部门排名，第二行为公司排名；CPA由低到高，其他指标由高到低'
     $('#opsTeamGrid').innerHTML = members.length ? members.map(person => {
@@ -146,5 +153,5 @@ function mountWorkspace(api) {
   api.render()
 }
 
-if (window.ops1106) mountWorkspace(window.ops1106)
-else window.addEventListener('ops1106-ready', () => mountWorkspace(window.ops1106), { once:true })
+if (window.ops1106) mountOperationsTeam(window.ops1106)
+else window.addEventListener('ops1106-ready', () => mountOperationsTeam(window.ops1106), { once:true })

@@ -1,13 +1,13 @@
 /* 1106 独立工作区：全局概览、团队和局部运营分析。 */
-body.embedded main { padding: 24px 22px 32px; }
-main > .toolbar.panel {
+body.embedded:not(.ops-phase-two) main { padding: 24px 22px 32px; }
+body:not(.ops-phase-two) main > .toolbar.panel {
   display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px;
   min-height: 64px; padding: 14px 16px; margin-bottom: 20px;
   border-radius: 14px; box-shadow: 0 4px 16px rgba(31,65,105,.035);
 }
-main > .toolbar.panel::after { bottom: -21px; height: 21px; }
-.toolbar .toolbar-date-range { flex-wrap: wrap; gap: 10px; }
-.toolbar .filter-spacer { display: block; flex: 1 1 auto; }
+body:not(.ops-phase-two) main > .toolbar.panel::after { bottom: -21px; height: 21px; }
+body:not(.ops-phase-two) .toolbar .toolbar-date-range { flex-wrap: wrap; gap: 10px; }
+body:not(.ops-phase-two) .toolbar .filter-spacer { display: block; flex: 1 1 auto; }
 .ops-global-department { display: flex; align-items: center; gap: 10px; margin-left: auto; }
 .ops-global-department > span, .ops-filter-label { color: #6f7f94; font-size: 12px; white-space: nowrap; }
 #opsDepartment { min-width: 178px; }
@@ -257,15 +257,15 @@ main > .toolbar.panel::after { bottom: -21px; height: 21px; }
   .ops-detail-metrics { grid-template-columns:repeat(3,minmax(0,1fr)); }
   .ops-person-ranks { width:100%; }
   .ops-person-ranks > span { justify-content:space-between; }
-  body.embedded main { padding:18px 14px 28px; }
+  body.embedded:not(.ops-phase-two) main { padding:18px 14px 28px; }
   .ops-section { padding:16px; }
 }
 @media(max-width:590px) {
   .ops-person-ranks > span { flex-wrap:wrap; justify-content:flex-start; gap:5px 3px; padding:8px 6px; }
   .ops-person-ranks svg { display:none; }
   .ops-person-ranks b { flex-basis:100%; margin-left:0; }
-  main > .toolbar.panel { padding:12px; }
-  .toolbar .filter-spacer { display:none; }
+  body:not(.ops-phase-two) main > .toolbar.panel { padding:12px; }
+  body:not(.ops-phase-two) .toolbar .filter-spacer { display:none; }
   .ops-global-filters { width:100%; }
   .ops-global-filters .gos-dashboard-select { flex:1 1 0; width:0; min-width:0; }
   .ops-global-filters .ops-organization-filter.is-compact,.ops-global-filters #accountMultiFilter { width:auto; flex:1 1 0; min-width:0; }
