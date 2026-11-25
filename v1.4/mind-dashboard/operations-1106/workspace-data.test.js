@@ -66,6 +66,7 @@ test('PM 分配按计划事实汇总，后段人数不超过前段且金额守�
     const rows = buildOperationsPmRows(plans, factor)
     const summary = summarizeOperations(plans, factor)
     assert.equal(rows.reduce((sum, row) => sum + row.assigned, 0), summary.crmCustomers)
+    assert.equal(pmSum(rows, 'customers'), summary.crmCustomers)
     assert.equal(pmSum(rows, 'projects'), summary.projects)
     assert.equal(pmSum(rows, 'deals'), summary.deals)
     assert.equal(pmSum(rows, 'amount'), summary.amount)
@@ -91,7 +92,18 @@ test('选择不同广告子集只改变其贡献量，不会改写其他计划�
   const organic = all.find(row => row.name === 'Sarah Wong')
   assert.equal(organic.crmOnly, true)
   assert.deepEqual(organic.grades, { a: 0, b: 0, c: 0 })
-  assert.deepEqual(organic.crm, { projects: 3, deals: 1, amount: 521 })
+  assert.deepEqual(organic.crm, { customers: 7, projects: 3, deals: 1, amount: 521 })
+})
+
+test('广告进线排除自然来源，客户数取 CRM 记录并按 PM 汇总', () => {
+  const sample = [{ ...plans[0], crmCustomers: 5 }, plans[2]]
+  const summary = summarizeOperations(sample)
+  const rows = buildOperationsPmRows(sample)
+  assert.equal(summary.inquiries, 13)
+  assert.equal(summary.crmCustomers, 12)
+  assert.equal(pmSum(rows.filter(row => !row.crmOnly), 'customers'), 5)
+  assert.equal(pmSum(rows, 'customers'), 12)
+  assert.equal(rows.reduce((sum, row) => sum + row.assigned, 0), 16)
 })
 
 test('地区与项目类型在计划层过滤，同一条件无数据时为空', () => {

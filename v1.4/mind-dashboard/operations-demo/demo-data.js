@@ -18,7 +18,7 @@ export function filterLinkedEntries(index, scope = {}) {
     const projectCreated = inRange(entry.createdAt)
     const createdOpportunities = entry.opportunities.filter(item=>inRange(item.createdAt))
     const closedOpportunities = entry.opportunities.filter(item=>isWon(item)&&inRange(item.closedAt || item.createdAt))
-    const customers = (entry.customers || [{id:entry.project.id,connected:true,level:entry.project.level,assignedAt:entry.createdAt}]).filter(customer=>inRange(customer.assignedAt || entry.createdAt))
+    const customers = (entry.customers || [{id:entry.project.customerId || entry.project.id,connected:true,level:entry.project.level,assignedAt:entry.createdAt}]).filter(customer=>inRange(customer.assignedAt || entry.createdAt))
     if (!projectCreated && !createdOpportunities.length && !closedOpportunities.length && !customers.length) return []
     if (scope.measure==='projects' && !projectCreated) return []
     let opportunities = scope.measure==='opportunities' ? createdOpportunities : scope.measure==='deals' || scope.wonOnly ? closedOpportunities : entry.opportunities
@@ -60,7 +60,7 @@ export function buildPmConversionRows(entries) {
   }
   const summarize = ({name,entries}) => {
     const totals = summarizeLinkedEntries(entries)
-    const customers = entries.flatMap(entry=>entry.customers || [{id:entry.project.id,connected:true,level:entry.project.level}])
+    const customers = entries.flatMap(entry=>entry.customers || [{id:entry.project.customerId || entry.project.id,connected:true,level:entry.project.level}])
     const acquisition = key => entries.reduce((sum,entry)=>sum+((entry.period?.acquired??true)?entry.acquisition?.[key]||0:0),0)
     return { name, ...totals, inquiries:acquisition('inquiries'),visits:acquisition('visits'),floorplan:acquisition('floorplan'),duplicate:acquisition('duplicate'),assigned:customers.length, customerCount:new Set(customers.map(customer=>customer.id)).size, connected:customers.filter(customer=>customer.connected).length,
       grades:Object.fromEntries(['a','b','c'].map(grade=>[grade,customers.filter(customer=>customer.level.toLowerCase()===grade).length])) }

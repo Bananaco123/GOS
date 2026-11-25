@@ -121,9 +121,9 @@ function projectTypeOf(plan) {
 function newPmRow(name, crmOnly, region) {
   return {
     name, region, assigned: 0, adAssigned: 0, crmOnly,
-    grades: emptyGrades(), connected: emptyGrades(), projects: emptyGrades(),
+    grades: emptyGrades(), customers: emptyGrades(), connected: emptyGrades(), projects: emptyGrades(),
     deals: emptyGrades(), amount: emptyGrades(),
-    crm: { projects: 0, deals: 0, amount: 0 },
+    crm: { customers: 0, projects: 0, deals: 0, amount: 0 },
     projectTypes: new Set(),
   }
 }
@@ -150,7 +150,9 @@ export function buildOperationsPmRows(plans = [], factor = 1, filters = {}) {
     const pool = candidates.length ? candidates : ['江晨 Chris Jiang', '唐悦 Tina Tang']
     if (plan.conversionSource !== 'advertising') {
       const row = getRow(plan.crmPm || pool[seed % pool.length], true, regionName, typeName)
-      row.assigned += periodValue(plan.crmCustomers, factor)
+      const customers = periodValue(plan.crmCustomers, factor)
+      row.assigned += customers
+      row.crm.customers += customers
       for (const key of ['projects', 'deals', 'amount']) row.crm[key] += periodValue(plan[key], factor)
       continue
     }
@@ -160,6 +162,7 @@ export function buildOperationsPmRows(plans = [], factor = 1, filters = {}) {
     const ownerWeights = owners.length === 1 ? [1] : [3, 2]
     const assigned = periodValue(plan.transfers, factor)
     const grades = allocate(assigned, [40 + seed % 9, 34, 26 - seed % 9])
+    const customers = allocate(periodValue(plan.crmCustomers, factor), grades)
     const projectCount = Math.min(assigned, periodValue(plan.projects, factor))
     const connectedCount = Math.min(assigned, Math.max(projectCount, Math.round(assigned * .76)))
     const connected = allocate(connectedCount, [50, 32, 18], grades)
@@ -170,6 +173,7 @@ export function buildOperationsPmRows(plans = [], factor = 1, filters = {}) {
     for (let gradeIndex = 0; gradeIndex < gradeKeys.length; gradeIndex++) {
       const grade = gradeKeys[gradeIndex]
       const memberGrades = allocate(grades[gradeIndex], ownerWeights)
+      const memberCustomers = allocate(customers[gradeIndex], total(memberGrades) ? memberGrades : ownerWeights)
       const memberConnected = allocate(connected[gradeIndex], ownerWeights, memberGrades)
       const memberProjects = allocate(projects[gradeIndex], ownerWeights, memberConnected)
       const memberDeals = allocate(deals[gradeIndex], ownerWeights, memberProjects)
@@ -179,6 +183,7 @@ export function buildOperationsPmRows(plans = [], factor = 1, filters = {}) {
         row.assigned += memberGrades[index]
         row.adAssigned += memberGrades[index]
         row.grades[grade] += memberGrades[index]
+        row.customers[grade] += memberCustomers[index]
         row.connected[grade] += memberConnected[index]
         row.projects[grade] += memberProjects[index]
         row.deals[grade] += memberDeals[index]

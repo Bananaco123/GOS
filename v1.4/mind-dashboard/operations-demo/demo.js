@@ -118,8 +118,8 @@ function addAdsColumn(){
 }
 window.addEventListener('ops-demo-table-render',addAdsColumn)
 
-const columns=[['name','PM'],['region','项目地区'],['connected','建联数'],['projects','立项数'],['opportunities','商机数'],['dealCustomers','成交数'],['amount','成交金额']]
-const periodTitles={projects:'筛选周期内新建的项目数',opportunities:'筛选周期内新建的商机数',dealCustomers:'筛选周期内成交客户去重数'}
+const columns=[['name','PM'],['region','项目地区'],['customerCount','客户数'],['projects','立项数'],['opportunities','商机数'],['dealCustomers','成交数'],['amount','成交金额']]
+const periodTitles={customerCount:'筛选周期内分配给 PM 的去重客户数',projects:'筛选周期内新建的项目数',opportunities:'筛选周期内新建的商机数',dealCustomers:'筛选周期内成交客户去重数'}
 window.opsDemoRenderPm=()=>{
   const scope=scopeFor({pm:true}), entries=entriesFor(scope), result=buildPmConversionRows(entries)
   const key=state.pmSortKey
@@ -138,7 +138,7 @@ window.opsDemoRenderPm=()=>{
       if(key==='name')td.innerHTML=`<span class="pm-name">${esc(row.name)}</span>`
       else if(key==='region')td.textContent=state.pmCountry==='all'?'—':state.pmCountry
       else if(key==='amount')td.innerHTML=`<div class="pm-cell amount"><strong>${money(row.amount)}</strong></div>`
-      else if(key==='connected')td.innerHTML=`<div class="pm-cell connected"><strong>${fmt(row.connected)}</strong><small title="建联数 ÷ 分配客户数">${rate(row.connected,row.assigned)}</small></div>`
+      else if(key==='customerCount')td.innerHTML=`<div class="pm-cell customer-count"><strong>${fmt(row.customerCount)}</strong></div>`
       else {
         const description=`${label} ÷ 分配客户数`
         const countScope={...rowScope,measure:({projects:'projects',opportunities:'opportunities',dealCustomers:'deals'})[key]||'all'}
