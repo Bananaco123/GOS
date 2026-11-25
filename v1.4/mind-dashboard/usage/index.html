@@ -282,14 +282,13 @@
     }
 
     .page-heading h1 {
-      margin: 0 0 6px;
+      margin: 0;
       font-size: 22px;
       line-height: 32px;
       font-weight: 600;
       color: #162438;
     }
 
-    .page-heading p { margin: 0; color: var(--text-3); font-size: 13px; }
 
     .update-state {
       display: flex;
@@ -1557,7 +1556,6 @@
           <div class="page-heading">
             <div>
               <h1>系统数据</h1>
-              <p>统一查看系统用户、翻译服务、AI 业务员、AI 销冠与客户业务对象创建情况</p>
             </div>
             <div class="update-state"><span class="state-dot"></span><span id="updateText">数据已更新 · 10:30</span></div>
           </div>
@@ -1826,7 +1824,6 @@
           <section class="module-section" id="salesKingService">
             <div class="section-heading">
               <h2 class="section-title">AI 销冠</h2>
-              <span class="section-note">分析使用、会话关联与知识调用概览</span>
             </div>
             <div class="metric-grid six" id="salesKingMetrics" aria-label="AI 销冠核心指标">
               <article class="module-card metric-card">
@@ -1837,22 +1834,18 @@
               <article class="module-card metric-card">
                 <div class="metric-head"><span class="metric-name">会话次数</span><span class="metric-icon teal"><svg class="icon"><use href="#i-chat" /></svg></span></div>
                 <div class="metric-body"><div class="metric-value" data-metric="salesKingSessions">8,726</div><span class="delta up">↑ 9.8%</span></div>
-                <div class="metric-caption">AI 销冠会话发起总数</div>
               </article>
               <article class="module-card metric-card">
                 <div class="metric-head"><span class="metric-name">IM发起</span><span class="metric-icon purple"><svg class="icon"><use href="#i-message" /></svg></span></div>
                 <div class="metric-body"><div class="metric-value" data-metric="salesKingImSessions">3,984</div><span class="delta up">↑ 11.4%</span></div>
-                <div class="metric-caption">由 IM 会话入口发起</div>
               </article>
               <article class="module-card metric-card">
                 <div class="metric-head"><span class="metric-name">看板发起</span><span class="metric-icon amber"><svg class="icon"><use href="#i-chart" /></svg></span></div>
                 <div class="metric-body"><div class="metric-value" data-metric="salesKingDashboardSessions">2,718</div><span class="delta up">↑ 8.6%</span></div>
-                <div class="metric-caption">由看板入口发起</div>
               </article>
               <article class="module-card metric-card">
                 <div class="metric-head"><span class="metric-name">菜单发起</span><span class="metric-icon teal"><svg class="icon"><use href="#i-pulse" /></svg></span></div>
                 <div class="metric-body"><div class="metric-value" data-metric="salesKingMenuSessions">2,024</div><span class="delta up">↑ 6.2%</span></div>
-                <div class="metric-caption">由 AI 销冠菜单入口发起</div>
               </article>
               <article class="module-card metric-card">
                 <div class="metric-head"><span class="metric-name">Token成本</span><span class="metric-icon purple"><svg class="icon"><use href="#i-coins" /></svg></span></div>
@@ -1864,7 +1857,7 @@
             <div class="sales-king-primary-grid">
               <article class="module-card chart-card">
                 <div class="card-heading">
-                  <div><h3 class="card-title">AI 销冠使用趋势</h3><div class="card-subtitle">切换查看使用人数、会话来源或 Token 成本趋势</div></div>
+                  <div><h3 class="card-title">AI 销冠使用趋势</h3></div>
                   <div class="chart-tabs" id="salesKingTrendTabs" data-chart="salesKingChart" aria-label="AI 销冠趋势指标切换">
                     <button class="active" type="button" data-metric-key="salesKingUsagePeople">使用人数</button>
                     <button type="button" data-metric-keys="salesKingSessions,salesKingImSessions,salesKingDashboardSessions,salesKingMenuSessions">会话次数</button>
@@ -1890,7 +1883,7 @@
             <div class="sales-king-secondary-grid">
               <article class="module-card donut-card">
                 <div class="card-heading">
-                  <div><h3 class="card-title">关联会话数占比</h3><div class="card-subtitle">按 AI 销冠分析窗口统计</div></div>
+                  <div><h3 class="card-title">关联会话数占比</h3></div>
                 </div>
                 <div class="donut-layout">
                   <div class="donut-wrap">

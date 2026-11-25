@@ -21,7 +21,7 @@ const allocate = (total, weights) => {
 }
 
 // Every plotted point is allocated from the selected period's totals; ratios use those same points.
-export function operationsTrendSeries({ summary, start, end, metric = 'spend', primary }) {
+export function operationsTrendSeries({ summary, start, end, metric = 'spend', primary, leadLabel }) {
   const from = new Date(`${start}T00:00:00`), to = new Date(`${end}T00:00:00`)
   const days = Math.max(1, Math.round((to - from) / 86400000) + 1)
   const count = days === 1 ? 12 : Math.min(days, 15)
@@ -41,6 +41,10 @@ export function operationsTrendSeries({ summary, start, end, metric = 'spend', p
   values.b = values.valid.map(v => Math.round(v * .4))
   values.c = values.valid.map((v, i) => v - values.a[i] - values.b[i])
   const series = (meta[metric] || meta.spend).map(([key, name, unit, axis = 'left'], i) => ({ key, name, unit, axis, color: colors[i], values: values[key] }))
+  if (metric === 'leads' && leadLabel) {
+    series.find(item => item.key === 'valid').name = leadLabel
+    series.find(item => item.key === 'validRate').name = leadLabel + '率'
+  }
   if (primary === 'crmProjects') primary = 'projects'
   if (primary) series.sort((a, b) => a.key === primary ? -1 : b.key === primary ? 1 : 0)
   return { labels, series }
@@ -94,7 +98,7 @@ function draw(root, instance) {
   labels.forEach((label, i) => { if (i % interval === 0 || i === labels.length - 1) svg += `<text x="${point(series[0], i).x}" y="${H - 7}" text-anchor="middle">${label}</text>` })
   svg += `<line class="ops-chart-guide" y1="${p.t}" y2="${p.t + ih}" stroke="#91add0" stroke-dasharray="3 3" visibility="hidden"/>`
   labels.forEach((_, i) => { const x = point(series[0], i).x, half = iw / (labels.length - 1) / 2; svg += `<rect class="ops-chart-hit" data-point="${i}" x="${Math.max(p.l, x - half)}" y="${p.t}" width="${i === 0 || i === labels.length - 1 ? half : half * 2}" height="${ih}" fill="transparent" tabindex="0" role="button" aria-label="${labels[i]} ${series.map(s => s.name + format(s.values[i], s.unit)).join('，')}"/>` })
-  const title = TREND_GROUPS.find(([key]) => key === instance.options.metric)?.[1] || '投放消耗'
+  const title = instance.options.metric === 'leads' && instance.options.leadLabel ? instance.options.leadLabel : TREND_GROUPS.find(([key]) => key === instance.options.metric)?.[1] || '投放消耗'
   root.innerHTML = `<div class="ops-chart-heading"><strong>${title}</strong><div class="ops-chart-legend">${series.map(s => `<span><i style="background:${s.color}"></i>${s.name}</span>`).join('')}</div></div><div class="ops-chart-canvas"><svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" role="img" aria-label="${title}趋势">${svg}</svg><div class="ops-chart-tooltip" hidden></div></div>`
   const tip = root.querySelector('.ops-chart-tooltip'), guide = root.querySelector('.ops-chart-guide')
   let locked = null

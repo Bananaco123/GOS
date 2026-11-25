@@ -6,7 +6,7 @@ const compact = value => value >= 1e6 ? `${(value / 1e6).toFixed(1)}M`
   : value >= 1e5 ? `${Math.round(value / 1e3)}k`
     : value >= 1e3 ? `${(value / 1e3).toFixed(1)}k` : number.format(Math.round(value))
 
-function metricGroups(current) {
+function metricGroups(current, leadLabel = '有效询盘') {
   return [
     ['spend', '投放消耗', [['spend', '投放消耗', money(current.spend)]]],
     ['delivery', '曝光 / CPM', [
@@ -15,7 +15,7 @@ function metricGroups(current) {
     ['inquiries', '询盘 / CPA', [
       ['inquiries', '询盘', number.format(current.inquiries)], ['cpa', 'CPA', current.cpa ? money(current.cpa) : '—'],
     ]],
-    ['leads', '有效询盘', [['leads', '有效询盘', number.format(current.valid), 'valid']]],
+    ['leads', leadLabel, [['leads', leadLabel, number.format(current.valid), 'valid']]],
     ['crm', 'CRM客户 / CRM立项', [
       ['crmCustomers', 'CRM客户', number.format(current.crmCustomers)], ['crmProjects', 'CRM立项', number.format(current.projects), 'projects'],
     ]],
@@ -26,7 +26,7 @@ function metricGroups(current) {
 
 export function renderOperationsOverviewMetrics(container, state, { current, changes }, renderAction = () => '') {
   const primaryMetrics = {}
-  container.innerHTML = metricGroups(current).map(([key, label, items]) => {
+  container.innerHTML = metricGroups(current, state.leadLabel).map(([key, label, items]) => {
     const [primaryKey, primaryLabel, display, metricKey = primaryKey] = items.find(([itemKey]) => itemKey === state.metricPrimary[key]) || items[0]
     primaryMetrics[key] = { key: primaryKey, label: primaryLabel, display }
     const active = state.trend === key

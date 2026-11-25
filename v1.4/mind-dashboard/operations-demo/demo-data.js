@@ -1,5 +1,5 @@
 export const DEMO_CHANNEL = 'gos-operations-demo-v2'
-export { DEPARTMENTS, departmentOf } from '../operations-organization-data.js'
+export { departmentOf } from './filters.js'
 export const WON_STAGES = ['待下单', '交付中', '已完成']
 export const isWon = item => WON_STAGES.includes(item.status)
 export function filterLinkedEntries(index, scope = {}) {
@@ -62,7 +62,7 @@ export function buildPmConversionRows(entries) {
     const totals = summarizeLinkedEntries(entries)
     const customers = entries.flatMap(entry=>entry.customers || [{id:entry.project.id,connected:true,level:entry.project.level}])
     const acquisition = key => entries.reduce((sum,entry)=>sum+((entry.period?.acquired??true)?entry.acquisition?.[key]||0:0),0)
-    return { name, ...totals, inquiries:acquisition('inquiries'),visits:acquisition('visits'),floorplan:acquisition('floorplan'),duplicate:acquisition('duplicate'),assigned:customers.length, connected:customers.filter(customer=>customer.connected).length,
+    return { name, ...totals, inquiries:acquisition('inquiries'),visits:acquisition('visits'),floorplan:acquisition('floorplan'),duplicate:acquisition('duplicate'),assigned:customers.length, customerCount:new Set(customers.map(customer=>customer.id)).size, connected:customers.filter(customer=>customer.connected).length,
       grades:Object.fromEntries(['a','b','c'].map(grade=>[grade,customers.filter(customer=>customer.level.toLowerCase()===grade).length])) }
   }
   return { total:summarize({name:'总计',entries}), rows:[...groups.values()].map(summarize) }

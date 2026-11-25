@@ -49,11 +49,11 @@ function mountOrganizationControls(api, people, $) {
   return refreshOrganization
 }
 
-export function mountOperationsTeam(api, { keepGlobalOrganization = false } = {}) {
+export function mountOperationsTeam(api, { keepGlobalOrganization = false, roster = OPERATIONS_PEOPLE } = {}) {
   const { state, plans, ownerOf, rangeFactor } = api
   const globalRows = api.overviewRows || api.globalRows
   const $ = selector => document.querySelector(selector)
-  const people = OPERATIONS_PEOPLE.filter(person => plans.some(plan => ownerOf(plan) === person.name))
+  const people = roster.filter(person => plans.some(plan => ownerOf(plan) === person.name))
   const local = { member:null, trend:'spend', primary:null }
   const drawer = $('#opsMemberDrawer')
   const analysisSection = $('#opsAnalysisSection'), analysisHome = document.createComment('运营分析原位置')
@@ -92,7 +92,7 @@ export function mountOperationsTeam(api, { keepGlobalOrganization = false } = {}
 
   function renderMemberTrend() {
     if (!local.member) return
-    renderOperationsTrend($('#opsDetailChart'), { summary:summarizeOperations(memberPlans(local.member),rangeFactor()), metric:local.trend, primary:local.primary, start:state.start, end:state.end })
+    renderOperationsTrend($('#opsDetailChart'), { summary:summarizeOperations(memberPlans(local.member),rangeFactor()), metric:local.trend, primary:local.primary, leadLabel:state.leadLabel, start:state.start, end:state.end })
     $('#opsDetailMetrics').querySelectorAll('[data-detail-trend]').forEach(card => { const active=card.dataset.detailPrimary===(local.primary||({spend:'spend',delivery:'exposure',inquiries:'inquiries',leads:'valid',crm:'crmCustomers',visits:'visits',performance:'amount'})[local.trend]); card.classList.toggle('is-active',active); card.setAttribute('aria-pressed',String(active)) })
   }
 
@@ -111,7 +111,7 @@ export function mountOperationsTeam(api, { keepGlobalOrganization = false } = {}
     $('#opsDetailPeriod').textContent = periodLabel()
     const cards = [
       ['spend','投放消耗',money(m.spend),'spend','blue'], ['exposure','曝光',number(m.exposure),'delivery','blue'], ['cpm','CPM',cost(m.cpm),'delivery','blue'],
-      ['inquiries','询盘进线',number(m.inquiries),'inquiries','teal'], ['cpa','CPA',cost(m.cpa),'inquiries','teal'], ['valid','有效询盘',number(m.valid),'leads','teal'],
+      ['inquiries','询盘进线',number(m.inquiries),'inquiries','teal'], ['cpa','CPA',cost(m.cpa),'inquiries','teal'], ['valid',state.leadLabel || '有效询盘',number(m.valid),'leads','teal'],
       ['crmCustomers','CRM客户',number(m.crmCustomers),'crm','violet'], ['projects','CRM立项',number(m.projects),'crm','violet'], ['visits','客户到店',number(m.visits),'visits','amber'], ['amount','业绩金额',money(m.amount),'performance','violet'],
     ]
     $('#opsDetailMetrics').innerHTML = cards.map(([key,label,value,trend,tone])=>'<button type="button" class="ops-detail-metric tone-'+tone+'" data-detail-trend="'+trend+'" data-detail-primary="'+key+'" aria-pressed="false"><span>'+label+'</span><strong>'+value+'</strong>'+delta(changes[key])+'</button>').join('')

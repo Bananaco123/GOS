@@ -1,5 +1,5 @@
-import { DEMO_CHANNEL, departmentOf, filterLinkedEntries, summarizeLinkedEntries, buildPmConversionRows, buildAdHierarchy, isWon } from './demo-data.js'
-import { mountOperationsOrganization } from '../operations-organization.js'
+import { DEMO_CHANNEL, filterLinkedEntries, summarizeLinkedEntries, buildPmConversionRows, isWon } from './demo-data.js'
+import { mountFilters, OPERATIONS_ROSTER } from './filters.js'
 import { mountOperationsTeam } from '../operations-1106/organization.js'
 import { summarizeOperations } from '../operations-1106/workspace-data.js'
 
@@ -12,50 +12,7 @@ const esc = value => legacy.traceText(value, '—')
 const fmt = value => Number(value || 0).toLocaleString('zh-CN')
 const rate = (value,base) => base ? `${(value/base*100).toFixed(1)}%` : '—'
 const money = value => `¥${fmt(Math.round(value || 0))}`
-const optionRows = values => [...new Set(values.filter(Boolean))].map(value => ({ value,label:value,keywords:value }))
 const ids = rows => rows.map(row=>String(row.id))
-window.opsDemoDepartmentOf = departmentOf
-state.departments = []
-state.operators = []
-
-const organizationFilter=mountOperationsOrganization({anchor:$('#operatorMultiFilter'),names:legacy.plans.map(plan=>plan.operator),state,render:legacy.render,compact:true})
-for(const id of ['campaign','group','ad']) $(`#${id}MultiFilter`).hidden=true
-const cascade=document.createElement('div')
-cascade.className='demo-ad-picker'
-cascade.innerHTML='<div class="demo-ad-control"><button type="button" class="demo-ad-trigger" aria-label="选择广告" aria-haspopup="dialog" aria-expanded="false"><span>选择广告</span><i aria-hidden="true"></i></button><button type="button" class="demo-ad-clear" aria-label="清除广告选择" hidden>×</button></div><div class="demo-cascade-menu" role="dialog" aria-label="选择广告：广告计划、广告组、广告" hidden></div>'
-$('#accountMultiFilter').after(cascade)
-let hierarchy=[], path={campaign:null,group:null,ad:null}
-const trigger=cascade.querySelector('.demo-ad-trigger'), menu=cascade.querySelector('.demo-cascade-menu'), clear=cascade.querySelector('.demo-ad-clear')
-const closeCascade=()=>{menu.hidden=true;trigger.setAttribute('aria-expanded','false')}
-function renderCascade(){
-  const campaign=hierarchy.find(item=>item.key===path.campaign), group=campaign?.groups.find(item=>item.label===path.group)
-  const columns=[{label:'广告计划',items:hierarchy.map(item=>({key:item.key,label:item.label,selected:item.key===path.campaign,branch:true}))},
-    {label:'广告组',items:(campaign?.groups||[]).map(item=>({key:item.label,label:item.label,selected:item.label===path.group,branch:true}))},
-    {label:'广告',items:(group?.ads||[]).map(item=>({key:item.id,label:item.label,selected:item.id===path.ad}))}]
-  menu.innerHTML=columns.map((column,level)=>`<section class="demo-cascade-column"><header>${column.label}</header><div role="listbox" aria-label="${column.label}选项">${column.items.length?column.items.map(item=>`<button type="button" role="option" aria-selected="${item.selected}" data-cascade-level="${level}" data-cascade-key="${esc(item.key)}"><span>${esc(item.label)}</span>${item.branch?'<i aria-hidden="true">›</i>':''}</button>`).join(''):`<p>${level?'请选择上一级':'暂无广告'}</p>`}</div></section>`).join('')
-  const ad=group?.ads.find(item=>item.id===path.ad)
-  const label=ad?.label||group?.label||campaign?.label
-  trigger.querySelector('span').textContent=label||'选择广告'
-  trigger.title=label ? [campaign?.label,group?.label,ad?.label].filter(Boolean).join(' / ') : '选择广告'
-  trigger.setAttribute('aria-label',label?`选择广告：${label}`:'选择广告')
-  clear.hidden=!label
-}
-trigger.addEventListener('click',()=>{const open=menu.hidden;menu.hidden=!open;trigger.setAttribute('aria-expanded',String(open));if(open)renderCascade()})
-function applyPath(){
-  const campaign=hierarchy.find(item=>item.key===path.campaign), group=campaign?.groups.find(item=>item.label===path.group), ad=group?.ads.find(item=>item.id===path.ad)
-  state.campaigns=campaign?[campaign.label]:[];state.groups=group?[group.label]:[];state.ads=ad?[ad.label]:[]
-  state.adPlanIds=campaign ? (group ? (ad?[ad]:group.ads) : campaign.groups.flatMap(item=>item.ads)).map(item=>item.id) : null
-  state.adsPage=1;state.pmPage=1;legacy.render()
-}
-menu.addEventListener('click',event=>{
-  const option=event.target.closest('[data-cascade-level]');if(!option)return
-  const level=Number(option.dataset.cascadeLevel), key=option.dataset.cascadeKey
-  path=level===0?{campaign:key,group:null,ad:null}:level===1?{...path,group:key,ad:null}:{...path,ad:key}
-  applyPath();if(level===2)closeCascade()
-})
-clear.addEventListener('click',()=>{path={campaign:null,group:null,ad:null};applyPath();closeCascade();trigger.focus()})
-document.addEventListener('pointerdown',event=>{if(!cascade.contains(event.target))closeCascade()})
-cascade.addEventListener('keydown',event=>{if(event.key==='Escape'){closeCascade();trigger.focus()}})
 
 const toolbox=document.createElement('details')
 toolbox.className='demo-toolbox'
@@ -66,26 +23,11 @@ const calculatorIcon=icon('<rect x="5" y="2" width="14" height="20" rx="2"/><pat
 const audienceIcon=icon('<circle cx="9" cy="7" r="3"/><path d="M3 20v-3a6 6 0 0 1 12 0v3m1-16a3 3 0 0 1 0 6m2 4a5 5 0 0 1 3 4v2"/>')
 const metaIcon=icon('<path d="M20 11a8 8 0 0 0-14.5-4.5L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.5 4.5L20 16"/><path d="M20 20v-4h-4"/>')
 toolbox.innerHTML=`<summary aria-label="工具箱">${toolsIcon}<span>工具箱</span><i class="demo-toolbox-chevron" aria-hidden="true"></i></summary><div class="demo-toolbox-menu" role="group" aria-label="工具箱功能"><button type="button" data-demo-tool="commission"><span class="demo-tool-icon is-commission">${calculatorIcon}</span><span>提成试算</span></button><button type="button" data-demo-tool="audience"><span class="demo-tool-icon is-audience">${audienceIcon}</span><span>人群包提取</span></button><button type="button" data-demo-tool="meta"><span class="demo-tool-icon is-meta">${metaIcon}</span><span>Meta 事件回传</span></button></div>`
-cascade.after(toolbox)
+$('.ops-global-department').append(toolbox)
 toolbox.querySelectorAll('[data-demo-tool]').forEach(button=>button.setAttribute('aria-label',button.lastElementChild.textContent))
-window.opsDemoBeforeRender=()=>{
-  const inDepartment=legacy.plans.filter(plan=>(!state.departments.length||state.departments.includes(departmentOf(plan.operator)))&&(!state.organizationOperators||state.organizationOperators.includes(plan.operator)))
-  const operators=optionRows(inDepartment.map(plan=>plan.operator))
-  state.operators=state.operators.filter(value=>operators.some(option=>option.value===value))
-  const operated=inDepartment.filter(plan=>!state.operators.length||state.operators.includes(plan.operator))
-  const accounts=optionRows(operated.map(plan=>plan.account))
-  state.accounts=state.accounts.filter(value=>accounts.some(option=>option.value===value))
-  const accounted=operated.filter(plan=>!state.accounts.length||state.accounts.includes(plan.account))
-  hierarchy=buildAdHierarchy(accounted)
-  if(path.campaign&&!hierarchy.some(item=>item.key===path.campaign)){
-    path={campaign:null,group:null,ad:null};state.campaigns=[];state.groups=[];state.ads=[];state.adPlanIds=null
-  }
-  organizationFilter.refresh();legacy.operatorMultiFilter.refresh(operators);legacy.accountMultiFilter.refresh(accounts)
-  renderCascade()
-}
 function scopeFor({plans=legacy.rows(),pmName,pm=false,label='当前筛选',...extra}={}){
-  const scope={planIds:ids(plans),start:state.start,end:state.end,label,department:state.departments[0]||'全部部门',...extra}
-  if(pm){Object.assign(scope,{pmName,region:state.pmCountry,projectType:state.pmProjectType,grade:state.pmGrade})
+  const scope={planIds:ids(plans),start:state.start,end:state.end,label,department:[state.department,state.organizationTeam].filter(Boolean).join(' · ')||'全部部门',...extra}
+  if(pm){Object.assign(scope,{pmName,region:state.pmCountry})
     if(!pmName&&state.pmSearch.trim())scope.pmNames=[...new Set(linkedIndex.map(entry=>entry.attribution.pmName))].filter(name=>name.toLocaleLowerCase().includes(state.pmSearch.trim().toLocaleLowerCase()))}
   return scope
 }
@@ -108,7 +50,7 @@ function overviewRowsFor(plans) {
       const id = String(plan.id)
       const totals = buildPmConversionRows(entriesByPlan.get(id) || []).total
       return [id, { ...plan, exposure: plan.exposure / 10, inquiries: totals.inquiries / factor, transfers: totals.assigned / factor,
-        crmCustomers: totals.assigned / factor, projects: totals.projects / factor, visits: totals.visits / factor,
+        crmCustomers: totals.customerCount / factor, projects: totals.projects / factor, visits: totals.visits / factor,
         deals: totals.dealCustomers / factor, amount: totals.amount / factor }]
     }))
     overviewCache = { index: linkedIndex, start, end, factor, rowsById }
@@ -142,8 +84,7 @@ function metricCell(cell,scope,key,value,noun,caption,title,mode='conversion'){
 function plansForRow(row){return legacy.advertisingRows().filter(plan=>row.__total||legacy.dimensionValue(plan)===row[state.dimension])}
 window.opsDemoFunnel=(row,metrics)=>{
   const entries=entriesFor(scopeFor({plans:plansForRow(row)})),summary=buildPmConversionRows(entries).total
-  const byGrade=grade=>summarizeLinkedEntries(entries.filter(entry=>entry.project.level===grade)).dealCustomers
-  return {...metrics,total:summary.inquiries,valid:summary.assigned,gradeA:summary.grades.a,gradeB:summary.grades.b,gradeC:summary.grades.c,floorplan:summary.floorplan,duplicate:summary.duplicate,connected:summary.connected,arrivals:summary.visits,projects:summary.projects,deals:summary.dealCustomers,amount:summary.amount,aDeals:byGrade('A'),bDeals:byGrade('B'),cDeals:byGrade('C')}
+  return {...metrics,total:summary.inquiries,valid:summary.assigned,gradeA:summary.grades.a,gradeB:summary.grades.b,gradeC:summary.grades.c,floorplan:summary.floorplan,duplicate:summary.duplicate,customerCount:summary.customerCount,arrivals:summary.visits,projects:summary.projects,deals:summary.dealCustomers,amount:summary.amount}
 }
 window.opsDemoGroupRows=rows=>rows.map(row=>{
   const plans=plansForRow(row), factor=legacy.rangeFactor()
@@ -167,31 +108,26 @@ function addAdsColumn(){
   for(const row of document.querySelectorAll('#planBody .funnel-summary-row')){
     const snapshot=legacy.snapshot(row.dataset.rowKey);if(!snapshot||row.querySelector('[data-ops-cell]'))continue
     const plans=legacy.advertisingRows().filter(plan=>snapshot.isTotal||legacy.dimensionValue(plan)===snapshot.name)
-    const scope=scopeFor({plans,label:snapshot.isTotal?'投放转化 · 当前总计':snapshot.name}), summary=summaryFor(scope)
-    metricCell(row.children[11],{...scope,measure:'projects'},`project:${row.dataset.rowKey}`,summary.projects,'个项目',rate(summary.projects,snapshot.metrics.valid),'立项数 ÷ 有效询盘数')
+    const scope=scopeFor({plans,label:snapshot.isTotal?'运营分析 · 当前总计':snapshot.name}), summary=summaryFor(scope)
+    metricCell(row.children[11],{...scope,measure:'projects'},`project:${row.dataset.rowKey}`,summary.projects,'个项目',rate(summary.projects,snapshot.metrics.valid),'立项数 ÷ 有效线索数')
     const cell=document.createElement('td');cell.dataset.opsCell='true';cell.dataset.label='商机数'
-    metricCell(cell,{...scope,measure:'opportunities'},`opportunity:${row.dataset.rowKey}`,summary.opportunities,'个商机',rate(summary.opportunities,snapshot.metrics.valid),'商机数 ÷ 有效询盘数')
+    metricCell(cell,{...scope,measure:'opportunities'},`opportunity:${row.dataset.rowKey}`,summary.opportunities,'个商机',rate(summary.opportunities,snapshot.metrics.valid),'商机数 ÷ 有效线索数')
     row.children[11].after(cell)
-    metricCell(row.children[13],{...scope,measure:'deals'},`won:${row.dataset.rowKey}`,summary.dealCustomers,'位成交客户',rate(summary.dealCustomers,snapshot.metrics.valid),'成交客户去重数 ÷ 有效询盘数','orders')
+    metricCell(row.children[13],{...scope,measure:'deals'},`won:${row.dataset.rowKey}`,summary.dealCustomers,'位成交客户',rate(summary.dealCustomers,snapshot.metrics.valid),'成交客户去重数 ÷ 有效线索数','orders')
   }
-  for(const cell of document.querySelectorAll('#planBody .analysis-detail-row>td'))cell.colSpan=15
 }
 window.addEventListener('ops-demo-table-render',addAdsColumn)
 
-const pmColumns=[['name','PM'],['assigned','分配客户'],['region','项目地区'],['projectType','项目类型'],['a','A级'],['b','B级'],['c','C级'],['connected','建联数'],['projects','立项数'],['opportunities','商机数'],['dealCustomers','成交数'],['amount','成交金额']]
+const columns=[['name','PM'],['region','项目地区'],['connected','建联数'],['projects','立项数'],['opportunities','商机数'],['dealCustomers','成交数'],['amount','成交金额']]
 const periodTitles={projects:'筛选周期内新建的项目数',opportunities:'筛选周期内新建的商机数',dealCustomers:'筛选周期内成交客户去重数'}
 window.opsDemoRenderPm=()=>{
   const scope=scopeFor({pm:true}), entries=entriesFor(scope), result=buildPmConversionRows(entries)
-  const inMemberDetail = Boolean(legacy.memberName())
-  const columns = inMemberDetail ? pmColumns.filter(([key]) => key !== 'projectType') : pmColumns
-  const key={deals:'dealCustomers'}[state.pmSortKey]||state.pmSortKey
-  const value=row=>['a','b','c'].includes(key)?row.grades[key]:row[key]||0
+  const key=state.pmSortKey
+  const value=row=>row[key]||0
   const sorted=result.rows.sort((a,b)=>(value(a)-value(b))*(state.pmSortDir==='asc'?1:-1)||a.name.localeCompare(b.name))
   const totalPages=Math.max(1,Math.ceil(sorted.length/state.pmPageSize));state.pmPage=Math.min(Math.max(1,state.pmPage),totalPages)
   const page=sorted.slice((state.pmPage-1)*state.pmPageSize,state.pmPage*state.pmPageSize)
-  $('#pmTableHead').innerHTML=columns.map(([key,label])=>`<th title="${periodTitles[key]||label}">${['name','region','projectType'].includes(key)?label:`<button type="button" class="pm-sort ${state.pmSortKey===key?'active':''}" data-pm-sort="${key}">${label}<span class="pm-sort-arrow">${state.pmSortKey===key?(state.pmSortDir==='desc'?'↓':'↑'):'↕'}</span></button>`}</th>`).join('')
-  $('#pmBoard colgroup').innerHTML='<col class="pm-col-name"><col class="pm-col-base"><col class="pm-col-country">'+(inMemberDetail?'':'<col class="pm-col-project-type">')+Array.from({length:3},()=>'<col class="pm-col-grade">').join('')+Array.from({length:4},()=>'<col class="pm-col-stage">').join('')+'<col class="pm-col-amount">'
-  document.querySelectorAll('#pmGradeTabs button').forEach(button=>button.classList.toggle('active',button.dataset.pmGrade===state.pmGrade))
+  $('#pmTableHead').innerHTML=columns.map(([key,label])=>`<th title="${periodTitles[key]||label}">${['name','region'].includes(key)?label:`<button type="button" class="pm-sort ${state.pmSortKey===key?'active':''}" data-pm-sort="${key}">${label}<span class="pm-sort-arrow">${state.pmSortKey===key?(state.pmSortDir==='desc'?'↓':'↑'):'↕'}</span></button>`}</th>`).join('')
   $('#pmEmpty').hidden=sorted.length>0
   $('#pmTableBody').replaceChildren()
   for(const row of sorted.length?[{...result.total,total:true},...page]:[]){
@@ -200,10 +136,8 @@ window.opsDemoRenderPm=()=>{
     for(const [key,label] of columns){
       const td=document.createElement('td');td.dataset.label=label
       if(key==='name')td.innerHTML=`<span class="pm-name">${esc(row.name)}</span>`
-      else if(key==='region'||key==='projectType')td.textContent=(key==='region'?state.pmCountry:state.pmProjectType)==='all'?'—':key==='region'?state.pmCountry:state.pmProjectType
-      else if(['a','b','c'].includes(key))td.innerHTML=`<div class="pm-cell grade-${key}"><strong>${fmt(row.grades[key])}</strong><small title="该等级客户数 ÷ 分配客户数">${rate(row.grades[key],row.assigned)}</small></div>`
+      else if(key==='region')td.textContent=state.pmCountry==='all'?'—':state.pmCountry
       else if(key==='amount')td.innerHTML=`<div class="pm-cell amount"><strong>${money(row.amount)}</strong></div>`
-      else if(key==='assigned')td.innerHTML=`<div class="pm-cell"><strong>${fmt(row.assigned)}</strong></div>`
       else if(key==='connected')td.innerHTML=`<div class="pm-cell connected"><strong>${fmt(row.connected)}</strong><small title="建联数 ÷ 分配客户数">${rate(row.connected,row.assigned)}</small></div>`
       else {
         const description=`${label} ÷ 分配客户数`
@@ -263,5 +197,6 @@ window.addEventListener('message',event=>{
   if(event.origin!==window.location.origin||event.source!==window.parent||event.data?.channel!==DEMO_CHANNEL)return
   if(event.data.type==='project-index'&&Array.isArray(event.data.index)){linkedIndex=event.data.index;scopes.clear();legacy.render()}
 })
-mountOperationsTeam(legacy, { keepGlobalOrganization: true })
+mountFilters(state, legacy.render)
+mountOperationsTeam(legacy, { keepGlobalOrganization: true, roster: OPERATIONS_ROSTER })
 post({type:'ready',plans:legacy.plans,orders:legacy.orders})
